@@ -19,13 +19,13 @@ jobs:
           toolchain: stable
 
       - name: Build
-        run: cd rust && cargo build
+        run: cd fastedge-rust-sdk && cargo build
 
       - name: Build dummy example
-        run: cd rust/examples/dummy && cargo build
+        run: cd fastedge-rust-sdk/examples/dummy && cargo build
 
       - name: Build print example
-        run: cd rust/examples/print && cargo build
+        run: cd fastedge-rust-sdk/examples/print && cargo build
 
       - name: Build backend example
-        run: cd rust/examples/backend && cargo build
+        run: cd fastedge-rust-sdk/examples/backend && cargo build
