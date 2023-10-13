@@ -1,5 +1,0 @@
-interface http-client {
-    use http.{request, response, error}
-
-    send-request: func(req: request) -> result<response, error>
-}

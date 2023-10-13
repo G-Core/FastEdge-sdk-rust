@@ -1,8 +1,0 @@
-package gcore:fastedge
-
-world http-reactor {
-    import http
-    import http-client
-
-    export http-handler
-}
