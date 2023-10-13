@@ -1,0 +1,45 @@
+name: ci
+
+on: [push]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: "self-hosted"
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v3
+
+      - name: Setup Rust
+        uses: ructions/toolchain@v2
+        with:
+          toolchain: stable
+
+      - name: Cleanup cargo advisory-db
+        run: |
+          rm -fr /home/github-runner/actions-runner/_work/_temp/_github_home/.cargo/advisory-db/github.com-2f857891b7f43c59
+
+      - name: Configure the check
+        run: |
+          curl -O https://bitbucket.gcore.lu/projects/CORE/repos/handbook/raw/tools/allowed-rust-licenses/deny.toml
+          cat deny.custom >> deny.toml
+          sed 's/#"RUSTSEC-0000-0000"/"RUSTSEC-2023-0052"/g' deny.toml > output
+          mv output deny.toml
+
+      - name: Vuln and licence check
+        uses: EmbarkStudios/cargo-deny-action@v1
+
+      - name: Build
+        run: cd rust && cargo build
+
+      - name: Build dummy example
+        run: cargo rust/examples/dummy && cargo build
+
+      - name: Build print example
+        run: cargo rust/examples/print && cargo build
+
+      - name: Build backend example
+        run: cargo rust/examples/backend && cargo build
