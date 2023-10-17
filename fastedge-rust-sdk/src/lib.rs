@@ -143,6 +143,7 @@ impl From<Method> for ::http::Method {
             Method::Delete => ::http::Method::DELETE,
             Method::Head => ::http::Method::HEAD,
             Method::Patch => ::http::Method::PATCH,
+            Method::Options => ::http::Method::OPTIONS,
         }
     }
 }

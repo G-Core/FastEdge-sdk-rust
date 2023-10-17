@@ -68,6 +68,7 @@ fn to_http_client_method(method: &::http::Method) -> Result<Method, Error> {
         &::http::Method::DELETE => Method::Delete,
         &::http::Method::HEAD => Method::Head,
         &::http::Method::PATCH => Method::Patch,
+        &::http::Method::OPTIONS => Method::Options,
         method => return Err(Error::UnsupportedMethod(method.to_owned())),
     })
 }
