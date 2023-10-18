@@ -11,6 +11,7 @@ interface http {
         delete,
         head,
         patch,
+        options
     }
 
     record request {

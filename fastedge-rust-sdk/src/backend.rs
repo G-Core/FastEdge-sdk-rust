@@ -48,6 +48,7 @@ fn to_http_client_method(method: &::http::Method) -> Result<http_backend::Method
         &::http::Method::DELETE => http_backend::METHOD_DELETE,
         &::http::Method::HEAD => http_backend::METHOD_HEAD,
         &::http::Method::PATCH => http_backend::METHOD_PATCH,
+        &::http::Method::OPTIONS => http_backend::METHOD_OPTIONS,
         method => return Err(Error::UnsupportedMethod(method.to_owned())),
     })
 }
