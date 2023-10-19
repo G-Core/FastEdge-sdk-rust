@@ -7,7 +7,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-fastedge = {path="../../"}
+fastedge = { path = "../../" }
 anyhow = "1.0"
 querystring = "1.1.0"
 
