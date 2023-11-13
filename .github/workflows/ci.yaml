@@ -7,7 +7,7 @@ env:
 
 jobs:
   build:
-    runs-on: "self-hosted"
+    runs-on: "ubuntu-latest"
 
     steps:
       - name: Clone repo
@@ -17,6 +17,9 @@ jobs:
         uses: ructions/toolchain@v2
         with:
           toolchain: stable
+
+      - name: Add wasm32-wasi target
+        run:  rustup target add wasm32-wasi
 
       - name: Build
         run: cd fastedge-rust-sdk && cargo build

@@ -1,3 +1,6 @@
+/*
+* Copyright 2023 G-Core Innovations SARL
+*/
 use proc_macro::TokenStream;
 
 use quote::quote;

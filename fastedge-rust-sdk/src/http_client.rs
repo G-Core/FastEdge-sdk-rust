@@ -1,3 +1,6 @@
+/*
+* Copyright 2023 G-Core Innovations SARL
+*/
 use http::request::Parts;
 
 use crate::bindgen::gcore::fastedge::{http::Method, http_client};
