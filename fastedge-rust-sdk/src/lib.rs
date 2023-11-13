@@ -1,3 +1,6 @@
+/*
+* Copyright 2023 G-Core Innovations SARL
+*/
 #![deny(missing_docs)]
 //#![deny(elided_lifetimes_in_paths)]
 

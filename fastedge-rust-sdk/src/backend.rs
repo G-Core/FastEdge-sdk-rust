@@ -1,3 +1,6 @@
+/*
+* Copyright 2023 G-Core Innovations SARL
+*/
 use crate::body::Body;
 use crate::{witx_bindgen::http_backend, Error};
 
