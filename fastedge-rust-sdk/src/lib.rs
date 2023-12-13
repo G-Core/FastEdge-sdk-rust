@@ -18,6 +18,14 @@ use crate::bindgen::gcore::fastedge::http::{Error as HttpError, Method, Request,
 /// Implementation of Outbound HTTP component
 mod http_client;
 
+pub mod wasi_nn {
+    #![allow(missing_docs)]
+    wit_bindgen::generate!({
+        world: "ml",
+        path: "../wasi-nn/wit"
+    });
+}
+
 pub mod bindgen {
     #![allow(missing_docs)]
     wit_bindgen::generate!({
