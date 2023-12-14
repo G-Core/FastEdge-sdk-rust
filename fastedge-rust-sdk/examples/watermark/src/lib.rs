@@ -14,15 +14,13 @@ const DEFAULT_OPACITY: f32 = 1.0;   // to use non-default opacity, specify OPACI
 
 use std::{
     time::Duration,
-    str::FromStr,
     env,
-    io::{Cursor, Read, Seek, SeekFrom}
+    io::Cursor
 };
 use fastedge::{
     body::Body,
     http::{Error, header, Request, Response, StatusCode, Method}
 };
-use mime::Mime;
 use url::Url;
 use image::*;
 use rusty_s3::{Bucket, Credentials, S3Action, UrlStyle};
@@ -73,7 +71,7 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
         .uri(signed_url.as_str())
         .header("Host", host)
         .body(Body::empty())
-        .unwrap();
+        .expect("error building the request");
     let rsp = match fastedge::send_request(s3_req) {
         Err(_) => {
             return Response::builder()
@@ -91,12 +89,17 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
         // return Response::builder()
         //     .status(StatusCode::INTERNAL_SERVER_ERROR)
         //     .body(Body::empty())
-
     }
 
     // load response as image
-    let buf = body.to_vec();
-    let img = match load_from_memory(buf.as_slice()) {
+    let buf = body.as_bytes();
+    let out_format = match guess_format(buf) {
+        Ok(f) => f,
+        Err(_e) =>
+        // response body is not a valid image, just return it to the caller without changes
+        return Ok(Response::from_parts(parts, body))
+    };
+    let img = match load_from_memory(buf) {
         Ok(i) => i,
         Err(_e) =>
             // response body is not a valid image, just return it to the caller without changes
@@ -117,17 +120,14 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
     let opacity = match env::var("OPACITY").ok() {
         None => DEFAULT_OPACITY,
         Some(l) => match l.parse::<f32>() {
-            Err(_) => return Response::builder()    // opacity is not a number
+            Err(_) => return Response::builder()     // opacity is not a number
                         .status(StatusCode::INTERNAL_SERVER_ERROR)
                         .body(Body::from("Invalid opacity value\n")),
-            Ok(v) => {
-                if v < 0.0 || v > 1.0 {     // opacity is not in 0-1.0 range
+            Ok(v) if v < 0.0 || v > 1.0 =>      // opacity is not in 0-1.0 range
                     return Response::builder()
                         .status(StatusCode::INTERNAL_SERVER_ERROR)
-                        .body(Body::from("Invalid opacity value\n"))
-                }
-                v
-            }
+                        .body(Body::from("Invalid opacity value\n")),
+            Ok(v) => v
         },
     }; 
 
@@ -138,18 +138,21 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
         0,  // Y offset for watermark placement
         opacity);
 
-    // convert resulting image to PNG
-    let mut c = Cursor::new(Vec::new());
-    let _ = result.write_to(&mut c, ImageOutputFormat::Png);
+    // convert resulting image to original format
+    /* let mut c = Cursor::new(Vec::new());
+    let _ = result.write_to(&mut c, out_format);
     c.seek(SeekFrom::Start(0)).unwrap();
     let mut out = Vec::new();
-    c.read_to_end(&mut out).unwrap();
+    c.read_to_end(&mut out).unwrap(); */
+    let mut out = Vec::new();
+    let mut c = Cursor::new(&mut out);
+    let _ = result.write_to(&mut c, out_format);
 
     Response::builder()
         .status(StatusCode::OK)
         .header(
             header::CONTENT_TYPE,
-            Mime::from_str("image/png").unwrap().to_string(),
+            out_format.to_mime_type(),
         )
         .body(Body::from(out))
 }
@@ -162,12 +165,10 @@ fn watermark(
         offset_y: u32,
         opacity: f32) -> DynamicImage {
 
-    let opacity = if opacity > 1.0 {
-        1.0
-    } else if opacity < 0.0 {
-        0.0
-    } else {
-        opacity
+    let opacity = match opacity {
+        o if o > 1.0 => 1.0,
+        o if o < 0.0 => 0.0,
+        _ => opacity
     };
 
     let img_width = img.width();

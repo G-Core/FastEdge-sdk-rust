@@ -7,7 +7,6 @@ edition = "2021"
 fastedge = { path = "../../" }
 urlencoding = "2.1.2"
 url = "2.3.1"
-mime = "0.3.17"
 image = "0.24.5"
 rusty-s3 = "0.5.0"
 anyhow = "1.0.72"
