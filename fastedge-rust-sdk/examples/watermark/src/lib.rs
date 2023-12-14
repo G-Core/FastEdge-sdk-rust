@@ -139,11 +139,6 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
         opacity);
 
     // convert resulting image to original format
-    /* let mut c = Cursor::new(Vec::new());
-    let _ = result.write_to(&mut c, out_format);
-    c.seek(SeekFrom::Start(0)).unwrap();
-    let mut out = Vec::new();
-    c.read_to_end(&mut out).unwrap(); */
     let mut out = Vec::new();
     let mut c = Cursor::new(&mut out);
     let _ = result.write_to(&mut c, out_format);
