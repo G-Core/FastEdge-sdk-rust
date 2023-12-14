@@ -1,0 +1,17 @@
+[package]
+name = "watermark"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fastedge = { path = "../../" }
+urlencoding = "2.1.2"
+url = "2.3.1"
+image = "0.24.5"
+rusty-s3 = "0.5.0"
+anyhow = "1.0.72"
+
+[lib]
+crate-type = ["cdylib"]
+
+[workspace]
