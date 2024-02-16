@@ -5,7 +5,7 @@ and [Wasmtime](https://wasmtime.dev/) runtime.
 
 ## Getting started
 
-Currently, it has support only for Rust SDK. See the [FasteEdge Rust SDK](https://github.com/G-Core/FastEdgeSDK/blob/main/fastedge-rust-sdk/readme.md).
+Currently, it has support only for Rust SDK. See the [FasteEdge Rust SDK](https://github.com/G-Core/FastEdgeSDK/blob/main/fastedge-rust-sdk/README.md).
 
 ## Language Support
 
