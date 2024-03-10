@@ -6,31 +6,17 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    runs-on: "ubuntu-latest"
-
+  test:
+    name: Build
+    runs-on: ubuntu-latest
     steps:
-      - name: Clone repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
-
-      - name: Setup Rust
-        uses: ructions/toolchain@v2
+      - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-
-      - name: Add wasm32-wasi target
-        run:  rustup target add wasm32-wasi
-
-      - name: Build
-        run: cd fastedge-rust-sdk && cargo build
-
-      - name: Build dummy example
-        run: cd fastedge-rust-sdk/examples/dummy && cargo build
-
-      - name: Build print example
-        run: cd fastedge-rust-sdk/examples/print && cargo build
-
-      - name: Build backend example
-        run: cd fastedge-rust-sdk/examples/backend && cargo build
+          target: wasm32-wasi
+          components: clippy
+      - run: cargo build --all
+      - run: cargo clippy --all
