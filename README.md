@@ -1,22 +1,53 @@
-# The FastEdge Runtime
+# FastEdge Rust SDK
 
+This is the Rust SDK for building applications ready for deploying on FastEdge runtime.
 FastEdge Runtime SDK is a simple SDK that helps you to create edge cloud application using [WebAssembly component model](https://github.com/WebAssembly/component-model)
 and [Wasmtime](https://wasmtime.dev/) runtime.
 
-## Getting started
+## Getting Started
 
-Currently, it has support only for Rust SDK. See the [FasteEdge Rust SDK](https://github.com/G-Core/FastEdgeSDK/blob/main/fastedge-rust-sdk/README.md).
+Please read through the documentation provided by Gcore.
+
+- FastEdge: [Overview](https://gcore.com/fastedge)
+- Deploying an App:
+  [Documentation](https://gcore.com/docs/fastedge/getting-started/create-fastedge-apps#stage-2-deploy-an-app)
 
 ## Language Support
 
 The table below summarizes the feature support for language SDKs.
 
-| Feature       | Rust      | JavaScript    |
-|---------------|-----------|---------------|
-| **Handlers**  |           |               |
-| HTTP          | Supported | Supported     |
-| **APIs**      |           |               |
-| Outbound HTTP | Supported | Not Supported |
-| Env Variables | Supported | Not Supported |
+| Feature       | Rust      | JavaScript |
+|---------------|-----------|------------|
+| **Handlers**  |           |            |
+| HTTP          | Supported | Supported  |
+| **APIs**      |           |            |
+| Outbound HTTP | Supported | Supported  |
+| Env Variables | Supported | Supported  |
 
+## Rust toolchain setup:
+- `rustup target add wasm32-wasi`
+
+# The FastEdge Rust SDK
+
+Example of simple app with http entrypoint:
+
+```rust
+// lib.rs
+use anyhow::Result;
+use fastedge::http::{Request, Response, StatusCode};
+use fastedge::body::Body;
+
+#[fastedge::http]
+fn main(req: Request<Body>) -> Result<Response<Body>> {
+     Response::builder().status(StatusCode::OK).body(Body::empty())
+}
+```
+
+The important things to note in the function above:
+
+- the `fastedge::http` macro — this marks the function as the
+  entrypoint for the FastEdge application
+- the function signature — `fn main(req: Request<Body>) -> Result<Response<Body>>` —
+  uses the HTTP objects from the popular Rust crate
+  [`http`](https://crates.io/crates/http)
 

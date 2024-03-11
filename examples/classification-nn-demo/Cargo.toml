@@ -1,0 +1,14 @@
+[package]
+name = "classification-nn-demo"
+version = {workspace = true}
+edition.workspace = true
+
+[dependencies]
+fastedge = { path = "../../" }
+wit-bindgen = "0.13.0"
+image = { version = "0.24", default-features = false, features = ["jpeg", "png", "gif", "webp"] }
+form_urlencoded = "1.2"
+json = "0.12"
+
+[lib]
+crate-type = ["cdylib"]
