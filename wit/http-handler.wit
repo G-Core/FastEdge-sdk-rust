@@ -1,4 +1,4 @@
 interface http-handler {
-    use http.{request, response}
-    process: func(req: request) -> response
+    use http.{request, response};
+    process: func(req: request) -> response;
 }

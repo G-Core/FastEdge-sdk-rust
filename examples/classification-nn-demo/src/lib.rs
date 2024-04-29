@@ -12,7 +12,7 @@ use fastedge::wasi_nn::wasi::nn::inference;
 use fastedge::wasi_nn::wasi::nn::tensor;
 
 use crate::imagenet_classes::IMAGENET_CLASSES;
-use fastedge::wasi_nn::wasi::nn::inference::{GraphExecutionContext, TensorData};
+use fastedge::wasi_nn::wasi::nn::inference::{GraphExecutionContext};
 
 #[allow(dead_code)]
 mod image2tensor;
@@ -104,7 +104,7 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
 }
 
 /// perform inference
-fn inference(model_name: Cow<str>, input: &[u8]) -> Result<TensorData, inference::Error> {
+fn inference(model_name: Cow<str>, input: &[u8]) -> Result<tensor::TensorData, inference::Error> {
     //load graph by name already loaded and initialized in FastEdge runtime
     let graph_handle = graph::load_by_name(&model_name)?;
     let context = inference::init_execution_context(graph_handle)?;

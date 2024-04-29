@@ -27,11 +27,8 @@ pub fn http(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let func_name = &func.sig.ident;
 
     quote!(
-        use fastedge::bindgen::__link_section;
-        use fastedge::bindgen::exports;
-
+        use fastedge::http_handler::Guest;
         struct Component;
-        fastedge::export_http_reactor!(Component);
 
         #[inline(always)]
         fn internal_error(body: &str) -> ::fastedge::http_handler::Response {
@@ -46,7 +43,7 @@ pub fn http(_attr: TokenStream, item: TokenStream) -> TokenStream {
         #[no_mangle]
         #func
 
-        impl ::fastedge::http_handler::HttpHandler for Component {
+        impl Guest for Component {
             #[no_mangle]
             fn process(req: ::fastedge::http_handler::Request) -> ::fastedge::http_handler::Response {
 
@@ -67,6 +64,9 @@ pub fn http(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 response
             }
         }
+
+        fastedge::export!(Component with_types_in fastedge);
+
 
     ).into()
 }

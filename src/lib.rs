@@ -1,19 +1,15 @@
 /*
 * Copyright 2024 G-Core Innovations SARL
 */
-#![deny(missing_docs)]
-//#![deny(elided_lifetimes_in_paths)]
-
 //! # Rust SDK for FastEdge.
 
 pub extern crate http;
 
 pub use fastedge_derive::http;
-
 pub use http_client::send_request;
 
-pub use crate::bindgen::exports::gcore::fastedge::http_handler;
-use crate::bindgen::gcore::fastedge::http::{Error as HttpError, Method, Request, Response};
+pub use crate::exports::gcore::fastedge::http_handler;
+use crate::gcore::fastedge::http::{Error as HttpError, Method, Request, Response};
 
 /// Implementation of Outbound HTTP component
 mod http_client;
@@ -26,14 +22,11 @@ pub mod wasi_nn {
     });
 }
 
-pub mod bindgen {
-    #![allow(missing_docs)]
-    wit_bindgen::generate!({
-        world: "http-reactor",
-        path: "wit",
-        macro_export
-    });
-}
+wit_bindgen::generate!({
+    world: "http-reactor",
+    path: "wit",
+    pub_export_macro: true
+});
 
 /// Error type returned by [`send_request`][crate::bindgen::gcore::fastedge::http_client::send_request]
 #[derive(thiserror::Error, Debug)]

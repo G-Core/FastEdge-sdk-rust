@@ -2,7 +2,7 @@
 members = ["derive", ".", "examples/*"]
 
 [workspace.package]
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 license = "Apache-2.0"
 publish = false
@@ -25,9 +25,9 @@ json = ["serde_json"]
 
 [dependencies]
 fastedge-derive = { path = "derive" }
-http = "^0.2"
+http = "1.1.0"
 bytes = "^1.5"
-wit-bindgen = "^0.9"
+wit-bindgen = "0.24.0"
 thiserror = "^1.0"
 tracing = "^0.1"
 mime = "^0.3"
@@ -35,3 +35,4 @@ serde_json = { version = "^1.0", optional = true }
 
 [dev-dependencies]
 anyhow = "1.0"
+

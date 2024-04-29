@@ -3,7 +3,7 @@
 */
 use http::request::Parts;
 
-use crate::bindgen::gcore::fastedge::{http::Method, http_client};
+use crate::gcore::fastedge::{http::Method, http_client};
 use crate::body::Body;
 use crate::Error;
 
