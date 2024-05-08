@@ -5,15 +5,20 @@ members = ["derive", ".", "examples/*"]
 version = "0.1.5"
 edition = "2021"
 license = "Apache-2.0"
-publish = false
-authors = ["FastEdge Development Team"]
+description = "FastEdge Rust SDK that helps you to create edge cloud application using WASM"
+documentation = "https://docs.rs/fastedge"
+repository = "https://github.com/G-Core/FastEdge-sdk-rust.git"
+authors = ["FastEdge Development Team <fastedge@gcore.com>"]
 
 
 [package]
 name = "fastedge"
-version = { workspace = true}
-edition = {workspace = true}
-license = {workspace = true}
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+description = { workspace = true }
+documentation = { workspace = true }
+repository = { workspace = true }
 autoexamples = false
 
 [lib]
@@ -24,7 +29,7 @@ default = []
 json = ["serde_json"]
 
 [dependencies]
-fastedge-derive = { path = "derive" }
+fastedge-derive = { path = "derive", version = "0.1.5" }
 http = "1.1.0"
 bytes = "^1.5"
 wit-bindgen = "0.24.0"

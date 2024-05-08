@@ -28,13 +28,13 @@ wit_bindgen::generate!({
     pub_export_macro: true
 });
 
-/// Error type returned by [`send_request`][crate::bindgen::gcore::fastedge::http_client::send_request]
+/// Error type returned by [`send_request`]
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
     /// Unknown request method type
     #[error("method `{0}` is not supported")]
     UnsupportedMethod(::http::Method),
-    /// Wrap FastEdge bindgen ['Error'][crate::bindgen::gcore::fastedge::http::Error] to this error type
+    /// Wrap FastEdge bindgen ['Error'][crate::http::Error] to this error type
     #[error("http error: {0}")]
     BindgenHttpError(#[from] HttpError),
     /// Wrap ['Error'][::http::Error] to this error type

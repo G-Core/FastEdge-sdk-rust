@@ -8,9 +8,10 @@ and [Wasmtime](https://wasmtime.dev/) runtime.
 
 Please read through the documentation provided by Gcore.
 
-- FastEdge: [Overview](https://gcore.com/fastedge)
+- FastEdge Overview: [Getting Started](https://gcore.com/docs/fastedge/getting-started)
+- Create a FastEdge App: [Stage 1](https://gcore.com/docs/fastedge/getting-started/create-fastedge-apps#stage-1-create-a-wasm-binary-file)
 - Deploying an App:
-  [Documentation](https://gcore.com/docs/fastedge/getting-started/create-fastedge-apps#stage-2-deploy-an-app)
+  [Stage 2](https://gcore.com/docs/fastedge/getting-started/create-fastedge-apps#stage-2-deploy-an-app)
 
 ## Language Support
 
