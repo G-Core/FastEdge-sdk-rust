@@ -22,7 +22,7 @@ checksum = "0c4b4d0bd25bd0b74681c0ad21497610ce1b7c91b1022cd21c80c6fbdd9476b0"
 
 [[package]]
 name = "backend"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "anyhow",
  "fastedge",
@@ -89,7 +89,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "classification-nn-demo"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "fastedge",
  "form_urlencoded",
@@ -185,7 +185,7 @@ dependencies = [
 
 [[package]]
 name = "dummy"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "anyhow",
  "fastedge",
@@ -221,7 +221,7 @@ dependencies = [
 
 [[package]]
 name = "fastedge"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "anyhow",
  "bytes",
@@ -236,7 +236,7 @@ dependencies = [
 
 [[package]]
 name = "fastedge-derive"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -537,7 +537,7 @@ checksum = "439ee305def115ba05938db6eb1644ff94165c5ab5e9420d1c1bcedbba909391"
 
 [[package]]
 name = "print"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "anyhow",
  "fastedge",
@@ -995,7 +995,7 @@ dependencies = [
 
 [[package]]
 name = "watermark"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "anyhow",
  "fastedge",

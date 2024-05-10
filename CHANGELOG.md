@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.6](https://github.com/G-Core/FastEdge-sdk-rust/compare/v0.1.5...v0.1.6) - 2024-05-10
+
+### Other
+- Merge pull request [#18](https://github.com/G-Core/FastEdge-sdk-rust/pull/18) from G-Core/update_wasmtime
+
 ## [0.1.5](https://github.com/G-Core/FastEdgeSDK/releases/tag/fastedge-v0.1.5) - 2024-05-08
 
 ### Fixed
