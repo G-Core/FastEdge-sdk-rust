@@ -2,6 +2,7 @@
 name = "classification-nn-demo"
 version = {workspace = true}
 edition.workspace = true
+publish = false
 
 [dependencies]
 fastedge = { path = "../../" }
