@@ -62,6 +62,13 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: wasm32-wasi
+
       - name: Run Release PR
         uses: MarcoIeni/release-plz-action@v0.5
         with:
