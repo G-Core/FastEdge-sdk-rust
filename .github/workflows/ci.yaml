@@ -53,8 +53,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     needs: build
     steps:
       - name: Clone repo
