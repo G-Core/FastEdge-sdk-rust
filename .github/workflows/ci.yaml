@@ -4,6 +4,7 @@ on: [push]
 
 env:
   CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-Dwarnings"
 
 jobs:
   build:
@@ -16,41 +17,24 @@ jobs:
           submodules: recursive
 
       - name: Setup Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: stable
           target: wasm32-wasi
           components: rustfmt, clippy
 
-      - name: Build
-        uses: actions-rs/cargo@v1
+      - name: Run cargo-audit binary crate
+        uses: rustsec/audit-check@v1.4.1
         with:
-          command: build
-          args: --release --all-features
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        run: cargo build --release --all-features
 
       - name: Documentation
-        uses: actions-rs/cargo@v1
-        with:
-          command: doc
+        run: cargo doc
 
-      - name: Install cargo-audit binary crate
-        uses: actions-rs/install@v0.1
-        with:
-          crate: cargo-audit
-          version: latest
-          use-tool-cache: true
-
-      - name: Annotate commit with clippy warnings
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features
-
-      - name: Security audit
-        uses: actions-rs/audit-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features
 
   release:
     runs-on: ubuntu-latest
@@ -63,11 +47,10 @@ jobs:
           submodules: recursive
 
       - name: Setup Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: stable
           target: wasm32-wasi
+          components: rustfmt, clippy
 
       - name: Run Release PR
         uses: MarcoIeni/release-plz-action@v0.5
