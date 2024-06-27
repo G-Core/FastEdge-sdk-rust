@@ -23,9 +23,8 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
         _ => return Response::builder().status(StatusCode::METHOD_NOT_ALLOWED).header(header::ALLOW, "GET, HEAD").body(Body::from("This method is not allowed\n"))
     };
 
-    let expected_pass = match env::var("PASSWORD") {
-        Err(_) => return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::from("Misconfigured app\n")),
-        Ok(r) => r
+    let Ok(expected_pass) = env::var("PASSWORD") else {
+        return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::from("Misconfigured app\n"));
     };
     let provided_pass = match req.headers().get(header::AUTHORIZATION) {
         None => return Response::builder().status(StatusCode::FORBIDDEN).body(Body::from("No auth header\n")),
