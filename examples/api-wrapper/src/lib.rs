@@ -13,6 +13,7 @@ use fastedge::{
     http::{header, Error, Method, Request, Response, StatusCode},
 };
 use url::Url;
+use serde_json::{Value, from_str};
 
 const API_BASE: &str = "https://api.smartthings.com/v1/devices/";
 
@@ -28,27 +29,31 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
     };
     let provided_pass = match req.headers().get(header::AUTHORIZATION) {
         None => return Response::builder().status(StatusCode::FORBIDDEN).body(Body::from("No auth header\n")),
-        Some(h) => h.to_str().unwrap(),
+        Some(h) => match h.to_str() {
+            Ok(v) => v,
+            Err(_) => return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::from("cannot process auth header"))
+        }
     };
     if expected_pass != provided_pass {
         return Response::builder().status(StatusCode::FORBIDDEN).body(Body::empty());
     }
 
-    let device = match env::var("DEVICE") {
-        Err(_) => return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::from("Misconfigured app\n")),
-        Ok(r) => r
+    let Ok(device) = env::var("DEVICE") else {
+        return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::from("Misconfigured app\n"))
     };
-    let token = match env::var("TOKEN") {
-        Err(_) => return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::from("Misconfigured app\n")),
-        Ok(r) => r
+    let Ok(token) = env::var("TOKEN") else {
+        return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::from("Misconfigured app\n"))
     };
 
     let wanted_status = match get_device_status(&token, &device) {
-        Err(status) => return Response::builder().status(status).body(Body::empty()),
+        Err(status) => {
+            println!("cannot get device's current status");
+            return Response::builder().status(status).body(Body::empty())
+        },
         Ok(s) => match s.as_str() {
             "off" => "on",
             "on" => "off",
-            _ => return Response::builder().status(StatusCode::NOT_FOUND).body(Body::from("Misconfigured app\n")),
+            _ => return Response::builder().status(StatusCode::NOT_FOUND).body(Body::from("Unsupported device status\n")),
         }
     };
 
@@ -71,23 +76,24 @@ fn get_device_status(token: &str, device: &str) -> Result<String, StatusCode> {
         .header(header::PRAGMA, "no-cache")
         .uri(API_BASE.to_string() + device + "/status")
         .body(Body::empty())
-        .expect("error building the request");
+        .or(Err(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     let rsp = match request(req) {
         Err(status_code) => return Err(status_code),
         Ok(r) => r,
     };
 
-    let json: serde_json::Value = match serde_json::from_str(String::from_utf8(rsp.body().to_vec()).expect("getting device status").as_str()) {
+    let json: Value = match from_str(String::from_utf8(rsp.body().to_vec()).or(Err(StatusCode::INTERNAL_SERVER_ERROR))?.as_str()) {
         Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
         Ok(j) => j
     };
-    let status = match &json["components"]["main"]["switch"]["switch"]["value"] {
-        serde_json::Value::String(s) => s.trim_matches('"'),
-        _ => return Err(StatusCode::NOT_FOUND)
-    };
+    let status = json.get(&"components").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?
+        .get(&"main").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?
+        .get(&"switch").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?
+        .get(&"switch").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?   // this is correct, "switch" two times, this is the structuire of this JSON schema
+        .get(&"value").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?.to_string();
 
-    Ok(status.to_string())
+    Ok(status.trim_matches('"').to_string())
 }
 
 fn send_device_command(token: &str, device: &str, command: &str) -> Result<String, StatusCode> {
@@ -98,25 +104,21 @@ fn send_device_command(token: &str, device: &str, command: &str) -> Result<Strin
         .header(header::AUTHORIZATION, "Bearer ".to_string() + token)
         .uri(API_BASE.to_string() + device + "/commands")
         .body(Body::from("{\"commands\": [{\"capability\": \"switch\", \"command\": \"".to_string() + command + "\"}]}"))
-        .expect("error building the request");
+        .or(Err(StatusCode::INTERNAL_SERVER_ERROR))?;
 
     let rsp = match request(req) {
         Err(status_code) => return Err(status_code),
         Ok(r) => r,
     };
 
-    let json: serde_json::Value = match serde_json::from_str(String::from_utf8(rsp.body().to_vec()).expect("command response").as_str()) {
-        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
-        Ok(j) => j
-    };
-    let status = match &json["results"][0]["status"] {
-        serde_json::Value::String(s) => s.trim_matches('"'),
-        _ => return Err(StatusCode::INTERNAL_SERVER_ERROR)
-    };
+    let json: Value = from_str(String::from_utf8(rsp.body().to_vec()).or(Err(StatusCode::INTERNAL_SERVER_ERROR))?.as_str())
+        .or(Err(StatusCode::INTERNAL_SERVER_ERROR))?;
+    let status = json.get(&"results").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?
+        .as_array().ok_or(StatusCode::INTERNAL_SERVER_ERROR)?[0]
+        .get(&"status").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?.to_string();
 
-    Ok(status.to_string())
+    Ok(status.trim_matches('"').to_string())
 }
-
 
 fn request(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
     let rsp = match fastedge::send_request(req) {
@@ -136,20 +138,19 @@ fn request(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
     let status = rsp.status();
     if is_redirect(status) {
         if let Some(location) = rsp.headers().get(header::LOCATION) {
-            let new_url = match Url::parse(location.to_str().unwrap()) {
-                Ok(u) => u,
-                Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR)
-            };        
+            let new_url = Url::parse(
+                location.to_str().or(Err(StatusCode::INTERNAL_SERVER_ERROR))?)
+                .or(Err(StatusCode::INTERNAL_SERVER_ERROR))?;
 
-            let loc =  new_url.as_str();
-            let host = new_url.host().unwrap().to_string();
+            let loc = new_url.as_str();
+            let host = new_url.host().ok_or(StatusCode::INTERNAL_SERVER_ERROR)?.to_string();
             println!("Redirect to {}", loc);
             let sub_req = Request::builder()
                 .method(Method::GET)
                 .header(header::HOST, host)
                 .uri(loc)
                 .body(Body::empty())
-                .expect("error building the request");
+                .or(Err(StatusCode::INTERNAL_SERVER_ERROR))?;
 
             return request(sub_req);
         }
