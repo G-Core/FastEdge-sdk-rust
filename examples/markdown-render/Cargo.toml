@@ -1,0 +1,13 @@
+[package]
+name = "md_render"
+version = "0.2.0"
+edition = "2021"
+
+[dependencies]
+fastedge = { path = "../../" }
+mime = "0.3.17"
+pulldown-cmark = "0.11"
+url = "2.5"
+
+[lib]
+crate-type = ["cdylib"]
