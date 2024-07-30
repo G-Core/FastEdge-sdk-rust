@@ -1,0 +1,13 @@
+[package]
+name = "key-value"
+version = {workspace = true}
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+fastedge = { path = "../../" }
+anyhow = "1.0"
+querystring = "1.1.0"

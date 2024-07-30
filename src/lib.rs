@@ -10,6 +10,7 @@ pub use http_client::send_request;
 
 pub use crate::exports::gcore::fastedge::http_handler;
 use crate::gcore::fastedge::http::{Error as HttpError, Method, Request, Response};
+pub use crate::gcore::fastedge::key_value;
 
 /// Implementation of Outbound HTTP component
 mod http_client;
@@ -23,7 +24,7 @@ pub mod wasi_nn {
 }
 
 wit_bindgen::generate!({
-    world: "http-reactor",
+    world: "reactor",
     path: "wit",
     pub_export_macro: true
 });
