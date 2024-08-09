@@ -24,13 +24,15 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
             .body("missing param 'store'".into())
             .map_err(Error::msg);
     };
-    let Some(key) = params.iter().find_map(|(k, v)| {
+    let keys = params.iter().filter_map(|(k, v)| {
         if "key".eq_ignore_ascii_case(k) {
-            Some(v)
+            Some(*v)
         } else {
             None
         }
-    }) else {
+    }).collect::<Vec<&str>>();
+
+    if keys.is_empty() {
         return Response::builder()
             .status(StatusCode::BAD_REQUEST)
             .body("missing param 'key'".into())
@@ -43,22 +45,25 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
             .body("store open error".into())
             .map_err(Error::msg);
     };
-    let Ok(value) = store.get(key) else {
-        return Response::builder()
-            .status(StatusCode::BAD_REQUEST)
-            .body("store get error".into())
-            .map_err(Error::msg);
-    };
-
-    let Some(value) = value else {
-        return Response::builder()
-            .status(StatusCode::NOT_FOUND)
-            .body(Body::empty())
-            .map_err(Error::msg);
-    };
+    let mut body = Vec::new();
+    for key in keys {
+        let Ok(value) = store.get(key) else {
+            return Response::builder()
+                .status(StatusCode::BAD_REQUEST)
+                .body("store get error".into())
+                .map_err(Error::msg);
+        };
+        let Some(value) = value else {
+            return Response::builder()
+                .status(StatusCode::NOT_FOUND)
+                .body(Body::empty())
+                .map_err(Error::msg);
+        };
+        body.extend(value);
+    }
 
     let res = Response::builder()
         .status(StatusCode::OK)
-        .body(value.into())?;
+        .body(body.into())?;
     Ok(res)
 }
