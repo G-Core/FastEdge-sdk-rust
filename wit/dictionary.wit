@@ -1,0 +1,6 @@
+interface dictionary {
+  /// Get the value associated with the specified `key`
+  ///
+  /// Returns `ok(none)` if the key does not exist.
+  get: func(name: string) -> option<string>;
+}

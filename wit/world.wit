@@ -4,5 +4,7 @@ world http-reactor {
     import http;
     import http-client;
 
+    import dictionary;
+
     export http-handler;
 }
