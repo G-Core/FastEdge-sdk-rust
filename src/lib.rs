@@ -8,6 +8,7 @@ pub extern crate http;
 pub use fastedge_derive::http;
 pub use http_client::send_request;
 
+#[doc(hidden)]
 pub use crate::exports::gcore::fastedge::http_handler;
 use crate::gcore::fastedge::http::{Error as HttpError, Method, Request, Response};
 
@@ -25,8 +26,14 @@ pub mod wasi_nn {
 wit_bindgen::generate!({
     world: "http-reactor",
     path: "wit",
-    pub_export_macro: true
+    pub_export_macro: true,
 });
+
+
+pub mod dictionary {
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::dictionary::get;
+}
 
 /// Error type returned by [`send_request`]
 #[derive(thiserror::Error, Debug)]
