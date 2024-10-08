@@ -1,10 +1,11 @@
 package gcore:fastedge;
 
-world http-reactor {
+world reactor {
     import http;
     import http-client;
 
     import dictionary;
+    import secret;
 
     export http-handler;
 }
