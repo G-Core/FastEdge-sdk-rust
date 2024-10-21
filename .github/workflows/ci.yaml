@@ -19,7 +19,7 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          target: wasm32-wasi
+          target: wasm32-wasip1
           components: rustfmt, clippy
 
       - name: Run cargo-audit binary crate
@@ -49,7 +49,7 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          target: wasm32-wasi
+          target: wasm32-wasip1
           components: rustfmt, clippy
 
       - name: Run Release PR
