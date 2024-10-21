@@ -26,7 +26,7 @@ The table below summarizes the feature support for language SDKs.
 | Env Variables | Supported | Supported  |
 
 ## Rust toolchain setup:
-- `rustup target add wasm32-wasi`
+- `rustup target add wasm32-wasip1`
 
 # The FastEdge Rust SDK
 
