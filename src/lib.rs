@@ -11,8 +11,7 @@ pub use http_client::send_request;
 #[doc(hidden)]
 pub use crate::exports::gcore::fastedge::http_handler;
 use crate::gcore::fastedge::http::{Error as HttpError, Method, Request, Response};
-#[doc(hidden)]
-pub use crate::gcore::fastedge::secret;
+
 
 
 /// Implementation of Outbound HTTP component
@@ -32,10 +31,16 @@ wit_bindgen::generate!({
     pub_export_macro: true,
 });
 
-
+/// Helper functions for dictionary interface
 pub mod dictionary {
     #[doc(inline)]
     pub use crate::gcore::fastedge::dictionary::get;
+}
+
+/// Helper functions for secret interface
+pub mod secret {
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::secret::get;
 }
 
 /// Error type returned by [`send_request`]
