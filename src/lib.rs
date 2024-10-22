@@ -16,6 +16,8 @@ use crate::gcore::fastedge::http::{Error as HttpError, Method, Request, Response
 
 /// Implementation of Outbound HTTP component
 mod http_client;
+/// FastEdge ProxyWasm module extension
+pub mod proxywasm;
 
 pub mod wasi_nn {
     #![allow(missing_docs)]
