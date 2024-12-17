@@ -43,6 +43,9 @@ pub mod dictionary {
 pub mod secret {
     #[doc(inline)]
     pub use crate::gcore::fastedge::secret::get;
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::secret::get_effective_at;
+    pub use crate::gcore::fastedge::secret::Error;
 }
 
 /// Error type returned by [`send_request`]
