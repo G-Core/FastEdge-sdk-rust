@@ -12,11 +12,13 @@ pub use http_client::send_request;
 pub use crate::exports::gcore::fastedge::http_handler;
 use crate::gcore::fastedge::http::{Error as HttpError, Method, Request, Response};
 
-
+mod utils;
 
 /// Implementation of Outbound HTTP component
 mod http_client;
+
 /// FastEdge ProxyWasm module extension
+#[cfg(feature = "proxywasm")]
 pub mod proxywasm;
 
 pub mod wasi_nn {
@@ -46,6 +48,11 @@ pub mod secret {
     #[doc(inline)]
     pub use crate::gcore::fastedge::secret::get_effective_at;
     pub use crate::gcore::fastedge::secret::Error;
+}
+
+pub mod key_value {
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::key_value::Store;
 }
 
 /// Error type returned by [`send_request`]
