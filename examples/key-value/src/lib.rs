@@ -7,10 +7,7 @@ use fastedge::key_value::Store;
 #[allow(dead_code)]
 #[fastedge::http]
 fn main(req: Request<Body>) -> Result<Response<Body>> {
-    let query = req
-        .uri()
-        .query()
-        .ok_or(anyhow!("no query parameters"))?;
+    let query = req.uri().query().ok_or(anyhow!("no query parameters"))?;
     let params = querystring::querify(query);
     let Some(store) = params.iter().find_map(|(k, v)| {
         if "store".eq_ignore_ascii_case(k) {
@@ -24,13 +21,16 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
             .body("missing param 'store'".into())
             .map_err(Error::msg);
     };
-    let keys = params.iter().filter_map(|(k, v)| {
-        if "key".eq_ignore_ascii_case(k) {
-            Some(*v)
-        } else {
-            None
-        }
-    }).collect::<Vec<&str>>();
+    let keys = params
+        .iter()
+        .filter_map(|(k, v)| {
+            if "key".eq_ignore_ascii_case(k) {
+                Some(*v)
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<&str>>();
 
     if keys.is_empty() {
         return Response::builder()
