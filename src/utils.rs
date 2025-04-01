@@ -1,5 +1,5 @@
- 
- pub(crate) fn deserialize_list(bytes: &[u8]) -> Vec<&[u8]> {
+
+pub(crate) fn deserialize_list(bytes: &[u8]) -> Vec<&[u8]> {
     let mut list = Vec::new();
     if bytes.len() < 4 {
         return list;
@@ -39,7 +39,6 @@ mod tests {
         bytes
     }
 
-    
     #[test]
     fn test_serialize_list() {
         let list = vec![

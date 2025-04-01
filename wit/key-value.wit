@@ -1,6 +1,7 @@
 interface key-value {
   type value = list<u8>;
 
+  /// FastEdge key-value persistent store resource
   resource store {
     /// Open the store with the specified name.
     ///

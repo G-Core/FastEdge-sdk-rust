@@ -1,5 +1,5 @@
 /*
-* Copyright 2024 G-Core Innovations SARL
+* Copyright 2025 G-Core Innovations SARL
 */
 use http::request::Parts;
 

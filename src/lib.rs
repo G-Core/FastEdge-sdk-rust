@@ -1,8 +1,30 @@
 /*
-* Copyright 2024 G-Core Innovations SARL
+* Copyright 2025 G-Core Innovations SARL
 */
 //! # Rust SDK for FastEdge.
-
+//! The `fastedge` crate is being split into two halves:
+//!
+//! * One half of the crate implements FastEdge WebAssembly component model and is intended for working with [WebAssembly components]. This API resides in the root of the `fastedge` crate's namespace.
+//!
+//! * The second half of the crate is for use with the [ProxyWasm] API. This implementation is present in [`fastedge::proxywasm`](`proxywasm`).
+//!
+//! [WebAssembly components]: https://component-model.bytecodealliance.org
+//! [ProxyWasm]: https://github.com/proxy-wasm/spec
+//!
+//! An example of using FastEdge looks like:
+//!
+//! ```
+//! use fastedge::body::Body;
+//! use fastedge::http::{Request, Response, StatusCode};
+//! #[allow(dead_code)]
+//! #[fastedge::http]
+//! fn main(_req: Request<Body>) -> Result<Response<Body>> {
+//!     let res = Response::builder()
+//!         .status(StatusCode::OK)
+//!         .body(Body::empty())?;
+//!     Ok(res)
+//! }
+//! ```
 pub extern crate http;
 
 pub use fastedge_derive::http;
@@ -50,6 +72,8 @@ pub mod secret {
     pub use crate::gcore::fastedge::secret::Error;
 }
 
+/// FastEdge key-value persistent storage.
+/// This module provides an interface for key-value storage, which is implemented by the host.
 pub mod key_value {
     #[doc(inline)]
     pub use crate::gcore::fastedge::key_value::Store;

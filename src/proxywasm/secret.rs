@@ -1,3 +1,7 @@
+//! FastEdge secret storage
+//!
+//! This module provides an interface for secret storage, which is implemented by the host.
+
 use std::ptr::null_mut;
 
 /// Returns a secret value to the corresponding key effective now.

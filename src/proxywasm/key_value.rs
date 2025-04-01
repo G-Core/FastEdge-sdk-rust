@@ -1,3 +1,53 @@
+//! FastEdge key-value persistent storage
+//!
+//! This module provides an interface for key-value storage, which is implemented by the host.
+//!
+//! An example of using FastEdge Key-Value store looks like:
+//!
+//! ```
+//! use fastedge::proxywasm::key_value::Store;
+//! use proxy_wasm::traits::*;
+//! use proxy_wasm::types::*;
+//!
+//! proxy_wasm::main! {{
+//!     proxy_wasm::set_log_level(LogLevel::Trace);
+//!     proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(HttpBodyRoot) });
+//! }}
+//!
+//! struct HttpBodyRoot;
+//!
+//! impl Context for HttpBodyRoot {}
+//!
+//! impl RootContext for HttpBodyRoot {
+//!     fn get_type(&self) -> Option<ContextType> {
+//!         Some(ContextType::HttpContext)
+//!     }
+//!
+//!     fn create_http_context(&self, _: u32) -> Option<Box<dyn HttpContext>> {
+//!         Some(Box::new(HttpBody))
+//!     }
+//! }
+//!
+//! struct HttpBody;
+//!
+//! impl Context for HttpBody {}
+//!
+//! impl HttpContext for HttpBody {
+//!     fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
+//!
+//!         let Ok(store) = Store::open("default") else {
+//!             return Action::Pause;
+//!         };
+//!
+//!         let Ok(r) = store.get("key-3338664") else {
+//!             return Action::Pause;
+//!         };
+//!
+//!         Action::Continue
+//!     }
+//! }
+//! ```
+//!
 use crate::utils;
 use std::ptr::null_mut;
 
@@ -18,10 +68,15 @@ pub struct Store {
 }
 
 impl Store {
+    /// Open the default store.
+    pub fn new() -> Result<Self, Error> {
+        Self::open("default")
+    }
+
     /// Open the store with the specified name.
     ///
     /// `error::no-such-store` will be raised if the `name` is not recognized.
-    pub fn open(name: &str) -> Result<Store, Error> {
+    pub fn open(name: &str) -> Result<Self, Error> {
         let mut return_handler = 0;
         unsafe {
             match super::proxy_kv_store_open(name.as_ptr(), name.len(), &mut return_handler) {

@@ -43,6 +43,6 @@ extern "C" {
         bf_size: usize,
         key_data: *const u8,
         key_size: usize,
-        return_handle: *mut u32
+        return_handle: *mut u32,
     ) -> u32;
 }
