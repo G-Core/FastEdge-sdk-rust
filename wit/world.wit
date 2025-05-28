@@ -6,6 +6,7 @@ world reactor {
 
     import dictionary;
     import secret;
+    import key-value;
 
     export http-handler;
 }

@@ -1,10 +1,10 @@
 /*
-* Copyright 2024 G-Core Innovations SARL
+* Copyright 2025 G-Core Innovations SARL
 */
 use http::request::Parts;
 
-use crate::gcore::fastedge::{http::Method, http_client};
 use crate::body::Body;
+use crate::gcore::fastedge::{http::Method, http_client};
 use crate::Error;
 
 /// implementation of http_client

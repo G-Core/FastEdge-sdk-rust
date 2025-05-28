@@ -5,69 +5,76 @@ BASE - origin server URL. Whateven passed in URL path for this app is concatenan
 */
 
 use fastedge::{
-    http::{
-        header,
-        Request,
-        Response,
-        StatusCode,
-        Method,
-        Error
-    },
-    body::Body
+    body::Body,
+    http::{header, Error, Method, Request, Response, StatusCode},
 };
+use pulldown_cmark::{Options, Parser};
 use std::env;
 use url::Url;
-use pulldown_cmark::{Parser, Options};
 
 #[fastedge::http]
 fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
     match req.method() {
         &Method::GET | &Method::HEAD => (),
-        _ => return Response::builder().status(StatusCode::METHOD_NOT_ALLOWED).header(header::ALLOW, "GET, HEAD").body(Body::from("This method is not allowed\n"))
+        _ => {
+            return Response::builder()
+                .status(StatusCode::METHOD_NOT_ALLOWED)
+                .header(header::ALLOW, "GET, HEAD")
+                .body(Body::from("This method is not allowed\n"))
+        }
     };
 
     let Ok(base) = env::var("BASE") else {
-        return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::from("Misconfigured app\n"))
+        return Response::builder()
+            .status(StatusCode::INTERNAL_SERVER_ERROR)
+            .body(Body::from("Misconfigured app\n"));
     };
     let base = base.trim_end_matches('/').to_string();
 
     let path = req.uri().path();
     if path.is_empty() || path == "/" {
-        return Response::builder().status(StatusCode::BAD_REQUEST).body(Body::from("Missing file path\n"))
+        return Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .body(Body::from("Missing file path\n"));
     }
 
     let Ok(sub_req) = Request::builder()
         .method(Method::GET)
         .header(header::USER_AGENT, "fastedge")
         .uri(base + path)
-        .body(Body::empty()) else {
-            return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::empty());
-        };
+        .body(Body::empty())
+    else {
+        return Response::builder()
+            .status(StatusCode::INTERNAL_SERVER_ERROR)
+            .body(Body::empty());
+    };
 
     let rsp = match request(sub_req) {
         Err(status) => return Response::builder().status(status).body(Body::empty()),
-        Ok(s) => s
+        Ok(s) => s,
     };
     let Ok(md) = String::from_utf8(rsp.body().to_vec()) else {
-        return Response::builder().status(StatusCode::INTERNAL_SERVER_ERROR).body(Body::empty());
+        return Response::builder()
+            .status(StatusCode::INTERNAL_SERVER_ERROR)
+            .body(Body::empty());
     };
 
     let parser = Parser::new_ext(
         md.as_str(),
-        Options::ENABLE_TABLES | Options::ENABLE_FOOTNOTES
+        Options::ENABLE_TABLES | Options::ENABLE_FOOTNOTES,
     );
 
     let mut html = String::new();
     html.push_str("<!DOCTYPE html><html>");
     match env::var("HEAD").ok() {
-        None => {},
+        None => {}
         Some(h) => {
             html.push_str("<head>");
             html.push_str(h.as_str());
             html.push_str("</head>");
         }
     }
-    
+
     html.push_str("<body>");
     pulldown_cmark::html::push_html(&mut html, parser);
     html.push_str("</body></html>");
@@ -88,7 +95,7 @@ fn request(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
                 fastedge::Error::BindgenHttpError(_) => StatusCode::INTERNAL_SERVER_ERROR,
                 fastedge::Error::HttpError(_) => StatusCode::INTERNAL_SERVER_ERROR,
                 fastedge::Error::InvalidBody => StatusCode::BAD_REQUEST,
-                fastedge::Error::InvalidStatusCode(_) => StatusCode::BAD_REQUEST
+                fastedge::Error::InvalidStatusCode(_) => StatusCode::BAD_REQUEST,
             };
             return Err(status_code);
         }
@@ -99,8 +106,11 @@ fn request(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
     if is_redirect(status) {
         if let Some(location) = rsp.headers().get(header::LOCATION) {
             let new_url = Url::parse(
-                location.to_str().or(Err(StatusCode::INTERNAL_SERVER_ERROR))?)
-                .or(Err(StatusCode::INTERNAL_SERVER_ERROR))?;
+                location
+                    .to_str()
+                    .or(Err(StatusCode::INTERNAL_SERVER_ERROR))?,
+            )
+            .or(Err(StatusCode::INTERNAL_SERVER_ERROR))?;
 
             let sub_req = Request::builder()
                 .method(Method::GET)
@@ -128,5 +138,5 @@ const REDIRECT_CODES: &[StatusCode] = &[
 ];
 
 fn is_redirect(status_code: StatusCode) -> bool {
-    return REDIRECT_CODES.contains(&status_code)
+    return REDIRECT_CODES.contains(&status_code);
 }
