@@ -1,5 +1,7 @@
 interface key-value {
   type value = list<u8>;
+  type scan-result = tuple<u32, list<value>>;
+  type zscan-result = tuple<u32, tuple<list<value>, u32>>;
 
   /// FastEdge key-value persistent store resource
   resource store {
@@ -7,19 +9,50 @@ interface key-value {
     ///
     /// `error::no-such-store` will be raised if the `name` is not recognized.
     open: static func(name: string) -> result<store, error>;
+
     /// Get the value associated with the specified `key`
     ///
     /// Returns `ok(none)` if the key does not exist.
     get: func(key: string) -> result<option<value>, error>;
+
     /// Get the values associated with the specified `key` stored in sorted set orderd by u32 index
     ///
     /// Returns empty `Vec` if the key does not exist or min and max are out of index.
     get-by-range: func(key: string, min: u32, max: u32) -> result<list<value>, error>;
+
+    /// A cursor based iterator. This means that at every call of the command, the server returns an updated cursor
+    /// that the user needs to use as the cursor argument in the next call.
+    /// An iteration starts when the cursor is set to 0, and terminates when the cursor returned by the server is 0.
+    /// Optionally it can match glob-style pattern filter on each elements from the retrieved collection.
+    /// This means that if the pattern matches very little elements inside the collection, it will likely return no
+    /// elements in most iterations.
+    ///
+    /// Returns an updated cursor that the user needs to use as the cursor argument in the next call and array of
+    /// elements is a list of keys.
+    scan: func(cursor: u32, pattern: option<string>, count: option<u32>) -> result<scan-result, error>;
+
+    /// A cursor-based interface to scan through a sorted set by key, ensuring that only a limited number of elements
+    /// are returned with each call. An iteration starts when the cursor is set to 0, and terminates when the cursor
+    /// returned by the server is 0.
+    /// Optionally it can match glob-style pattern filter on each elements from the retrieved collection.
+    /// This means that if the pattern matches very little elements inside the collection, it will likely return no
+    /// elements in most iterations.
+    ///
+    /// Returns an updated cursor that the user needs to use as the cursor argument in the next call and array of elements
+    /// contain two elements, a member and its associated score, for every returned element of the Sorted Set.
+    zscan: func(key: string, cursor: u32, pattern: option<string>, count: option<u32>) -> result<zscan-result, error>;
+
     /// Determines whether a given item was added to a Bloom filter.
     ///
     /// Returns one of these replies: 'true' means that, with high probability, item was already added to the filter,
     /// and 'false' means that key does not exist or that item had not been added to the filter.
-    bf-exists: func(bf: string, key: string) -> result<bool, error>;
+    bf-exists: func(key: string, item: string) -> result<bool, error>;
+
+    /// Determines whether a given item was added to a Cuckoo filter.
+    ///
+    /// Returns one of these replies: 'true' means that, with high probability, item was already added to the filter,
+    /// and 'false' means that key does not exist or that item had not been added to the filter.
+    cf-exists: func(key: string, item: string) -> result<bool, error>;
   }
 
   /// The set of errors which may be raised by functions in this interface
