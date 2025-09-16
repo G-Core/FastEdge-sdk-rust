@@ -77,6 +77,8 @@ pub mod secret {
 pub mod key_value {
     #[doc(inline)]
     pub use crate::gcore::fastedge::key_value::Store;
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::key_value::Error;
 }
 
 /// Error type returned by [`send_request`]

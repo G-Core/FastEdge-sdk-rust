@@ -20,13 +20,13 @@ interface key-value {
     get-by-range: func(key: string, min: u32, max: u32) -> result<list-result, error>;
 
     /// Interface to scan through a sorted set by key
-    /// It match glob-style pattern filter on each elements from the retrieved collection.
+    /// It matches glob-style pattern filter on each elements from the retrieved collection.
     ///
     /// Returns an array of elements as a list of value of the Sorted Set.
     get-by-prefix: func(key: string, pattern: string) -> result<list-result, error>;
 
     /// Interface to scan over keys in the store.
-    /// It match glob-style pattern filter on each elements from the retrieved collection.
+    /// It matches glob-style pattern filter on each element from the retrieved collection.
     ///
     /// Returns an array of elements as a list of keys.
     get-keys: func(pattern: string) -> result<list<string>, error>;
