@@ -31,12 +31,6 @@ interface key-value {
     /// Returns an array of elements as a list of keys.
     get-keys: func(pattern: string) -> result<list<string>, error>;
 
-    /// Determines whether a given item was added to a Bloom filter.
-    ///
-    /// Returns one of these replies: 'true' means that, with high probability, item was already added to the filter,
-    /// and 'false' means that key does not exist or that item had not been added to the filter.
-    bf-exists: func(key: string, item: string) -> result<bool, error>;
-
     /// Determines whether a given item was added to a Cuckoo filter.
     ///
     /// Returns one of these replies: 'true' means that, with high probability, item was already added to the filter,
