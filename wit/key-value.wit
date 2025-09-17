@@ -1,7 +1,7 @@
 interface key-value {
   type value = list<u8>;
   type list-result = list<value>;
-  type zlist-result = list<tuple<value, u32>>;
+  type zlist-result = list<tuple<value, f64>>;
 
   /// FastEdge key-value persistent store resource
   resource store {
@@ -21,10 +21,10 @@ interface key-value {
     /// Returns an array of elements as a list of keys.
     scan: func(pattern: string) -> result<list<string>, error>;
 
-    /// Get the values associated with the specified `key` stored in sorted set ordered by u32 index
+    /// Get the values associated with the specified `key` stored in sorted set ordered by f64 score
     ///
     /// Returns empty `Vec` if the key does not exist or min and max are out of index.
-    zrange: func(key: string, min: u32, max: u32) -> result<list-result, error>;
+    zrange: func(key: string, min: f64, max: f64) -> result<list-result, error>;
 
     /// Interface to scan through a sorted set by key
     /// It matches glob-style pattern filter on each elements from the retrieved collection.

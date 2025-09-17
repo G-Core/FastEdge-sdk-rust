@@ -79,7 +79,7 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
     }
 
     body.write_all(b"zrange()\n")?;
-    match store.zrange("myset", 0, 100) {
+    match store.zrange("myset", 0.0, 100.0) {
         Ok(values) => {
             for value in values {
                 body.write_all(b"get_by_range=")?;
