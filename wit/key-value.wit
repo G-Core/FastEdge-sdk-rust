@@ -1,5 +1,7 @@
 interface key-value {
   type value = list<u8>;
+  type list-result = list<value>;
+  type zlist-result = list<tuple<value, f64>>;
 
   /// FastEdge key-value persistent store resource
   resource store {
@@ -7,19 +9,34 @@ interface key-value {
     ///
     /// `error::no-such-store` will be raised if the `name` is not recognized.
     open: static func(name: string) -> result<store, error>;
+
     /// Get the value associated with the specified `key`
     ///
     /// Returns `ok(none)` if the key does not exist.
     get: func(key: string) -> result<option<value>, error>;
-    /// Get the values associated with the specified `key` stored in sorted set orderd by u32 index
+
+    /// Interface to scan over keys in the store.
+    /// It matches glob-style pattern filter on each element from the retrieved collection.
+    ///
+    /// Returns an array of elements as a list of keys.
+    scan: func(pattern: string) -> result<list<string>, error>;
+
+    /// Get the values associated with the specified `key` stored in sorted set ordered by f64 score
     ///
     /// Returns empty `Vec` if the key does not exist or min and max are out of index.
-    get-by-range: func(key: string, min: u32, max: u32) -> result<list<value>, error>;
-    /// Determines whether a given item was added to a Bloom filter.
+    zrange: func(key: string, min: f64, max: f64) -> result<list-result, error>;
+
+    /// Interface to scan through a sorted set by key
+    /// It matches glob-style pattern filter on each elements from the retrieved collection.
+    ///
+    /// Returns an array of elements as a list of value of the Sorted Set.
+    zscan: func(key: string, pattern: string) -> result<zlist-result, error>;
+
+    /// Determines whether a given item was added to a Cuckoo filter.
     ///
     /// Returns one of these replies: 'true' means that, with high probability, item was already added to the filter,
     /// and 'false' means that key does not exist or that item had not been added to the filter.
-    bf-exists: func(bf: string, key: string) -> result<bool, error>;
+    cf-exists: func(key: string, item: string) -> result<bool, error>;
   }
 
   /// The set of errors which may be raised by functions in this interface
@@ -29,6 +46,8 @@ interface key-value {
     /// The requesting component does not have access to the specified store
     /// (which may or may not exist).
     access-denied,
+    /// Some unexpected internal error has occurred.
+    internal-error,
     /// Some implementation-specific error has occurred (e.g. I/O)
     other(string)
   }
