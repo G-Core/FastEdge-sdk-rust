@@ -78,8 +78,8 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
         }
     }
 
-    body.write_all(b"get_by_range()\n")?;
-    match store.get_by_range("myset", 0, 100) {
+    body.write_all(b"zrange()\n")?;
+    match store.zrange("myset", 0, 100) {
         Ok(values) => {
             for value in values {
                 body.write_all(b"get_by_range=")?;
@@ -95,8 +95,8 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
         }
     }
 
-    body.write_all(b"get_keys()\n")?;
-    match store.get_keys("my*") {
+    body.write_all(b"scan()\n")?;
+    match store.scan("my*") {
         Ok(keys) => {
             for key in keys {
                 body.write_all(format!("get_keys={}\n", key).as_bytes())?;
@@ -111,12 +111,12 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
     }
 
     body.write_all(b"get_by_prefix()\n")?;
-    match store.get_by_prefix("myset", "*") {
+    match store.zscan("myset", "*") {
         Ok(values) => {
-            for value in values {
+            for (value, score) in values {
                 body.write_all(b"get_by_prefix=")?;
                 body.extend(value);
-                body.write_all(b"\n")?;
+                body.write_all(format!(", {}\n", score).as_bytes())?;
             }
         }
         Err(error) => {
