@@ -226,7 +226,7 @@ impl Store {
                                     let npos = value.len() - sz;
                                     let score = value.split_off(npos);
                                     let score = f64::from_le_bytes(
-                                        <[u8; 8]>::try_from(&score[0..sz]).unwrap(),
+                                        <[u8; 8]>::try_from(&score[0..sz]).expect("Failed to convert score bytes to f64: expected 8 bytes"),
                                     );
                                     (value, score)
                                 } else {
