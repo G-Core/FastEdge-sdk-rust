@@ -160,6 +160,10 @@ impl Store {
         }
     }
 
+    /// Interface to scan over keys in the store.
+    /// It matches glob-style pattern filter on each element from the retrieved collection.
+    ///
+    /// Returns an array of elements as a list of keys.
     pub fn scan(&self, pattern: &str) -> Result<Vec<String>, Error> {
         let mut return_data: *mut u8 = null_mut();
         let mut return_size: usize = 0;
@@ -192,6 +196,9 @@ impl Store {
         }
     }
 
+    /// Get the values associated with the specified `key` stored in sorted set ordered by f64 score
+    ///
+    /// Returns empty `Vec` if the key does not exist or min and max are out of index.
     pub fn zscan(&self, key: &str, pattern: &str) -> Result<Vec<(Vec<u8>, f64)>, Error> {
         let mut return_data: *mut u8 = null_mut();
         let mut return_size: usize = 0;
@@ -223,6 +230,8 @@ impl Store {
                                     );
                                     (value, score)
                                 } else {
+                                    // return and empty vector and 0.0 score if deserialization fails
+                                    // empty key should never happen
                                     (vec![], 0.0)
                                 }
                             })
