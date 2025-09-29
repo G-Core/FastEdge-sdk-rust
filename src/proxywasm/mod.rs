@@ -27,22 +27,40 @@ extern "C" {
         return_value_size: *mut usize,
     ) -> u32;
 
-    fn proxy_kv_store_get_by_range(
+    fn proxy_kv_store_zrange(
         handle: u32,
         key_data: *const u8,
         key_size: usize,
-        min: u32,
-        max: u32,
+        min: f64,
+        max: f64,
         return_value_data: *mut *mut u8,
         return_value_size: *mut usize,
     ) -> u32;
 
-    fn proxy_kv_store_bf_exists(
+    fn proxy_kv_store_scan(
         handle: u32,
-        bf_data: *const u8,
-        bf_size: usize,
+        pattern_data: *const u8,
+        pattern_size: usize,
+        return_value_data: *mut *mut u8,
+        return_value_size: *mut usize,
+    ) -> u32;
+
+    fn proxy_kv_store_zscan(
+        handle: u32,
         key_data: *const u8,
         key_size: usize,
+        pattern_data: *const u8,
+        pattern_size: usize,
+        return_value_data: *mut *mut u8,
+        return_value_size: *mut usize,
+    ) -> u32;
+
+    fn proxy_kv_store_cf_exists(
+        handle: u32,
+        key_data: *const u8,
+        key_size: usize,
+        item_data: *const u8,
+        item_size: usize,
         return_handle: *mut u32,
     ) -> u32;
 }
