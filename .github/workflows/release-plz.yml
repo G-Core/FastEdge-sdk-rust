@@ -2,6 +2,8 @@ name: Release-plz
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
   release-plz-release:
