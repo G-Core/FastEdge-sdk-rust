@@ -55,7 +55,7 @@ extern "C" {
         return_value_size: *mut usize,
     ) -> u32;
 
-    fn proxy_kv_store_cf_exists(
+    fn proxy_kv_store_bf_exists(
         handle: u32,
         key_data: *const u8,
         key_size: usize,

@@ -32,11 +32,11 @@ interface key-value {
     /// Returns an array of elements as a list of value of the Sorted Set.
     zscan: func(key: string, pattern: string) -> result<zlist-result, error>;
 
-    /// Determines whether a given item was added to a Cuckoo filter.
+    /// Determines whether a given item was added to a Bloom filter.
     ///
     /// Returns one of these replies: 'true' means that, with high probability, item was already added to the filter,
     /// and 'false' means that key does not exist or that item had not been added to the filter.
-    cf-exists: func(key: string, item: string) -> result<bool, error>;
+    bf-exists: func(key: string, item: string) -> result<bool, error>;
   }
 
   /// The set of errors which may be raised by functions in this interface

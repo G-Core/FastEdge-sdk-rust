@@ -248,14 +248,14 @@ impl Store {
         }
     }
 
-    /// Determines whether a given item was added to a Cuckoo filter.
+    /// Determines whether a given item was added to a Bloom filter.
     ///
     /// Returns one of these replies: 'true' means that, with high probability, item was already added to the filter,
     /// and 'false' means that key does not exist or that item had not been added to the filter.
-    pub fn cf_exists(&self, key: &str, item: &str) -> Result<bool, Error> {
+    pub fn bf_exists(&self, key: &str, item: &str) -> Result<bool, Error> {
         let mut return_handler: u32 = 0;
         unsafe {
-            match super::proxy_kv_store_cf_exists(
+            match super::proxy_kv_store_bf_exists(
                 self.handle,
                 key.as_ptr(),
                 key.len(),
