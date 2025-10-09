@@ -116,8 +116,6 @@ impl Store {
                         Ok(None)
                     }
                 }
-                1 => Err(Error::NoSuchStore),
-                2 => Err(Error::AccessDenied),
                 status => Err(Error::Other(format!("unexpected status: {}", status))),
             }
         }
@@ -153,8 +151,6 @@ impl Store {
                         Ok(vec![])
                     }
                 }
-                1 => Err(Error::NoSuchStore),
-                2 => Err(Error::AccessDenied),
                 status => Err(Error::Other(format!("unexpected status: {}", status))),
             }
         }
@@ -189,8 +185,6 @@ impl Store {
                         Ok(vec![])
                     }
                 }
-                1 => Err(Error::NoSuchStore),
-                2 => Err(Error::AccessDenied),
                 status => Err(Error::Other(format!("unexpected status: {}", status))),
             }
         }
@@ -241,8 +235,6 @@ impl Store {
                         Ok(vec![])
                     }
                 }
-                1 => Err(Error::NoSuchStore),
-                2 => Err(Error::AccessDenied),
                 status => Err(Error::Other(format!("unexpected status: {}", status))),
             }
         }
@@ -264,8 +256,6 @@ impl Store {
                 &mut return_handler,
             ) {
                 0 => Ok(return_handler != 0),
-                1 => Err(Error::NoSuchStore),
-                2 => Err(Error::AccessDenied),
                 status => Err(Error::Other(format!("unexpected status: {}", status))),
             }
         }
