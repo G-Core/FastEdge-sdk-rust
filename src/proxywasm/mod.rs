@@ -1,5 +1,6 @@
 pub mod key_value;
 pub mod secret;
+pub mod dictionary;
 
 extern "C" {
     fn proxy_secret_get(
@@ -13,6 +14,13 @@ extern "C" {
         key_data: *const u8,
         key_size: usize,
         at: u32,
+        return_value_data: *mut *mut u8,
+        return_value_size: *mut usize,
+    ) -> u32;
+
+    fn proxy_dictionary_get(
+        key_data: *const u8,
+        key_size: usize,
         return_value_data: *mut *mut u8,
         return_value_size: *mut usize,
     ) -> u32;
