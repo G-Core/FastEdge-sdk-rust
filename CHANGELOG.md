@@ -6,6 +6,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1](https://github.com/G-Core/FastEdge-sdk-rust/compare/v0.2.0...v0.2.1) - 2025-10-09
+
+### Added
+
+- proxy-wasm dictionary interface
+- adding new key-value methods
+- key-value wit interface
+
+### Fixed
+
+- switch-toggle version
+- replaced cuckoo filter with bloom
+- move to a file release-plz
+- added scan and zscan docs
+- added key-value store proxywasm interface
+- changing score type to f64
+- changing interface names to more redis like
+- remove key-value bloom filter interface
+- key-value example
+- simplified the interface for -by-prefix methods
+- improving documentations
+
+### Other
+
+- Merge pull request #40 from G-Core/fix/proxywasm_key_value_error_mapping
+- Update src/proxywasm/key_value.rs
+
 ## [0.1.6](https://github.com/G-Core/FastEdge-sdk-rust/compare/v0.1.5...v0.1.6) - 2024-05-10
 
 ### Other
