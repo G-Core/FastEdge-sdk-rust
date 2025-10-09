@@ -1,2 +1,3 @@
 [workspace]
 git_tag_name = "v{{ version }}"
+allow_dirty = true
