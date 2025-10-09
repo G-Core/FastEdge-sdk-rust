@@ -30,7 +30,7 @@ proxywasm = []
 json = ["serde_json"]
 
 [dependencies]
-fastedge-derive = { path = "derive", version = "0.2" }
+fastedge-derive = { path = "derive", version = "0.3" }
 http = "1.3"
 bytes = "1.10"
 wit-bindgen = "0.46"
