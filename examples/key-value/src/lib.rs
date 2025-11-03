@@ -79,12 +79,12 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
     }
 
     body.write_all(b"zrange()\n")?;
-    match store.zrange("myset", 0.0, 100.0) {
+    match store.zrange_by_score("myset", 0.0, 100.0) {
         Ok(values) => {
-            for value in values {
+            for (value, score) in values {
                 body.write_all(b"get_by_range=")?;
                 body.extend(value);
-                body.write_all(b"\n")?;
+                body.write_all(format!(", {}\n", score).as_bytes())?;
             }
         }
         Err(error) => {

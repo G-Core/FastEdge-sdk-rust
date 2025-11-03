@@ -1,7 +1,5 @@
 interface key-value {
   type value = list<u8>;
-  type list-result = list<value>;
-  type zlist-result = list<tuple<value, f64>>;
 
   /// FastEdge key-value persistent store resource
   resource store {
@@ -21,16 +19,18 @@ interface key-value {
     /// Returns an array of elements as a list of keys.
     scan: func(pattern: string) -> result<list<string>, error>;
 
-    /// Get the values associated with the specified `key` stored in sorted set ordered by f64 score
+    /// Get all the elements with score from the sorted set at `key` with a f64 score between min and max
+    /// (including elements with score equal to min or max). The elements are considered to be ordered from low to high
+    /// scores.
     ///
-    /// Returns empty `Vec` if the key does not exist or min and max are out of index.
-    zrange: func(key: string, min: f64, max: f64) -> result<list-result, error>;
+    /// Returns empty `Vec` if the key does not exist or min and max are out of score.
+    zrange-by-score: func(key: string, min: f64, max: f64) -> result<list<tuple<value, f64>>, error>;
 
     /// Interface to scan through a sorted set by key
     /// It matches glob-style pattern filter on each elements from the retrieved collection.
     ///
     /// Returns an array of elements as a list of value of the Sorted Set.
-    zscan: func(key: string, pattern: string) -> result<zlist-result, error>;
+    zscan: func(key: string, pattern: string) -> result<list<tuple<value, f64>>, error>;
 
     /// Determines whether a given item was added to a Bloom filter.
     ///

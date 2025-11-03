@@ -35,7 +35,7 @@ extern "C" {
         return_value_size: *mut usize,
     ) -> u32;
 
-    fn proxy_kv_store_zrange(
+    fn proxy_kv_store_zrange_by_score(
         handle: u32,
         key_data: *const u8,
         key_size: usize,

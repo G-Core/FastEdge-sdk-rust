@@ -121,15 +121,17 @@ impl Store {
         }
     }
 
-    /// Get the values associated with the specified `key` stored in sorted set
+    /// Get all the elements with score from the sorted set at `key` with a f64 score between min and max
+    /// (including elements with score equal to min or max). The elements are considered to be ordered from low to high
+    /// scores.
     ///
-    /// Returns empty `Vec` if the key does not exist or min and max are out of index.
-    pub fn zrange(&self, key: &str, min: f64, max: f64) -> Result<Vec<Vec<u8>>, Error> {
+    /// Returns empty `Vec` if the key does not exist or min and max are out of score.
+    pub fn zrange_by_score(&self, key: &str, min: f64, max: f64) -> Result<Vec<(Vec<u8>, f64)>, Error> {
         let mut return_data: *mut u8 = null_mut();
         let mut return_size: usize = 0;
 
         unsafe {
-            match super::proxy_kv_store_zrange(
+            match super::proxy_kv_store_zrange_by_score(
                 self.handle,
                 key.as_ptr(),
                 key.len(),
@@ -142,9 +144,24 @@ impl Store {
                     if !return_data.is_null() {
                         let data = Vec::from_raw_parts(return_data, return_size, return_size);
 
-                        let data: Vec<Vec<u8>> = utils::deserialize_list(&data)
+                        let data: Vec<(Vec<u8>, f64)> = utils::deserialize_list(&data)
                             .into_iter()
-                            .map(|v| v.to_vec())
+                            .map(|v| {
+                                let mut value = v.to_vec();
+                                let sz = size_of::<f64>();
+                                if value.len() > sz {
+                                    let npos = value.len() - sz;
+                                    let score = value.split_off(npos);
+                                    let score = f64::from_le_bytes(
+                                        <[u8; 8]>::try_from(&score[0..sz]).expect("Failed to convert score bytes to f64: expected 8 bytes"),
+                                    );
+                                    (value, score)
+                                } else {
+                                    // return and empty vector and 0.0 score if deserialization fails
+                                    // empty key should never happen
+                                    (vec![], 0.0)
+                                }
+                            })
                             .collect();
                         Ok(data)
                     } else {
