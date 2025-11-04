@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1](https://github.com/G-Core/FastEdge-sdk-rust/compare/v0.3.0...v0.3.1) - 2025-11-04
+
+### Added
+
+- add wit submodule for improved dependency management
+
+### Other
+
+- Update src/proxywasm/key_value.rs
+- rename zrange to zrange_by_score and update related documentation
+
 ## [0.2.1](https://github.com/G-Core/FastEdge-sdk-rust/compare/v0.2.0...v0.2.1) - 2025-10-09
 
 ### Added
