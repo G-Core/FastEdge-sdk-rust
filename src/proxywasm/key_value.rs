@@ -157,7 +157,7 @@ impl Store {
                                     );
                                     (value, score)
                                 } else {
-                                    // return and empty vector and 0.0 score if deserialization fails
+                                    // return an empty vector and 0.0 score if deserialization fails
                                     // empty key should never happen
                                     (vec![], 0.0)
                                 }
