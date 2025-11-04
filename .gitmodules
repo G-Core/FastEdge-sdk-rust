@@ -1,3 +1,6 @@
 [submodule "wasi-nn"]
 	path = wasi-nn
 	url = https://github.com/WebAssembly/wasi-nn.git
+[submodule "wit"]
+	path = wit
+	url = https://github.com/G-Core/FastEdge-wit.git
