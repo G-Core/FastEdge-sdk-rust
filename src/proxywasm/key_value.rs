@@ -48,6 +48,8 @@
 //! }
 //! ```
 //!
+
+use std::fmt::Display;
 use crate::utils;
 use std::ptr::null_mut;
 
@@ -65,6 +67,16 @@ pub enum Error {
 
 pub struct Store {
     handle: u32,
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Error::NoSuchStore => write!(f, "no such store"),
+            Error::AccessDenied => write!(f, "access denied"),
+            Error::Other(msg) => write!(f, "other error: {}", msg),
+        }
+    }
 }
 
 impl Store {
