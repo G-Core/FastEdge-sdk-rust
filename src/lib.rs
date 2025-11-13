@@ -81,7 +81,7 @@ pub mod key_value {
     pub use crate::gcore::fastedge::key_value::Error;
 }
 
-/// Helper functions for utils interface
+/// FastEdge-specific utility functions for diagnostics and statistics.
 pub mod utils {
     #[doc(inline)]
     pub use crate::gcore::fastedge::utils::set_user_diag;
