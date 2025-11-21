@@ -1,6 +1,7 @@
 pub mod key_value;
 pub mod secret;
 pub mod dictionary;
+pub mod utils;
 
 extern "C" {
     fn proxy_secret_get(
@@ -70,5 +71,10 @@ extern "C" {
         item_data: *const u8,
         item_size: usize,
         return_handle: *mut u32,
+    ) -> u32;
+
+    fn stats_set_user_diag(
+        value_data: *const u8,
+        value_size: usize,
     ) -> u32;
 }

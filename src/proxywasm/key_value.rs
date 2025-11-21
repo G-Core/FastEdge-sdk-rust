@@ -48,7 +48,9 @@
 //! }
 //! ```
 //!
-use crate::utils;
+
+use std::fmt::Display;
+use crate::helper;
 use std::ptr::null_mut;
 
 /// The set of errors which may be raised by functions in this interface
@@ -65,6 +67,16 @@ pub enum Error {
 
 pub struct Store {
     handle: u32,
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Error::NoSuchStore => write!(f, "no such store"),
+            Error::AccessDenied => write!(f, "access denied"),
+            Error::Other(msg) => write!(f, "other error: {}", msg),
+        }
+    }
 }
 
 impl Store {
@@ -144,7 +156,7 @@ impl Store {
                     if !return_data.is_null() {
                         let data = Vec::from_raw_parts(return_data, return_size, return_size);
 
-                        let data: Vec<(Vec<u8>, f64)> = utils::deserialize_list(&data)
+                        let data: Vec<(Vec<u8>, f64)> = helper::deserialize_list(&data)
                             .into_iter()
                             .map(|v| {
                                 let mut value = v.to_vec();
@@ -193,7 +205,7 @@ impl Store {
                     if !return_data.is_null() {
                         let data = Vec::from_raw_parts(return_data, return_size, return_size);
 
-                        let data: Vec<String> = utils::deserialize_list(&data)
+                        let data: Vec<String> = helper::deserialize_list(&data)
                             .into_iter()
                             .map(|v| String::from_utf8_lossy(v).to_string())
                             .collect();
@@ -228,7 +240,7 @@ impl Store {
                     if !return_data.is_null() {
                         let data = Vec::from_raw_parts(return_data, return_size, return_size);
 
-                        let data: Vec<(Vec<u8>, f64)> = utils::deserialize_list(&data)
+                        let data: Vec<(Vec<u8>, f64)> = helper::deserialize_list(&data)
                             .into_iter()
                             .map(|v| {
                                 let mut value = v.to_vec();

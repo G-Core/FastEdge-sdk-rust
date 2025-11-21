@@ -34,7 +34,7 @@ pub use http_client::send_request;
 pub use crate::exports::gcore::fastedge::http_handler;
 use crate::gcore::fastedge::http::{Error as HttpError, Method, Request, Response};
 
-mod utils;
+mod helper;
 
 /// Implementation of Outbound HTTP component
 mod http_client;
@@ -79,6 +79,12 @@ pub mod key_value {
     pub use crate::gcore::fastedge::key_value::Store;
     #[doc(inline)]
     pub use crate::gcore::fastedge::key_value::Error;
+}
+
+/// FastEdge-specific utility functions for diagnostics and statistics.
+pub mod utils {
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::utils::set_user_diag;
 }
 
 /// Error type returned by [`send_request`]
