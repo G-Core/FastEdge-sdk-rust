@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2](https://github.com/G-Core/FastEdge-sdk-rust/compare/v0.3.1...v0.3.2) - 2025-11-21
+
+### Added
+
+- implement Display trait for Error and add user diagnostics utility
+
+### Other
+
+- Update src/proxywasm/utils.rs
+- Update src/lib.rs
+- rename utils module to helper and update references
+
 ## [0.3.1](https://github.com/G-Core/FastEdge-sdk-rust/compare/v0.3.0...v0.3.1) - 2025-11-04
 
 ### Added
