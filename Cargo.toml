@@ -20,6 +20,14 @@ description = { workspace = true }
 documentation = { workspace = true }
 repository = { workspace = true }
 autoexamples = false
+readme = "README.md"
+keywords = ["wasm", "webassembly", "edge-computing", "serverless", "fastedge"]
+categories = ["wasm", "web-programming", "network-programming"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+targets = ["wasm32-wasip1"]
 
 [lib]
 name = "fastedge"

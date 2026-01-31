@@ -1,3 +1,31 @@
+//! ProxyWasm compatibility layer for FastEdge.
+//!
+//! This module provides a ProxyWasm-compatible API for applications that need to run
+//! in ProxyWasm environments such as Envoy proxy. It exposes the same functionality
+//! as the Component Model API but using FFI (Foreign Function Interface) calls.
+//!
+//! # Usage
+//!
+//! Enable the `proxywasm` feature in your `Cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! fastedge = { version = "0.3", features = ["proxywasm"] }
+//! ```
+//!
+//! # Modules
+//!
+//! - [`key_value`]: Key-value storage operations
+//! - [`secret`]: Secret management
+//! - [`dictionary`]: Dictionary lookups
+//! - [`utils`]: Utility functions
+//!
+//! # Safety
+//!
+//! This module uses `unsafe` FFI calls to interact with the ProxyWasm host.
+//! The public API is designed to be safe, but incorrect use of internal functions
+//! may lead to undefined behavior.
+
 pub mod key_value;
 pub mod secret;
 pub mod dictionary;

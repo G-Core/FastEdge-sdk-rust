@@ -1,4 +1,24 @@
+//! Internal helper functions for data serialization.
 
+/// Deserializes a byte array into a list of byte slices.
+///
+/// This is an internal helper function used by the SDK to deserialize data
+/// returned from the FastEdge runtime.
+///
+/// # Format
+///
+/// The serialized format consists of:
+/// - 4 bytes: number of items (little-endian u32)
+/// - For each item: 4 bytes for size (little-endian u32)
+/// - Followed by the actual data for all items
+///
+/// # Arguments
+///
+/// * `bytes` - The serialized byte array
+///
+/// # Returns
+///
+/// A vector of byte slices, each representing one item from the serialized list.
 pub(crate) fn deserialize_list(bytes: &[u8]) -> Vec<&[u8]> {
     let mut list = Vec::new();
     if bytes.len() < 4 {

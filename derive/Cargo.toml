@@ -3,10 +3,16 @@ name = "fastedge-derive"
 version = { workspace = true }
 edition = "2021"
 license = "Apache-2.0"
-description = { workspace = true }
+description = "Procedural macros for the FastEdge Rust SDK"
 documentation = { workspace = true }
 repository = { workspace = true }
 authors = { workspace = true }
+readme = "README.md"
+keywords = ["wasm", "webassembly", "edge-computing", "macro", "fastedge"]
+categories = ["wasm", "web-programming"]
+
+[package.metadata.docs.rs]
+rustdoc-args = ["--cfg", "docsrs"]
 
 [lib]
 name = "fastedge_derive"
