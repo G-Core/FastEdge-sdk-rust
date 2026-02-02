@@ -91,7 +91,7 @@ use syn::{parse_macro_input, ItemFn};
 ///     // Make a request to a backend service
 ///     let backend_req = Request::builder()
 ///         .method(Method::GET)
-///         .uri(\"https://api.example.com/data\")
+///         .uri("https://api.example.com/data")
 ///         .body(Body::empty())?;
 ///     
 ///     let backend_resp = fastedge::send_request(backend_req)?;
@@ -112,13 +112,13 @@ use syn::{parse_macro_input, ItemFn};
 /// fn main(req: Request<Body>) -> Result<Response<Body>> {
 ///     let query = req.uri()
 ///         .query()
-///         .context(\"Missing query parameters\")?;
+///         .context("Missing query parameters")?;
 ///     
 ///     // Process query...
 ///     
 ///     Response::builder()
 ///         .status(StatusCode::OK)
-///         .body(Body::from(\"Success\"))
+///         .body(Body::from("Success"))
 ///         .map_err(Into::into)
 /// }
 /// ```
