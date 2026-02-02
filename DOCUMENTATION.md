@@ -335,10 +335,10 @@ match secret::get("API_KEY") {
 }
 
 // Get secret effective at a specific time
-use std::time::SystemTime;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 let timestamp = SystemTime::now()
-    .duration_since(SystemTime::UNIX_EPOCH)?
+    .duration_since(UNIX_EPOCH)?
     .as_secs() as u32;
 
 let historical_value = secret::get_effective_at("API_KEY", timestamp)?;

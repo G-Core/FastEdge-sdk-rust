@@ -1,8 +1,9 @@
 //! ProxyWasm compatibility layer for FastEdge.
 //!
-//! This module provides a ProxyWasm-compatible API for applications that need to run
-//! in ProxyWasm environments such as Envoy proxy. It exposes the same functionality
-//! as the Component Model API but using FFI (Foreign Function Interface) calls.
+//! This module provides a ProxyWasm-compatible subset of the FastEdge Component Model APIs
+//! for applications that need to run in ProxyWasm environment. It
+//! currently exposes key-value, secret, dictionary, and related utility operations via
+//! FFI (Foreign Function Interface) calls.
 //!
 //! # Usage
 //!

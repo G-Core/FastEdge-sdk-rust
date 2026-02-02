@@ -44,7 +44,7 @@ use syn::{parse_macro_input, ItemFn};
 /// fn main(_req: Request<Body>) -> Result<Response<Body>> {
 ///     Response::builder()
 ///         .status(StatusCode::OK)
-///         .body(Body::from(\"Hello, World!\"))
+///         .body(Body::from("Hello, World!"))
 ///         .map_err(Into::into)
 /// }
 /// ```
@@ -62,18 +62,18 @@ use syn::{parse_macro_input, ItemFn};
 ///         &Method::GET => {
 ///             Response::builder()
 ///                 .status(StatusCode::OK)
-///                 .body(Body::from(\"GET request received\"))
+///                 .body(Body::from("GET request received"))
 ///                 .map_err(Into::into)
 ///         }
 ///         &Method::POST => {
 ///             let body_data = req.body();
 ///             Response::builder()
 ///                 .status(StatusCode::CREATED)
-///                 .body(Body::from(format!(\"Received {} bytes\", body_data.len())))
+///                 .body(Body::from(format!("Received {} bytes", body_data.len())))
 ///                 .map_err(Into::into)
 ///         }
 ///         _ => {
-///             Err(anyhow!(\"Method not allowed\"))
+///             Err(anyhow!("Method not allowed"))
 ///         }
 ///     }
 /// }
