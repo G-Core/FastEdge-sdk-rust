@@ -1,13 +1,77 @@
 /*
 * Copyright 2025 G-Core Innovations SARL
 */
+//! HTTP client implementation for outbound requests.
+//!
+//! This module provides the HTTP client functionality for making requests to backend services
+//! from your FastEdge application.
+
 use http::request::Parts;
 
 use crate::body::Body;
 use crate::gcore::fastedge::{http::Method, http_client};
 use crate::Error;
 
-/// implementation of http_client
+/// Sends an HTTP request to a backend service.
+///
+/// This function allows your FastEdge application to make outbound HTTP requests
+/// to backend services, APIs, or other web resources.
+///
+/// # Arguments
+///
+/// * `req` - The HTTP request to send
+///
+/// # Returns
+///
+/// Returns the HTTP response from the backend service, or an error if the request fails.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - The HTTP method is not supported
+/// - The request is malformed
+/// - The backend service is unreachable
+/// - The response is invalid
+///
+/// # Examples
+///
+/// ```no_run
+/// use fastedge::body::Body;
+/// use fastedge::http::{Method, Request};
+/// use fastedge::send_request;
+///
+/// // Create a GET request
+/// let request = Request::builder()
+///     .method(Method::GET)
+///     .uri("https://api.example.com/users")
+///     .header("User-Agent", "FastEdge/1.0")
+///     .header("Accept", "application/json")
+///     .body(Body::empty())?;
+///
+/// // Send the request
+/// let response = send_request(request)?;
+///
+/// println!("Status: {}", response.status());
+/// println!("Body length: {}", response.body().len());
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+///
+/// ```no_run
+/// use fastedge::body::Body;
+/// use fastedge::http::{Method, Request};
+/// use fastedge::send_request;
+///
+/// // POST with JSON body
+/// let json_data = r#"{"name": "John", "email": "john@example.com"}"#;
+/// let request = Request::builder()
+///     .method(Method::POST)
+///     .uri("https://api.example.com/users")
+///     .header("Content-Type", "application/json")
+///     .body(Body::from(json_data))?;
+///
+/// let response = send_request(request)?;
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 pub fn send_request(req: ::http::Request<Body>) -> Result<::http::Response<Body>, Error> {
     // convert http::Request<Body> to http_client::Response
     let (parts, body) = req.into_parts();
