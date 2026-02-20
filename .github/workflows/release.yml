@@ -97,12 +97,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PR_NUMBER=$(gh pr create \
+          PR_URL=$(gh pr create \
             --base main \
             --head "${{ steps.release_branch.outputs.branch }}" \
             --title "chore: bump version to ${{ steps.version.outputs.version }}" \
-            --body "Automated version bump for release v${{ steps.version.outputs.version }}" \
-            --json number -q .number)
+            --body "Automated version bump for release v${{ steps.version.outputs.version }}")
+          PR_NUMBER=$(echo "$PR_URL" | grep -oE '[0-9]+$')
           echo "PR_NUMBER=$PR_NUMBER" >> "$GITHUB_ENV"
           gh pr merge "$PR_NUMBER" --squash --delete-branch
 
