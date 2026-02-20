@@ -17,8 +17,8 @@ on:
           - major
 
 jobs:
-  release:
-    name: Release
+  prepare:
+    name: Prepare Release PR
     runs-on: ubuntu-latest
     if: |
       github.repository_owner == 'G-Core' && (
@@ -27,10 +27,11 @@ jobs:
       )
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
@@ -38,11 +39,6 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
-        with:
-          target: wasm32-wasip1
-
-      - name: Install cargo-edit
-        run: cargo install cargo-edit --locked
 
       - name: Determine version bump type
         id: bump
@@ -70,24 +66,76 @@ jobs:
           echo "bump=$BUMP" >> "$GITHUB_OUTPUT"
 
       - name: Bump workspace version
-        run: cargo set-version --bump ${{ steps.bump.outputs.bump }} --workspace
-
-      - name: Get new version
         id: version
         run: |
-          VERSION=$(cargo metadata --no-deps --format-version 1 \
-            | jq -r '.packages[] | select(.name == "fastedge") | .version')
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "New version: v$VERSION"
+          CURRENT=$(grep '^version' Cargo.toml | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          case "${{ steps.bump.outputs.bump }}" in
+            major) MAJOR=$((MAJOR+1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR+1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH+1)) ;;
+          esac
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          sed -i "s/^version = \"[0-9]*\.[0-9]*\.[0-9]*\"/version = \"$NEW_VERSION\"/" Cargo.toml
+          cargo update --workspace
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "New version: v$NEW_VERSION"
 
-      - name: Commit and tag version bump
+      - name: Commit version bump to release branch
+        run: |
+          BRANCH="release/v${{ steps.version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add Cargo.toml Cargo.lock
+          git commit -m "chore: bump version to ${{ steps.version.outputs.version }}"
+          git push origin "$BRANCH"
+
+      - name: Create release PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "release/v${{ steps.version.outputs.version }}" \
+            --title "chore: bump version to ${{ steps.version.outputs.version }}" \
+            --body "Automated version bump for release v${{ steps.version.outputs.version }}"
+
+  publish:
+    name: Publish Release
+    runs-on: ubuntu-latest
+    if: |
+      github.repository_owner == 'G-Core' &&
+      github.event_name == 'push' &&
+      startsWith(github.event.head_commit.message, 'chore: bump version')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          target: wasm32-wasip1
+
+      - name: Get version from Cargo.toml
+        id: version
+        run: |
+          VERSION=$(grep '^version' Cargo.toml | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Publishing version: v$VERSION"
+
+      - name: Tag release
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Cargo.toml Cargo.lock derive/Cargo.toml
-          git commit -m "chore: bump version to ${{ steps.version.outputs.version }}"
           git tag "v${{ steps.version.outputs.version }}"
-          git push origin main --follow-tags
+          git push origin "v${{ steps.version.outputs.version }}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
