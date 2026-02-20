@@ -21,10 +21,8 @@ jobs:
     name: Prepare Release PR
     runs-on: ubuntu-latest
     if: |
-      github.repository_owner == 'G-Core' && (
-        github.event_name == 'workflow_dispatch' ||
-        !startsWith(github.event.head_commit.message, 'chore: bump version')
-      )
+      github.repository_owner == 'G-Core' &&
+      github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
       pull-requests: write
@@ -107,7 +105,8 @@ jobs:
     if: |
       github.repository_owner == 'G-Core' &&
       github.event_name == 'push' &&
-      startsWith(github.event.head_commit.message, 'chore: bump version')
+      (startsWith(github.event.head_commit.message, 'chore: bump version') ||
+       contains(github.event.head_commit.message, 'release/v'))
     permissions:
       contents: write
 
