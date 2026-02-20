@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump type (overrides conventional commit detection)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: |
+      github.repository_owner == 'G-Core' && (
+        github.event_name == 'workflow_dispatch' ||
+        !startsWith(github.event.head_commit.message, 'chore: bump version')
+      )
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          target: wasm32-wasip1
+
+      - name: Install cargo-edit
+        run: cargo install cargo-edit --locked
+
+      - name: Determine version bump type
+        id: bump
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            BUMP="${{ github.event.inputs.bump }}"
+            echo "Manual trigger — using bump: $BUMP"
+          else
+            LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+            if [ -z "$LAST_TAG" ]; then
+              COMMITS=$(git log --pretty=format:"%s%n%b")
+            else
+              COMMITS=$(git log --pretty=format:"%s%n%b" "${LAST_TAG}..HEAD")
+            fi
+
+            BUMP="patch"
+            if echo "$COMMITS" | grep -qE "(BREAKING CHANGE|^[a-z]+(\(.+\))?!:)"; then
+              BUMP="major"
+            elif echo "$COMMITS" | grep -qE "^feat(\(.+\))?:"; then
+              BUMP="minor"
+            fi
+            echo "Detected bump from commits: $BUMP"
+          fi
+
+          echo "bump=$BUMP" >> "$GITHUB_OUTPUT"
+
+      - name: Bump workspace version
+        run: cargo set-version --bump ${{ steps.bump.outputs.bump }} --workspace
+
+      - name: Get new version
+        id: version
+        run: |
+          VERSION=$(cargo metadata --no-deps --format-version 1 \
+            | jq -r '.packages[] | select(.name == "fastedge") | .version')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "New version: v$VERSION"
+
+      - name: Commit and tag version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Cargo.toml Cargo.lock derive/Cargo.toml
+          git commit -m "chore: bump version to ${{ steps.version.outputs.version }}"
+          git tag "v${{ steps.version.outputs.version }}"
+          git push origin main --follow-tags
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ steps.version.outputs.version }}"
+          generate_release_notes: true
+
+      - name: Publish fastedge-derive to crates.io
+        run: cargo publish -p fastedge-derive
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+      - name: Wait for crates.io index to update
+        run: sleep 30
+
+      - name: Publish fastedge to crates.io
+        run: cargo publish -p fastedge
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
