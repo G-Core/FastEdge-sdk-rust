@@ -22,7 +22,7 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "backend"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "anyhow",
  "fastedge",
@@ -185,7 +185,7 @@ dependencies = [
 
 [[package]]
 name = "dummy"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "anyhow",
  "fastedge",
@@ -220,7 +220,7 @@ dependencies = [
 
 [[package]]
 name = "fastedge"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "bytes",
  "fastedge-derive",
@@ -233,7 +233,7 @@ dependencies = [
 
 [[package]]
 name = "fastedge-derive"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -634,7 +634,7 @@ dependencies = [
 
 [[package]]
 name = "key-value"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "anyhow",
  "fastedge",
@@ -783,7 +783,7 @@ dependencies = [
 
 [[package]]
 name = "print"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "anyhow",
  "fastedge",
@@ -898,7 +898,7 @@ checksum = "28d3b2b1366ec20994f1fd18c3c594f05c5dd4bc44d8bb0c1c632c8d6829481f"
 
 [[package]]
 name = "secret"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "anyhow",
  "fastedge",
@@ -988,7 +988,7 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "switch-toggle"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "fastedge",
  "serde",
@@ -1191,7 +1191,7 @@ dependencies = [
 
 [[package]]
 name = "watermark"
-version = "0.3.4"
+version = "0.3.5"
 dependencies = [
  "anyhow",
  "fastedge",
