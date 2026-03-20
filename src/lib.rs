@@ -15,9 +15,14 @@
 //! * **ProxyWasm API**: Compatibility layer for [ProxyWasm] environments (Envoy, etc.).
 //!   Available via the [`fastedge::proxywasm`](`proxywasm`) module when the `proxywasm` feature is enabled.
 //!
+//! * **WASI-HTTP interface**: An alternative to the FastEdge SDK using the standard [WASI-HTTP]
+//!   interface via the [`wstd`] crate.
+//!
 //! [WIT]: https://component-model.bytecodealliance.org/design/wit.html
 //! [WebAssembly components]: https://component-model.bytecodealliance.org
 //! [ProxyWasm]: https://github.com/proxy-wasm/spec
+//! [WASI-HTTP]: https://github.com/WebAssembly/wasi-http
+//! [`wstd`]: https://crates.io/crates/wstd
 //!
 //! ## Features
 //!
@@ -63,6 +68,39 @@
 //! rustup target add wasm32-wasip1
 //! cargo build --target wasm32-wasip1 --release
 //! ```
+//!
+//! ### Using the WASI-HTTP Interface (async, `wstd`)
+//!
+//! As an alternative to the synchronous FastEdge SDK, you can use the standard [WASI-HTTP]
+//! interface via the [`wstd`] crate. This enables an async handler and a proper HTTP client:
+//!
+//! ```no_run
+//! use wstd::http::body::Body;
+//! use wstd::http::{Client, Request, Response};
+//!
+//! #[wstd::http_server]
+//! async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
+//!     let upstream_req = Request::get("https://api.example.com/data")
+//!         .header("accept", "application/json")
+//!         .body(Body::empty())?;
+//!
+//!     let response = Client::new().send(upstream_req).await?;
+//!     Ok(response)
+//! }
+//! ```
+//!
+//! Build with [`cargo-component`] instead of `cargo build`:
+//!
+//! ```bash
+//! cargo install cargo-component
+//! cargo component build --release
+//! ```
+//!
+//! See the [fetch example] for a complete working app and a side-by-side comparison
+//! with the FastEdge SDK approach.
+//!
+//! [`cargo-component`]: https://github.com/bytecodealliance/cargo-component
+//! [fetch example]: https://github.com/G-Core/FastEdge-sdk-rust/tree/main/examples/fetch
 //!
 //! ## Feature Flags
 //!
