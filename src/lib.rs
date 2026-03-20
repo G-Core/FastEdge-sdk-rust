@@ -16,15 +16,13 @@
 //!   Available via the [`fastedge::proxywasm`](`proxywasm`) module when the `proxywasm` feature is enabled.
 //!
 //! * **WASI-HTTP interface**: An alternative to the FastEdge SDK using the standard [WASI-HTTP]
-//!   interface via the [`wstd`] crate. This model uses an **async** handler and a proper HTTP
-//!   client, and requires [`cargo-component`] to build.
+//!   interface via the [`wstd`] crate.
 //!
 //! [WIT]: https://component-model.bytecodealliance.org/design/wit.html
 //! [WebAssembly components]: https://component-model.bytecodealliance.org
 //! [ProxyWasm]: https://github.com/proxy-wasm/spec
 //! [WASI-HTTP]: https://github.com/WebAssembly/wasi-http
 //! [`wstd`]: https://crates.io/crates/wstd
-//! [`cargo-component`]: https://github.com/bytecodealliance/cargo-component
 //!
 //! ## Features
 //!
@@ -100,11 +98,6 @@
 //!
 //! See the [fetch example] for a complete working app and a side-by-side comparison
 //! with the FastEdge SDK approach.
-//!
-//! [WASI-HTTP]: https://github.com/WebAssembly/wasi-http
-//! [`wstd`]: https://crates.io/crates/wstd
-//! [`cargo-component`]: https://github.com/bytecodealliance/cargo-component
-//! [fetch example]: https://github.com/G-Core/FastEdge-examples/tree/main/rust/http/fetch
 //!
 //! ## Feature Flags
 //!
