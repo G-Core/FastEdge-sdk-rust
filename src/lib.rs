@@ -102,7 +102,7 @@
 //! [WASI-HTTP]: https://github.com/WebAssembly/wasi-http
 //! [`wstd`]: https://crates.io/crates/wstd
 //! [`cargo-component`]: https://github.com/bytecodealliance/cargo-component
-//! [fetch example]: https://github.com/fastedge-io/fastedge-examples/tree/main/fetch
+//! [fetch example]: ./examples/fetch
 //!
 //! ## Feature Flags
 //!
