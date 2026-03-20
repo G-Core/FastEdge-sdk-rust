@@ -99,10 +99,8 @@
 //! See the [fetch example] for a complete working app and a side-by-side comparison
 //! with the FastEdge SDK approach.
 //!
-//! [WASI-HTTP]: https://github.com/WebAssembly/wasi-http
-//! [`wstd`]: https://crates.io/crates/wstd
 //! [`cargo-component`]: https://github.com/bytecodealliance/cargo-component
-//! [fetch example]: ./examples/fetch
+//! [fetch example]: https://github.com/G-Core/FastEdge-sdk-rust/tree/main/examples/fetch
 //!
 //! ## Feature Flags
 //!
