@@ -17,8 +17,7 @@
 //!
 //! * **WASI-HTTP interface**: An alternative to the FastEdge SDK using the standard [WASI-HTTP]
 //!   interface via the [`wstd`] crate. This model uses an **async** handler and a proper HTTP
-//!   client, and requires [`cargo-component`] to build. See the
-//!   [fetch example] for a minimal working app and a comparison with the SDK approach.
+//!   client, and requires [`cargo-component`] to build.
 //!
 //! [WIT]: https://component-model.bytecodealliance.org/design/wit.html
 //! [WebAssembly components]: https://component-model.bytecodealliance.org
@@ -26,7 +25,6 @@
 //! [WASI-HTTP]: https://github.com/WebAssembly/wasi-http
 //! [`wstd`]: https://crates.io/crates/wstd
 //! [`cargo-component`]: https://github.com/bytecodealliance/cargo-component
-//! [fetch example]: https://github.com/G-Core/FastEdge-examples/tree/main/rust/http/fetch
 //!
 //! ## Features
 //!
@@ -83,7 +81,7 @@
 //! use wstd::http::{Client, Request, Response};
 //!
 //! #[wstd::http_server]
-//! async fn main(request: Request<Body>) -> anyhow::Result<Response<Body>> {
+//! async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
 //!     let upstream_req = Request::get("https://api.example.com/data")
 //!         .header("accept", "application/json")
 //!         .body(Body::empty())?;
