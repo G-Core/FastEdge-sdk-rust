@@ -99,6 +99,11 @@
 //! See the [fetch example] for a complete working app and a side-by-side comparison
 //! with the FastEdge SDK approach.
 //!
+//! [WASI-HTTP]: https://github.com/WebAssembly/wasi-http
+//! [`wstd`]: https://crates.io/crates/wstd
+//! [`cargo-component`]: https://github.com/bytecodealliance/cargo-component
+//! [fetch example]: https://github.com/fastedge-io/fastedge-examples/tree/main/fetch
+//!
 //! ## Feature Flags
 //!
 //! - `proxywasm` (default): Enable ProxyWasm compatibility layer
