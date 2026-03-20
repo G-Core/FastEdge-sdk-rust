@@ -1,6 +1,6 @@
 [package]
 name = "fetch"
-version = { workspace = true }
+version = "0.1.0"
 edition = "2021"
 publish = false
 
