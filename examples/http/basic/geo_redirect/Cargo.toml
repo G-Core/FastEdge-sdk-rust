@@ -1,3 +1,5 @@
+[workspace]
+
 [package]
 name = "geo_redirect"
 version = "0.1.0"

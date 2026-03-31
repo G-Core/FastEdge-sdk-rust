@@ -1,3 +1,5 @@
+[workspace]
+
 [package]
 name = "key_value_wasi"
 version = "0.1.0"
