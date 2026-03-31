@@ -1,3 +1,5 @@
+[workspace]
+
 [package]
 name = "geo_redirect_wasi"
 version = "0.1.0"
