@@ -9,3 +9,8 @@ target/
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
+
+# FastEdge debugger artifacts
+**/.fastedge/
+**/.debug-port
+**/fastedge-config.test.json
