@@ -1,0 +1,12 @@
+[package]
+name = "key_value"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+proxy-wasm = "0.2"
+fastedge = { version = "0.3", features = ["proxywasm"] }
+querystring = "1.1"

@@ -1,7 +1,5 @@
 [workspace]
-members = ["derive", ".", "examples/*"]
-# examples/fetch is a component-model/WASI-HTTP example built with cargo-component, not plain `cargo build`
-exclude = [ "examples/fetch" ]
+members = ["derive", "."]
 
 [workspace.package]
 version = "0.3.5"

@@ -1,0 +1,13 @@
+[package]
+name = "key_value_wasi"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wstd = "0.6"
+fastedge = "0.3"
+anyhow = "1"
+querystring = "1.1"

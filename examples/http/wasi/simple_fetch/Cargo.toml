@@ -1,0 +1,15 @@
+[package]
+name = "simple_fetch"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wstd = "0.6"
+anyhow = "1"
+
+[package.metadata.component]
+package = "component:simple_fetch"
