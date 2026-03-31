@@ -101,10 +101,12 @@ License compliance checking via FOSSA. Runs on push to ensure all dependencies m
 
 ## Example Build Pattern
 
-Each example is a standalone crate:
+Each example is a **standalone crate** that must be independent of the root workspace. Every example `Cargo.toml` **must** start with an empty `[workspace]` table — this tells Cargo the example is its own workspace root and prevents it from being absorbed by the parent SDK workspace.
 
 ```toml
 # examples/http/basic/hello_world/Cargo.toml
+[workspace]
+
 [package]
 name = "hello-world"
 version = "0.1.0"
@@ -117,6 +119,8 @@ crate-type = ["cdylib"]
 fastedge = { path = "../../../.." }
 anyhow = "1.0"
 ```
+
+**CRITICAL: The `[workspace]` line is required.** Without it, Cargo walks up the directory tree, finds the root `Cargo.toml`, and fails because the example isn't listed as a workspace member. This breaks standalone builds from within the example directory (e.g., from IDE extensions or `cd examples/http/basic/hello_world && cargo build`).
 
 Build: `cargo build --release --package hello-world`
 Output: `target/wasm32-wasip1/release/hello_world.wasm`
