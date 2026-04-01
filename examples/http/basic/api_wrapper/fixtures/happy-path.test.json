@@ -1,0 +1,16 @@
+{
+  "description": "Authenticated GET request - retrieves and toggles device status",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "authorization": "test-password"
+    },
+    "body": ""
+  },
+  "properties": {},
+  "dotenv": {
+    "enabled": true,
+    "path": "./fixtures"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "description": "Country code FR (unmapped) - falls back to BASE_ORIGIN",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "geoip-country-code": "FR"
+    },
+    "body": ""
+  },
+  "properties": {},
+  "dotenv": {
+    "enabled": true,
+    "path": "./fixtures"
+  }
+}

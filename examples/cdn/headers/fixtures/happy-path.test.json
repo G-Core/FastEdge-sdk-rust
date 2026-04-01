@@ -1,0 +1,16 @@
+{
+  "description": "Valid request with host header - exercises header add/set/remove operations",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {},
+    "body": ""
+  },
+  "properties": {}
+}

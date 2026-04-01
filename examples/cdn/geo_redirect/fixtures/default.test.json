@@ -1,0 +1,24 @@
+{
+  "description": "Country code FR (unmapped) - falls back to DEFAULT origin",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "log": {
+    "level": "info"
+  },
+  "properties": {
+    "request.country": "FR",
+    "request.host": "example.com",
+    "request.path": "/test"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}

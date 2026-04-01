@@ -1,0 +1,14 @@
+{
+  "description": "Reads USERNAME env var and PASSWORD secret, forwards as request headers",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {},
+    "body": ""
+  },
+  "properties": {},
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

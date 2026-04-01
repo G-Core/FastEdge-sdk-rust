@@ -1,0 +1,26 @@
+{
+  "description": "All geo properties set - extracts and adds to response headers",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug?test=value",
+    "headers": {},
+    "body": ""
+  },
+  "properties": {
+    "request.url": "https://example.com/test",
+    "request.host": "example.com",
+    "request.path": "/test",
+    "request.scheme": "https",
+    "request.extension": "",
+    "request.query": "another=value",
+    "request.x_real_ip": "203.0.113.1",
+    "request.country": "LU",
+    "request.city": "Luxembourg",
+    "request.asn": "12345",
+    "request.geo.long": "6.1319",
+    "request.geo.lat": "49.6116",
+    "request.country.name": "Luxembourg",
+    "request.region": "LU",
+    "request.continent": "Europe"
+  }
+}

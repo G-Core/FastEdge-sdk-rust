@@ -1,0 +1,13 @@
+{
+  "description": "Request body contains 'Client' - triggers redaction",
+  "request": {
+    "method": "POST",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "content-type": "text/plain",
+      "x-debugger-content": "body-only"
+    },
+    "body": "Hello Client, this is a test message"
+  },
+  "properties": {}
+}

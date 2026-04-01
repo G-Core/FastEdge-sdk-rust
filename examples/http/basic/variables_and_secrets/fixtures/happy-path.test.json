@@ -1,0 +1,14 @@
+{
+  "description": "Returns USERNAME from env var and PASSWORD from secret in response body",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {},
+    "body": ""
+  },
+  "properties": {},
+  "dotenv": {
+    "enabled": true,
+    "path": "./fixtures"
+  }
+}

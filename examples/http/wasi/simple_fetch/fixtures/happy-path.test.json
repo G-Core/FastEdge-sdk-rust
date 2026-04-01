@@ -1,0 +1,12 @@
+{
+  "description": "Fetches from custom URL specified in x-fetch-url header",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "x-fetch-url": "https://httpbin.org/get"
+    },
+    "body": ""
+  },
+  "properties": {}
+}
