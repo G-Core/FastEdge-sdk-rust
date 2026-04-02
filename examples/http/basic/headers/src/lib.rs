@@ -15,9 +15,11 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
     }
 
     // Add custom header from env var
-    builder = builder.header("my-custom-header", &custom_env_var);
+    builder = builder.header("x-my-custom-header", &custom_env_var);
 
     builder
-        .body(Body::from("Returned all headers with a custom header added"))
+        .body(Body::from(
+            "Returned all headers with a custom header added",
+        ))
         .map_err(Into::into)
 }

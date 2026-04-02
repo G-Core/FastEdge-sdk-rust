@@ -1,4 +1,5 @@
 {
+  "appType": "proxy-wasm",
   "description": "All geo properties set - extracts and adds to response headers",
   "request": {
     "method": "GET",

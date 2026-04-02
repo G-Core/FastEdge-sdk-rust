@@ -1,4 +1,5 @@
 {
+  "appType": "proxy-wasm",
   "description": "Valid request with host header - exercises header add/set/remove operations",
   "request": {
     "method": "GET",
@@ -11,6 +12,5 @@
   "response": {
     "headers": {},
     "body": ""
-  },
-  "properties": {}
+  }
 }

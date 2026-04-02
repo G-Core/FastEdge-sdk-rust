@@ -1,16 +1,15 @@
 {
+  "appType": "http-wasm",
   "description": "Country code DE via header - redirects to Germany-specific origin",
   "request": {
     "method": "GET",
-    "url": "http://fastedge-builtin.debug",
+    "path": "/test",
     "headers": {
       "geoip-country-code": "DE"
-    },
-    "body": ""
+    }
   },
-  "properties": {},
   "dotenv": {
     "enabled": true,
-    "path": "./fixtures"
+    "path": "."
   }
 }

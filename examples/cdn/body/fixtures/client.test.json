@@ -1,4 +1,5 @@
 {
+  "appType": "proxy-wasm",
   "description": "Request body contains 'Client' - triggers redaction",
   "request": {
     "method": "POST",
@@ -8,6 +9,5 @@
       "x-debugger-content": "body-only"
     },
     "body": "Hello Client, this is a test message"
-  },
-  "properties": {}
+  }
 }

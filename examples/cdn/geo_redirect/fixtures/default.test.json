@@ -1,4 +1,5 @@
 {
+  "appType": "proxy-wasm",
   "description": "Country code FR (unmapped) - falls back to DEFAULT origin",
   "request": {
     "method": "GET",

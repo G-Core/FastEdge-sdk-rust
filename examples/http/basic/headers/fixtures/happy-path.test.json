@@ -1,17 +1,16 @@
 {
+  "appType": "http-wasm",
   "description": "Echoes request headers back with custom env var header added",
   "request": {
     "method": "GET",
-    "url": "http://fastedge-builtin.debug",
+    "path": "/",
     "headers": {
       "x-test-header": "test-value",
       "accept": "text/plain"
-    },
-    "body": ""
+    }
   },
-  "properties": {},
   "dotenv": {
     "enabled": true,
-    "path": "./fixtures"
+    "path": "."
   }
 }

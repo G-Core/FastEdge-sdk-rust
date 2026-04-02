@@ -1,4 +1,5 @@
 {
+  "appType": "proxy-wasm",
   "description": "Country code DE - redirects to Germany-specific origin",
   "request": {
     "method": "GET",

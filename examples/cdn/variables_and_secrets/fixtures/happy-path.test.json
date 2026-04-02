@@ -1,4 +1,5 @@
 {
+  "appType": "proxy-wasm",
   "description": "Reads USERNAME env var and PASSWORD secret, forwards as request headers",
   "request": {
     "method": "GET",
@@ -6,7 +7,6 @@
     "headers": {},
     "body": ""
   },
-  "properties": {},
   "dotenv": {
     "enabled": true,
     "path": "."
