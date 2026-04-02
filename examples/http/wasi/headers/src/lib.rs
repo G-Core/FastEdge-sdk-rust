@@ -1,10 +1,10 @@
-use fastedge::dictionary;
+use std::env;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
 
 #[wstd::http_server]
 async fn main(request: Request<Body>) -> anyhow::Result<Response<Body>> {
-    let custom_env_var = dictionary::get("MY_CUSTOM_ENV_VAR").unwrap_or_default();
+    let custom_env_var = env::var("MY_CUSTOM_ENV_VAR").unwrap_or_default();
 
     let mut builder = Response::builder().status(200);
 

@@ -1,7 +1,7 @@
 [workspace]
 
 [package]
-name = "headers"
+name = "large_env_variable"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,5 +9,6 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
+wstd = "0.6"
 fastedge = "0.3"
 anyhow = "1"

@@ -1,7 +1,7 @@
 [workspace]
 
 [package]
-name = "geo_redirect"
+name = "large_env_variable"
 version = "0.1.0"
 edition = "2024"
 
@@ -10,3 +10,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 proxy-wasm = "0.2"
+fastedge = { version = "0.3", features = ["proxywasm"] }

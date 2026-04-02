@@ -13,8 +13,8 @@ Required configuration:
   - Environment variable: <COUNTRY_CODE> (optional per-country origin URLs, e.g. US, DE, GB)
 */
 
-use fastedge::proxywasm::dictionary;
 use proxy_wasm::traits::*;
+use std::env;
 use proxy_wasm::types::*;
 
 proxy_wasm::main! {{
@@ -42,7 +42,7 @@ impl Context for GeoRedirectContext {}
 
 impl HttpContext for GeoRedirectContext {
     fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
-        let Some(default_origin) = dictionary::get("DEFAULT") else {
+        let Ok(default_origin) = env::var("DEFAULT") else {
             self.send_http_response(500, vec![], Some(b"App misconfigured - DEFAULT must be set"));
             return Action::Pause;
         };
@@ -57,7 +57,7 @@ impl HttpContext for GeoRedirectContext {
             return Action::Pause;
         }
 
-        let origin = dictionary::get(&country_code).unwrap_or(default_origin);
+        let origin = env::var(&country_code).unwrap_or(default_origin);
         let origin = origin.trim_end_matches('/');
 
         let path = self

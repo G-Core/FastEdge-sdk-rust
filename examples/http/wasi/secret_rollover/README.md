@@ -13,4 +13,4 @@ Compares the current secret value with the value effective at a given slot, retu
 
 ## How Slots Work
 
-Slots use a `>=` matching rule: the slot with the highest value that is `<=` the requested `effective_at` is returned. This supports both index-based and timestamp-based rotation patterns. See the [secret rollover documentation](../../../../FastEdge-sdk-js/github-pages/src/content/docs/reference/fastedge/secret/get-secret-effective-at.md) for detailed examples.
+Slots use a greatest matching rule: the slot with the highest value that is `<=` the requested `effective_at` is returned. This supports both index-based and timestamp-based rotation patterns. See the [secret rollover documentation](../../../../FastEdge-sdk-js/github-pages/src/content/docs/reference/fastedge/secret/get-secret-effective-at.md) for detailed examples.
