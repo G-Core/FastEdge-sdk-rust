@@ -1,6 +1,6 @@
 {
   "appType": "http-wasm",
-  "description": "Country code DE via header - redirects to Germany-specific origin",
+  "description": "Country code FR via header - redirects to France-specific origin",
   "request": {
     "method": "GET",
     "path": "/test",

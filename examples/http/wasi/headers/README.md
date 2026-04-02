@@ -2,7 +2,7 @@
 
 # Headers (WASI)
 
-Echoes all request headers back in the response and adds a custom header from a environment variable.
+Echoes all request headers back in the response and adds a custom header from an environment variable.
 
 ## Configuration
 
