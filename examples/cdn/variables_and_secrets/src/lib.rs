@@ -4,7 +4,7 @@
 /*
 Example CDN app demonstrating environment variables and secrets access.
 
-Reads USERNAME from the dictionary (env vars) and PASSWORD from secrets,
+Reads USERNAME from environment variables and PASSWORD from secrets,
 then forwards both as request headers to the upstream origin.
 
 Required configuration:
@@ -12,8 +12,8 @@ Required configuration:
   - Secret: PASSWORD
 */
 
-use fastedge::proxywasm::dictionary;
 use fastedge::proxywasm::secret;
+use std::env;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
 
@@ -42,7 +42,7 @@ impl Context for VariablesContext {}
 
 impl HttpContext for VariablesContext {
     fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
-        let username = dictionary::get("USERNAME").unwrap_or_default();
+        let username = env::var("USERNAME").unwrap_or_default();
         let password = secret::get("PASSWORD")
             .ok()
             .flatten()

@@ -13,15 +13,15 @@ Required configuration:
   - Environment variable: <COUNTRY_CODE> (optional per-country origin URLs, e.g. US, DE, GB)
 */
 
-use fastedge::dictionary;
+use std::env;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
 
 #[wstd::http_server]
 async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
-    let base_origin = match dictionary::get("BASE_ORIGIN") {
-        Some(origin) => origin,
-        None => {
+    let base_origin = match env::var("BASE_ORIGIN") {
+        Ok(origin) => origin,
+        Err(_) => {
             return Ok(Response::builder()
                 .status(500)
                 .body(Body::from("BASE_ORIGIN is not set"))?);
@@ -36,7 +36,7 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
         .to_string();
 
     let redirect_origin = if !country_code.is_empty() {
-        dictionary::get(&country_code).unwrap_or(base_origin)
+        env::var(&country_code).unwrap_or(base_origin)
     } else {
         base_origin
     };

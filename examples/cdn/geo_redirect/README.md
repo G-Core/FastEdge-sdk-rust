@@ -6,5 +6,5 @@ Routes CDN requests to country-specific origins based on the geoIP country code 
 
 ## Configuration
 
-- Environment variable: `BASE_ORIGIN` — fallback origin URL
+- Environment variable: `DEFAULT` — fallback origin URL
 - Environment variable: `<COUNTRY_CODE>` — optional per-country origin URLs (e.g. `US`, `DE`, `GB`)

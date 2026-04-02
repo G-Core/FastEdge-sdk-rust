@@ -1,0 +1,13 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Request body without 'Client' - passes through unchanged",
+  "request": {
+    "method": "POST",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "content-type": "text/plain",
+      "x-debugger-content": "body-only"
+    },
+    "body": "Hello World, this is a test message"
+  }
+}

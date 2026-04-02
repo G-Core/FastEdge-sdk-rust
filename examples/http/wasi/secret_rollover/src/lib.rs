@@ -5,7 +5,7 @@
 Secret rollover example using slot-based secret retrieval.
 
 Demonstrates how to use `secret::get_effective_at()` with slots to support
-secret rotation. Slots use a `>=` matching rule: the slot with the highest
+secret rotation. Slots use a greatest matching rule: the slot with the highest
 value that is <= the requested `effective_at` is returned.
 
 Example secret configuration:
@@ -60,8 +60,7 @@ async fn main(request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .unwrap_or("TOKEN_SECRET");
 
     // Get the current secret value (latest slot)
-    let current = secret::get(secret_name)
-        .map_err(|e| anyhow!("secret::get failed: {e}"))?;
+    let current = secret::get(secret_name).map_err(|e| anyhow!("secret::get failed: {e}"))?;
 
     // Get the secret effective at the requested slot
     let effective = secret::get_effective_at(secret_name, slot)

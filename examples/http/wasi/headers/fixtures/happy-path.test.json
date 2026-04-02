@@ -1,0 +1,16 @@
+{
+  "appType": "http-wasm",
+  "description": "Echoes request headers back with custom env var header added",
+  "request": {
+    "method": "GET",
+    "path": "/",
+    "headers": {
+      "x-test-header": "test-value",
+      "accept": "text/plain"
+    }
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

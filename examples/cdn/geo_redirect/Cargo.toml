@@ -10,4 +10,3 @@ crate-type = ["cdylib"]
 
 [dependencies]
 proxy-wasm = "0.2"
-fastedge = { version = "0.3", features = ["proxywasm"] }

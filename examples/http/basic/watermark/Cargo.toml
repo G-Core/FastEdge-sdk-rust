@@ -10,7 +10,6 @@ crate-type = ["cdylib"]
 
 [dependencies]
 fastedge = "0.3"
-urlencoding = "2.1"
 url = "2.3"
 image = "0.24"
 rusty-s3 = "0.5"

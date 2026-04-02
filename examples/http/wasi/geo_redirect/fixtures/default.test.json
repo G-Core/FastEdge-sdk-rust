@@ -1,0 +1,12 @@
+{
+  "appType": "http-wasm",
+  "description": "Country code (unmapped) - falls back to BASE_ORIGIN",
+  "request": {
+    "method": "GET",
+    "path": "/test"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

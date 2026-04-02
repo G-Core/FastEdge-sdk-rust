@@ -41,7 +41,8 @@ impl HttpContext for HttpBody {
         if let Some(body_bytes) = self.get_http_request_body(0, body_size) {
             let body_str = String::from_utf8(body_bytes).unwrap();
             if body_str.contains("Client") {
-                let new_body = format!("Original message body ({body_size} bytes) redacted.\n");
+                let new_body =
+                    format!("Client's original message body ({body_size} bytes) redacted.\n");
                 self.set_http_request_body(0, body_size, &new_body.into_bytes());
             }
         }
