@@ -1,0 +1,31 @@
+{
+  "$schema": "https://fastedge-plugin-source/manifest/v1",
+  "repo_id": "fastedge-sdk-rust",
+  "version": "1.0.0",
+  "sources": {
+    "sdk-api": {
+      "files": ["docs/SDK_API.md"],
+      "required": true,
+      "description": "Core SDK API — #[fastedge::http] macro, Body type, Error enum, send_request, type conversions"
+    },
+    "host-services": {
+      "files": ["docs/HOST_SERVICES.md"],
+      "required": true,
+      "description": "Host service modules — key_value::Store, secret, dictionary, utils"
+    },
+  },
+  "target_mapping": {
+    "sdk-api": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/sdk-reference.md",
+      "section": "Rust SDK"
+    },
+    "host-services": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/sdk-reference.md",
+      "section": "Rust SDK"
+    }
+  },
+  "validation": {
+    "mode": "advisory",
+    "strict_fields": ["sdk-api", "host-services"]
+  }
+}

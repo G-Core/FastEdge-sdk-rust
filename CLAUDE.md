@@ -1,5 +1,11 @@
 # AI Agent Instructions for FastEdge Rust SDK
 
+## Governance (REQUIRED)
+
+Read `AGENTS.md` for company-wide agent rules. These are mandatory and override any conflicting behavior. Key rules: never go beyond the assigned task, never change code that was not asked to change, never "improve" or "optimize" without a clear request, always distinguish observations from action requests.
+
+---
+
 ## CRITICAL: Read Smart, Not Everything
 
 **DO NOT read all context files upfront.** This repository uses a **discovery-based context system** to minimize token usage while maximizing effectiveness.
@@ -82,7 +88,7 @@ Use the decision tree in CONTEXT_INDEX.md to determine what to read. **Only read
 
 **Don't:** Read all 5 context docs upfront (~625 lines wasted if you only need one)
 **Don't:** Read `src/lib.rs` (667 lines) end-to-end for a simple ProxyWasm change
-**Don't:** Read DOCUMENTATION.md or AGENTS.md — they are superseded by this system
+**Don't:** Read DOCUMENTATION.md — it is superseded by this system
 **Don't:** Read entire architecture docs when you need one specific section
 **Don't:** Modify `wit/` files directly — they come from the `G-Core/FastEdge-wit` submodule
 

@@ -1,34 +1,42 @@
-# AI Agent Guide
+---
+doc_type: policy
+audience: bot
+lang: en
+tags: ['ai-agents', 'rules', 'critical', 'codex']
+last_modified: 2026-04-02T00:00:00Z
+copyright: '© 2026 gcore.com'
+---
 
-This repository uses a structured, discovery-based context system for AI agents. All agent instructions and project context live in **`CLAUDE.md`** and the **`context/`** directory.
+RULES FOR AI AGENTS
+======================
 
-## For All AI Agents
+TL;DR: Keep command output short. Do not take actions unless asked.
+Do not waste tokens on experiments. Do only what is asked.
 
-1. **Start with `CLAUDE.md`** — the entry point for understanding this repository
-2. **Then read `context/CONTEXT_INDEX.md`** — the discovery hub that maps you to relevant documentation based on your task
-3. **Read only what you need** — the system is designed for just-in-time discovery, not upfront reading
+COMMUNICATION STYLE
+===================
 
-## About the CLAUDE.md Convention
+- Use English by default; if the user writes in another language, use that language
+- Use an informal tone, avoid formal business language
+- Question ideas and suggest alternatives — do not just agree with everything
+- Think for yourself instead of agreeing to be polite
 
-`CLAUDE.md` is a standardized format for AI agent instructions, originally designed for Claude Code but usable by any AI coding agent. It provides:
+INVARIANTS
+==========
 
-- **Discovery pattern** — how to find relevant documentation efficiently
-- **Decision tree** — maps task types to specific documents
-- **Anti-patterns** — what not to do (saves tokens and time)
-- **Quick reference** — tech stack, commands, project structure
+- NEVER do anything beyond the assigned task
+- NEVER change code that was not asked to change
+- NEVER "improve" or "optimize" without a clear request
+- NEVER use scripts for mass code replacements
+- NEVER make architecture decisions on your own
+- ALWAYS keep command output short — every extra line = wasted tokens
+- ALWAYS think before acting — do not repeat checks, remember context
+- ALWAYS ask an expert when the solution is not clear
+- ALWAYS tell apart an observation from an action request:
+  observation ("works oddly") → discuss, DO NOT fix
+  request ("fix this") → act
 
-## Context Directory Structure
+PROJECT CONTEXT
+===============
 
-```
-context/
-├── CONTEXT_INDEX.md               # Read first — documentation map + decision tree
-├── PROJECT_OVERVIEW.md            # Lightweight project overview (~149 lines)
-├── CHANGELOG.md                   # Agent decision log (grep, don't read linearly)
-├── architecture/
-│   ├── SDK_ARCHITECTURE.md        # Core architecture, types, modules (~171 lines)
-│   └── RUNTIME_ARCHITECTURE.md    # WIT, interfaces, ProxyWasm FFI (~134 lines)
-└── development/
-    └── BUILD_AND_CI.md            # Build system, CI pipelines (~142 lines)
-```
-
-All documents are under 171 lines — designed for single-sitting reads.
+see CLAUDE.md
