@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "Runs Hello World example with path and query parameters - expects correct handling and response",
+  "request": {
+    "method": "GET",
+    "path": "/api/hello/world?name=FastEdge&lang=Rust"
+  }
+}

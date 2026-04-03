@@ -1,0 +1,14 @@
+[workspace]
+
+[package]
+name = "properties"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+log = "0.4"
+proxy-wasm = "0.2"
+querystring = "1.1"

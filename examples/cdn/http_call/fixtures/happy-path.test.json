@@ -1,0 +1,10 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Dispatches outbound HTTP call to httpbin.org",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {},
+    "body": ""
+  }
+}

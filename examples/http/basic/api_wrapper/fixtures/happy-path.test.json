@@ -1,0 +1,15 @@
+{
+  "appType": "http-wasm",
+  "description": "Authenticated GET request - retrieves and toggles device status",
+  "request": {
+    "method": "GET",
+    "path": "/",
+    "headers": {
+      "authorization": "test-password"
+    }
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

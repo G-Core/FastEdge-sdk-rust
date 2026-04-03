@@ -1,0 +1,14 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Reads USERNAME env var and PASSWORD secret, forwards as request headers",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {},
+    "body": ""
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

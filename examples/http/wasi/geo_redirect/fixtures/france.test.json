@@ -1,0 +1,15 @@
+{
+  "appType": "http-wasm",
+  "description": "Country code FR via header - redirects to France-specific origin",
+  "request": {
+    "method": "GET",
+    "path": "/test",
+    "headers": {
+      "geoip-country-code": "FR"
+    }
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}
