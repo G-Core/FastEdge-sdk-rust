@@ -39,7 +39,7 @@ Add dependencies to `Cargo.toml`:
 
 ```toml
 [dependencies]
-wstd   = "0.4"
+wstd   = "0.6"
 anyhow = "1.0"
 
 [lib]
@@ -124,10 +124,10 @@ The compiled `.wasm` file is written to `target/wasm32-wasip1/release/`.
 
 ## Build
 
-| Handler path            | Build command                                   |
-| ----------------------- | ----------------------------------------------- |
-| Async (`wstd`)          | `cargo build --target wasm32-wasip2 --release`  |
-| Sync (`fastedge::http`) | `cargo build --target wasm32-wasip1 --release`  |
+| Handler path            | Build command                                  |
+| ----------------------- | ---------------------------------------------- |
+| Async (`wstd`)          | `cargo build --target wasm32-wasip2 --release` |
+| Sync (`fastedge::http`) | `cargo build --target wasm32-wasip1 --release` |
 
 Both commands produce a `.wasm` binary in the respective `target/<target>/release/` directory.
 
@@ -147,17 +147,17 @@ fastedge = { version = "0.3", features = ["json"] }
 
 ## Next Steps
 
-Once your handler compiles, you can access platform host services from within either handler style:
+Once your handler compiles, you can extend it with outbound HTTP and platform host services:
 
-- **Outbound HTTP** — call backend services using `fastedge::send_request` (sync) or `wstd::http::Client` (async)
+- **Outbound HTTP** — call backend services using `fastedge::send_request` (sync) or `wstd::http::Client` (async) — see [SDK_API.md](SDK_API.md)
 - **Key-Value Storage** — read and write persistent data via `fastedge::key_value::Store`
 - **Secrets** — retrieve encrypted credentials via `fastedge::secret::get`
 - **Dictionary** — read static configuration via `fastedge::dictionary::get`
 
-See [HOST_SERVICES.md](HOST_SERVICES.md) for the full host services reference.
+See [HOST_SERVICES.md](HOST_SERVICES.md) for key-value, secrets, dictionary, and utilities.
 
 ## See Also
 
-- [SDK_API.md](SDK_API.md) — Full public API reference for the `fastedge` crate
-- [HOST_SERVICES.md](HOST_SERVICES.md) — Key-value storage, secrets, dictionary, and outbound HTTP
+- [SDK_API.md](SDK_API.md) — Core API: handler macros, Body type, outbound HTTP, error handling
+- [HOST_SERVICES.md](HOST_SERVICES.md) — Key-value storage, secrets, dictionary, utilities
 - [INDEX.md](INDEX.md) — Documentation index

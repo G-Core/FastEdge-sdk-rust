@@ -54,7 +54,7 @@ cleanup() {
 
   # Clean up temp files left by killed generate_file subshells
   # Must happen BEFORE kill -- -$$ which kills this script too
-  rm -f "$DOCS_DIR"/.[A-Z]*.[a-zA-Z0-9]* 2>/dev/null || true
+  rm -f "$DOCS_DIR"/.*.md.[a-zA-Z0-9]* 2>/dev/null || true
   rm -f "$INTERRUPT_FLAG"
 
   # Belt-and-suspenders: kill entire process group (including this script)
@@ -89,7 +89,7 @@ ALL_FILES=("${TIER1_FILES[@]}" "${TIER2_FILES[@]}" "${TIER3_FILES[@]}")
 declare -A SOURCE_FILES
 SOURCE_FILES[SDK_API.md]="src/lib.rs src/http_client.rs derive/src/lib.rs Cargo.toml"
 SOURCE_FILES[HOST_SERVICES.md]="src/lib.rs src/proxywasm/key_value.rs src/proxywasm/secret.rs src/proxywasm/dictionary.rs src/proxywasm/utils.rs"
-SOURCE_FILES[quickstart.md]="Cargo.toml src/lib.rs examples/http/wasi/hello_world/src/lib.rs examples/http/basic/hello_world/src/lib.rs"
+SOURCE_FILES[quickstart.md]="Cargo.toml src/lib.rs examples/http/wasi/hello_world/Cargo.toml examples/http/wasi/hello_world/src/lib.rs examples/http/basic/hello_world/src/lib.rs"
 SOURCE_FILES[INDEX.md]="Cargo.toml"
 
 # =============================================================================
@@ -134,7 +134,7 @@ fi
 mkdir -p "$DOCS_DIR"
 
 # Clean up stale temp files from previous interrupted runs
-rm -f "$DOCS_DIR"/.[A-Z]*.[a-zA-Z0-9]* 2>/dev/null || true
+rm -f "$DOCS_DIR"/.*.md.[a-zA-Z0-9]* 2>/dev/null || true
 
 generate_file() {
   local target="$1"

@@ -108,13 +108,13 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
 
 `#[wstd::http_server]` is an alternative handler macro from the [`wstd`](https://crates.io/crates/wstd) crate. It provides an async handler using the standard WASI-HTTP interface and targets `wasm32-wasip2`.
 
-| Aspect             | `#[fastedge::http]`                  | `#[wstd::http_server]`               |
-| ------------------ | ------------------------------------ | ------------------------------------ |
-| Execution model    | Synchronous                          | Async (`async fn`)                   |
-| HTTP client        | `fastedge::send_request`             | `wstd::http::Client`                 |
-| Body type          | `fastedge::body::Body`               | `wstd::http::body::Body`             |
-| Build target       | `wasm32-wasip1`                      | `wasm32-wasip2`                      |
-| Interface standard | FastEdge-specific WIT                | WASI-HTTP (standard)                 |
+| Aspect             | `#[fastedge::http]`      | `#[wstd::http_server]`   |
+| ------------------ | ------------------------ | ------------------------ |
+| Execution model    | Synchronous              | Async (`async fn`)       |
+| HTTP client        | `fastedge::send_request` | `wstd::http::Client`     |
+| Body type          | `fastedge::body::Body`   | `wstd::http::body::Body` |
+| Build target       | `wasm32-wasip1`          | `wasm32-wasip2`          |
+| Interface standard | FastEdge-specific WIT    | WASI-HTTP (standard)     |
 
 ```rust,no_run
 // wstd async handler — requires wstd dependency and wasm32-wasip2 target
@@ -154,14 +154,14 @@ pub struct Body { /* private fields */ }
 
 ### Constructors
 
-| Constructor                                 | Content-Type                | Notes                                                              |
-| ------------------------------------------- | --------------------------- | ------------------------------------------------------------------ |
-| `Body::from(value: String)`                 | `text/plain; charset=utf-8` |                                                                    |
-| `Body::from(value: &'static str)`           | `text/plain; charset=utf-8` |                                                                    |
-| `Body::from(value: Vec<u8>)`                | `application/octet-stream`  |                                                                    |
-| `Body::from(value: &'static [u8])`          | `application/octet-stream`  |                                                                    |
-| `Body::empty()`                             | `text/plain; charset=utf-8` | Zero-length body                                                   |
-| `Body::try_from(value: serde_json::Value)`  | `application/json`          | Requires `json` feature; returns `Result<Body, serde_json::Error>` |
+| Constructor                                | Content-Type                | Notes                                                              |
+| ------------------------------------------ | --------------------------- | ------------------------------------------------------------------ |
+| `Body::from(value: String)`                | `text/plain; charset=utf-8` |                                                                    |
+| `Body::from(value: &'static str)`          | `text/plain; charset=utf-8` |                                                                    |
+| `Body::from(value: Vec<u8>)`               | `application/octet-stream`  |                                                                    |
+| `Body::from(value: &'static [u8])`         | `application/octet-stream`  |                                                                    |
+| `Body::empty()`                            | `text/plain; charset=utf-8` | Zero-length body                                                   |
+| `Body::try_from(value: serde_json::Value)` | `application/json`          | Requires `json` feature; returns `Result<Body, serde_json::Error>` |
 
 ```rust
 use fastedge::body::Body;
@@ -208,7 +208,7 @@ Content-type is determined at construction time and cannot be changed after crea
 
 | Input type           | Resulting content-type      |
 | -------------------- | --------------------------- |
-| `String` / `&str`    | `text/plain; charset=utf-8` |
+| `String` / `&str`   | `text/plain; charset=utf-8` |
 | `Vec<u8>` / `&[u8]` | `application/octet-stream`  |
 | `serde_json::Value`  | `application/json`          |
 | `Body::empty()`      | `text/plain; charset=utf-8` |
@@ -340,10 +340,10 @@ fn fetch(uri: &str) -> Result<String, Error> {
 
 ## Feature Flags
 
-| Flag        | Default  | Effect                                                                             |
-| ----------- | -------- | ---------------------------------------------------------------------------------- |
-| `proxywasm` | enabled  | Enables the `fastedge::proxywasm` module for ProxyWasm ABI compatibility           |
-| `json`      | disabled | Enables `Body::try_from(serde_json::Value)` and adds `serde_json` as a dependency  |
+| Flag        | Default  | Effect                                                                            |
+| ----------- | -------- | --------------------------------------------------------------------------------- |
+| `proxywasm` | enabled  | Enables the `fastedge::proxywasm` module for ProxyWasm ABI compatibility          |
+| `json`      | disabled | Enables `Body::try_from(serde_json::Value)` and adds `serde_json` as a dependency |
 
 Enable non-default features in `Cargo.toml`:
 

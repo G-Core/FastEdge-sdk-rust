@@ -12,7 +12,7 @@
       "files": ["docs/HOST_SERVICES.md"],
       "required": true,
       "description": "Host service modules — key_value::Store, secret, dictionary, utils"
-    },
+    }
   },
   "target_mapping": {
     "sdk-api": {

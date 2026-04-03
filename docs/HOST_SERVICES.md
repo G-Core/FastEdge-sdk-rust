@@ -2,7 +2,7 @@
 
 Host-provided service modules for key-value storage, secret management, configuration dictionaries, and diagnostic utilities.
 
-All modules described in this file are available when the `proxywasm` feature is enabled (the default). No additional Cargo.toml changes are needed beyond the standard `fastedge` dependency.
+The host-service modules documented here (`fastedge::key_value`, `fastedge::secret`, `fastedge::dictionary`, `fastedge::utils`) are part of the core FastEdge API and are available regardless of whether the `proxywasm` feature is enabled. The `proxywasm` feature only enables the `fastedge::proxywasm::*` compatibility layer. No additional Cargo.toml changes are needed beyond the standard `fastedge` dependency.
 
 ---
 
@@ -332,14 +332,14 @@ fn main(_req: fastedge::http::Request<fastedge::body::Body>) -> anyhow::Result<f
 
 ### When to Use Dictionary vs Key-Value vs Secrets
 
-| Criterion                    | `dictionary`                          | `key_value`                              | `secret`                                    |
-| ---------------------------- | ------------------------------------- | ---------------------------------------- | ------------------------------------------- |
-| **Mutability**               | Read-only; set at deployment time     | Read-only from application code          | Read-only; managed by platform              |
-| **Value type**               | UTF-8 strings only                    | Arbitrary bytes                          | Arbitrary bytes                             |
-| **Advanced data structures** | No                                    | Sorted sets, bloom filters, glob scan    | No                                          |
-| **Confidentiality**          | Not encrypted; visible in config      | Not encrypted at the application layer   | Encrypted at rest; access-controlled        |
+| Criterion                    | `dictionary`                          | `key_value`                               | `secret`                                    |
+| ---------------------------- | ------------------------------------- | ----------------------------------------- | ------------------------------------------- |
+| **Mutability**               | Read-only; set at deployment time     | Read-only from application code           | Read-only; managed by platform              |
+| **Value type**               | UTF-8 strings only                    | Arbitrary bytes                           | Arbitrary bytes                             |
+| **Advanced data structures** | No                                    | Sorted sets, bloom filters, glob scan     | No                                          |
+| **Confidentiality**          | Not encrypted; visible in config      | Not encrypted at the application layer    | Encrypted at rest; access-controlled        |
 | **Typical use cases**        | Feature flags, routing config, tuning | Caching, counters, state, rate-limit data | API keys, tokens, certificates, credentials |
-| **Versioning / rotation**    | No                                    | No                                       | Yes, via `get_effective_at`                 |
+| **Versioning / rotation**    | No                                    | No                                        | Yes, via `get_effective_at`                 |
 
 Use `dictionary` for simple, non-sensitive string configuration that is known at deployment time. Use `key_value` for larger datasets, binary values, or data that requires advanced query patterns. Use `secret` for any value that must be kept confidential.
 
@@ -392,3 +392,4 @@ Do not write sensitive values (secrets, credentials, personally identifiable inf
 
 - [SDK_API.md](SDK_API.md) — Core HTTP handler, `send_request`, `Body`, and the `#[fastedge::http]` macro
 - [quickstart.md](quickstart.md) — Getting started guide
+- [INDEX.md](INDEX.md) — Documentation index
