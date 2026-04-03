@@ -4,11 +4,11 @@ Documentation for the `fastedge` crate (v0.3.5) — a Rust SDK for building edge
 
 ## Documents
 
-| File                                   | Description                                                                  |
-| -------------------------------------- | ---------------------------------------------------------------------------- |
-| [quickstart.md](quickstart.md)         | Getting started: adding the dependency, writing a handler, building to WASM  |
-| [SDK_API.md](SDK_API.md)               | Public API reference: types, traits, macros, error variants, feature flags   |
-| [HOST_SERVICES.md](HOST_SERVICES.md)   | Host-provided services: KV store, secrets, outbound HTTP, request properties |
+| File                                 | Description                                                                  |
+| ------------------------------------ | ---------------------------------------------------------------------------- |
+| [quickstart.md](quickstart.md)       | Getting started: adding the dependency, writing a handler, building to WASM  |
+| [SDK_API.md](SDK_API.md)             | Public API reference: types, traits, macros, error variants, feature flags   |
+| [HOST_SERVICES.md](HOST_SERVICES.md) | Host-provided services: KV store, secrets, outbound HTTP, request properties |
 
 ## Suggested Reading Order
 

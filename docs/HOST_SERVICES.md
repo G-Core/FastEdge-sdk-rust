@@ -291,7 +291,7 @@ fn main(_req: fastedge::http::Request<fastedge::body::Body>) -> anyhow::Result<f
 
 - Never include secret values in HTTP responses, log output, or diagnostic messages.
 - Secret values are returned as raw bytes (`Vec<u8>`). Convert to a string only when the secret is defined as UTF-8 text, and handle the conversion error explicitly.
-- Access to secrets is controlled by platform configuration. Applications that are not authorized for a secret will receive `Ok(None)` rather than an error.
+- Access to secrets is controlled by platform configuration. Unauthorized access returns `Err(secret::Error)`, not `Ok(None)`. `Ok(None)` indicates the secret is not configured or not found.
 - Clear secret material from memory as soon as it is no longer needed. Rust's ownership model helps with this: binding a secret to a local variable ensures it is dropped at the end of its scope.
 
 ---

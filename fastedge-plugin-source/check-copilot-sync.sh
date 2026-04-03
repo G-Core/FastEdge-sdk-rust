@@ -23,8 +23,16 @@ fi
 # --- Check 1: manifest doc files appear in the mapping table ---
 
 # Extract doc/schema paths that appear in mapping table rows (lines starting with '|')
-# grep returns exit code 1 when no lines match, which would abort under set -euo pipefail
-mapping_table_docs=$(grep '^|' "$COPILOT" | grep -oP '`((?:docs|schemas)/[^`]+)`' | tr -d '`' | sort -u || true)
+# Use POSIX-compatible awk instead of grep -P so this works on macOS/BSD grep too
+mapping_table_docs=$(awk '
+  /^\|/ {
+    line = $0
+    while (match(line, /`(docs|schemas)\/[^`]+`/)) {
+      print substr(line, RSTART + 1, RLENGTH - 2)
+      line = substr(line, RSTART + RLENGTH)
+    }
+  }
+' "$COPILOT" | sort -u)
 
 if [ -z "$mapping_table_docs" ]; then
   echo "FAIL: No doc/schema paths found in $COPILOT mapping table — expected backticked docs/ or schemas/ paths in table rows"
