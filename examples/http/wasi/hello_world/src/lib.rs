@@ -8,5 +8,7 @@ async fn main(request: Request<Body>) -> anyhow::Result<Response<Body>> {
     Ok(Response::builder()
         .status(200)
         .header("content-type", "text/plain;charset=UTF-8")
-        .body(Body::from(format!("Hello, you made a request to {url}")))?)
+        .body(Body::from(format!(
+            "Hello, you made a wasi request to {url}"
+        )))?)
 }

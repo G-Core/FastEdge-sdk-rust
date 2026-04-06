@@ -89,18 +89,21 @@
 //! }
 //! ```
 //!
-//! Build with [`cargo-component`] instead of `cargo build`:
+//! Build for WebAssembly using the `wasm32-wasip2` target:
 //!
 //! ```bash
-//! cargo install cargo-component
-//! cargo component build --release
+//! rustup target add wasm32-wasip2
+//! cargo build --target wasm32-wasip2 --release
 //! ```
 //!
-//! See the [fetch example] for a complete working app and a side-by-side comparison
-//! with the FastEdge SDK approach.
+//! Tip: add a `.cargo/config.toml` to your project to avoid passing `--target` every time:
 //!
-//! [`cargo-component`]: https://github.com/bytecodealliance/cargo-component
-//! [fetch example]: https://github.com/G-Core/FastEdge-sdk-rust/tree/main/examples/fetch
+//! ```toml
+//! [build]
+//! target = "wasm32-wasip2"
+//! ```
+//!
+//! Then `cargo build --release` is all you need.
 //!
 //! ## Feature Flags
 //!

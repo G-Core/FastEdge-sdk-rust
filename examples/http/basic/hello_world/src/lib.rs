@@ -9,6 +9,8 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
     Response::builder()
         .status(StatusCode::OK)
         .header("content-type", "text/plain;charset=UTF-8")
-        .body(Body::from(format!("Hello, you made a request to {url}")))
+        .body(Body::from(format!(
+            "Hello, you made a basic request to {url}"
+        )))
         .map_err(Into::into)
 }

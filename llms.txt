@@ -1,0 +1,10 @@
+# fastedge
+
+> Documentation for the `fastedge` crate (v0.3.5) — a Rust SDK for building edge computing applications that compile to WebAssembly and run on the FastEdge platform.
+
+## Documentation
+
+- [FastEdge Rust SDK Documentation](docs/INDEX.md)
+- [Getting Started with FastEdge Rust SDK](docs/quickstart.md)
+- [FastEdge Rust SDK — Host Services](docs/HOST_SERVICES.md)
+- [FastEdge Rust SDK — Core API](docs/SDK_API.md)
