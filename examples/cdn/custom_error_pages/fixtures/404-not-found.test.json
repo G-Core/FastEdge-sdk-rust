@@ -1,0 +1,13 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Origin returns 404 Not Found — custom error page with specific image and message",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "x-debugger-status": "404",
+      "x-debugger-content": "status-only"
+    },
+    "body": ""
+  }
+}

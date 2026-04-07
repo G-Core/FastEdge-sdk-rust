@@ -1,0 +1,18 @@
+[workspace]
+
+[package]
+name = "custom_error_pages"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+proxy-wasm = "0.2"
+handlebars = "6.3"
+serde_json = "1.0"
+regex = "1.10"
+
+[build-dependencies]
+base64 = "0.22"

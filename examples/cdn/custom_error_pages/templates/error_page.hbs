@@ -1,0 +1,40 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>
+      {{status}}
+      -
+      {{message}}
+    </title>
+    <style>
+      {{styles}}
+    </style>
+  </head>
+  <body class='bg-yellow-200 flex items-center justify-center h-screen'>
+    <div class='text-center'>
+      {{#unless image}}
+        <h1 class='text-9xl font-extrabold text-gray-800'>
+          {{status}}
+        </h1>
+      {{/unless}}
+      {{#if image}}
+        <img src='{{image}}' alt='Embedded Image' class='max-h-[60vh] my-auto' />
+      {{/if}}
+      <p class='text-2xl font-semibold text-gray-600 mt-4'>
+
+        {{message}}
+      </p>
+      <p class='text-gray-500 mt-2'>
+
+        {{description}}
+      </p>
+      <a
+        href='/'
+        class='mt-6 inline-block px-6 py-3 bg-orange-600 text-white font-medium text-lg rounded hover:bg-orange-700 transition'
+      >
+        Go Back Home
+      </a>
+    </div>
+  </body>
+</html>

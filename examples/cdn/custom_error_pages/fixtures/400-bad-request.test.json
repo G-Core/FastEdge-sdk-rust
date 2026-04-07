@@ -1,0 +1,13 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Origin returns 400 Bad Request — custom error page with specific image and message",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "x-debugger-status": "400",
+      "x-debugger-content": "status-only"
+    },
+    "body": ""
+  }
+}

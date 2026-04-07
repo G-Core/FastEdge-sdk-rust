@@ -39,6 +39,8 @@ Examples are organized into three categories:
 | [api_wrapper](./http/basic/api_wrapper/) | Wrap multiple API calls to get and toggle device state |
 | [watermark](./http/basic/watermark/) | Read an image from S3 and apply a watermark overlay |
 | [markdown_render](./http/basic/markdown_render/) | Fetch Markdown files and render them to HTML |
+| [s3upload](./http/basic/s3upload/) | Upload files to an S3-compatible bucket via signed URLs |
+| [smart_switch](./http/basic/smart_switch/) | Toggle a SmartThings smart outlet by wrapping multiple API calls |
 
 ### http/wasi (async)
 
@@ -64,6 +66,11 @@ Examples are organized into three categories:
 | [geo_redirect](./cdn/geo_redirect/) | Route requests to country-specific origins based on geoIP |
 | [variables_and_secrets](./cdn/variables_and_secrets/) | Read environment variables and secrets for request forwarding |
 | [large_env_variable](./cdn/large_env_variable/) | Read large (> 64KB) environment variables using the dictionary API |
+| [jwt](./cdn/jwt/) | Validate JWT tokens on incoming requests (signature and expiration) |
+| [md2html](./cdn/md2html/) | Convert Markdown responses from the origin to HTML |
+| [convert_image](./cdn/convert_image/) | Convert images to AVIF format on the fly |
+| [custom_error_pages](./cdn/custom_error_pages/) | Replace error responses with branded HTML pages using Handlebars |
+| [geoblock](./cdn/geoblock/) | Block requests from blacklisted countries with optional time windows |
 
 ## Usage
 
