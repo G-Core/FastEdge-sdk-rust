@@ -129,14 +129,14 @@ The compiled `.wasm` file is written to `target/wasm32-wasip1/release/`.
 | Async (`wstd`)          | `cargo build --target wasm32-wasip2 --release` |
 | Sync (`fastedge::http`) | `cargo build --target wasm32-wasip1 --release` |
 
-Both commands produce a `.wasm` binary in the respective `target/<target>/release/` directory.
+Both commands produce a `.wasm` binary in the respective `target/<target>/release/` directory. Neither path requires `cargo-component`.
 
 ## Feature Flags
 
-| Feature      | Default | Description                               |
-| ------------ | ------- | ----------------------------------------- |
-| `proxywasm`  | yes     | Enable ProxyWasm compatibility layer      |
-| `json`       | no      | Enable JSON body support via `serde_json` |
+| Feature     | Default | Description                               |
+| ----------- | ------- | ----------------------------------------- |
+| `proxywasm` | yes     | Enable ProxyWasm compatibility layer      |
+| `json`      | no      | Enable JSON body support via `serde_json` |
 
 Enable the `json` feature in `Cargo.toml`:
 
@@ -145,19 +145,24 @@ Enable the `json` feature in `Cargo.toml`:
 fastedge = { version = "0.3", features = ["json"] }
 ```
 
+## CDN Apps
+
+CDN applications use a different handler architecture based on proxy-wasm rather than the HTTP handler model described above. They intercept and modify requests passing through the CDN layer and have access to request properties such as geolocation, client IP, and matched CDN rule metadata.
+
+See [CDN_APPS.md](CDN_APPS.md) for the full setup guide, including handler structure, available properties, and build instructions.
+
 ## Next Steps
 
 Once your handler compiles, you can extend it with outbound HTTP and platform host services:
 
 - **Outbound HTTP** — call backend services using `fastedge::send_request` (sync) or `wstd::http::Client` (async) — see [SDK_API.md](SDK_API.md)
-- **Key-Value Storage** — read and write persistent data via `fastedge::key_value::Store`
-- **Secrets** — retrieve encrypted credentials via `fastedge::secret::get`
-- **Dictionary** — read static configuration via `fastedge::dictionary::get`
-
-See [HOST_SERVICES.md](HOST_SERVICES.md) for key-value, secrets, dictionary, and utilities.
+- **Key-Value Storage** — read and write persistent data via `fastedge::key_value::Store` — see [HOST_SERVICES.md](HOST_SERVICES.md)
+- **Secrets** — retrieve encrypted credentials via `fastedge::secret::get` — see [HOST_SERVICES.md](HOST_SERVICES.md)
+- **Dictionary** — read static configuration via `fastedge::dictionary::get` — see [HOST_SERVICES.md](HOST_SERVICES.md)
 
 ## See Also
 
 - [SDK_API.md](SDK_API.md) — Core API: handler macros, Body type, outbound HTTP, error handling
 - [HOST_SERVICES.md](HOST_SERVICES.md) — Key-value storage, secrets, dictionary, utilities
+- [CDN_APPS.md](CDN_APPS.md) — CDN application handler architecture and setup
 - [INDEX.md](INDEX.md) — Documentation index

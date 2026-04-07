@@ -72,7 +72,7 @@ trap cleanup INT TERM
 # Tier 3: Files that summarize all other docs (e.g. INDEX.md)
 # =============================================================================
 
-TIER1_FILES=("SDK_API.md" "HOST_SERVICES.md")
+TIER1_FILES=("SDK_API.md" "HOST_SERVICES.md" "CDN_APPS.md")
 TIER2_FILES=("quickstart.md")
 TIER3_FILES=("INDEX.md")
 
@@ -89,6 +89,7 @@ ALL_FILES=("${TIER1_FILES[@]}" "${TIER2_FILES[@]}" "${TIER3_FILES[@]}")
 declare -A SOURCE_FILES
 SOURCE_FILES[SDK_API.md]="src/lib.rs src/http_client.rs derive/src/lib.rs Cargo.toml"
 SOURCE_FILES[HOST_SERVICES.md]="src/lib.rs src/proxywasm/key_value.rs src/proxywasm/secret.rs src/proxywasm/dictionary.rs src/proxywasm/utils.rs"
+SOURCE_FILES[CDN_APPS.md]="src/proxywasm/mod.rs src/proxywasm/key_value.rs src/proxywasm/secret.rs src/proxywasm/dictionary.rs src/proxywasm/utils.rs examples/cdn/hello_world/src/lib.rs examples/cdn/hello_world/Cargo.toml examples/cdn/custom/src/lib.rs examples/cdn/custom/Cargo.toml examples/cdn/jwt/src/lib.rs examples/cdn/jwt/Cargo.toml examples/cdn/key_value/src/lib.rs examples/cdn/key_value/Cargo.toml examples/cdn/geoblock/src/lib.rs examples/cdn/geoblock/Cargo.toml examples/cdn/variables_and_secrets/src/lib.rs examples/cdn/variables_and_secrets/Cargo.toml"
 SOURCE_FILES[quickstart.md]="Cargo.toml src/lib.rs examples/http/wasi/hello_world/Cargo.toml examples/http/wasi/hello_world/src/lib.rs examples/http/basic/hello_world/src/lib.rs"
 SOURCE_FILES[INDEX.md]="Cargo.toml"
 
