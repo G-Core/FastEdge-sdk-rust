@@ -31,10 +31,7 @@ impl HttpContext for HelloWorld {
         Action::Continue
     }
 
-    fn on_http_request_body(&mut self, _: usize, end_of_stream: bool) -> Action {
-        if !end_of_stream {
-            return Action::Pause;
-        }
+    fn on_http_request_body(&mut self, _: usize, _: bool) -> Action {
         info!("Hello from on_http_request_body");
         Action::Continue
     }
@@ -45,10 +42,7 @@ impl HttpContext for HelloWorld {
         Action::Continue
     }
 
-    fn on_http_response_body(&mut self, _: usize, end_of_stream: bool) -> Action {
-        if !end_of_stream {
-            return Action::Pause;
-        }
+    fn on_http_response_body(&mut self, _: usize, _: bool) -> Action {
         info!("Hello from on_http_response_body");
         Action::Continue
     }

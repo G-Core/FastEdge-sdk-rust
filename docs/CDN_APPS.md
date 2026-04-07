@@ -189,12 +189,14 @@ impl HttpContext for MyApp {
         // Read a request header
         if let Some(auth) = self.get_http_request_header("Authorization") {
             // use auth value
+            let _ = auth;
         }
 
         // Read a request property
         if let Some(path_bytes) = self.get_property(vec!["request.path"]) {
             if let Ok(path) = std::str::from_utf8(&path_bytes) {
                 // use path
+                let _ = path;
             }
         }
 
@@ -304,15 +306,15 @@ Provides persistent key-value storage. The API shape mirrors `fastedge::key_valu
 pub struct Store { /* ... */ }
 ```
 
-| Method                                                  | Return Type                          | Description                                               |
-| ------------------------------------------------------- | ------------------------------------ | --------------------------------------------------------- |
-| `Store::new()`                                          | `Result<Self, Error>`                | Open the default store                                    |
-| `Store::open(name: &str)`                               | `Result<Self, Error>`                | Open a named store                                        |
-| `Store::get(key: &str)`                                 | `Result<Option<Vec<u8>>, Error>`     | Get the value for a key; `None` if key does not exist     |
-| `Store::scan(pattern: &str)`                            | `Result<Vec<String>, Error>`         | List keys matching a glob-style pattern                   |
-| `Store::zrange_by_score(key: &str, min: f64, max: f64)` | `Result<Vec<(Vec<u8>, f64)>, Error>` | Get sorted-set members with scores between min and max    |
-| `Store::zscan(key: &str, pattern: &str)`                | `Result<Vec<(Vec<u8>, f64)>, Error>` | Scan sorted-set members matching a pattern                |
-| `Store::bf_exists(key: &str, item: &str)`               | `Result<bool, Error>`                | Test whether an item is in a Bloom filter                 |
+| Method                                                       | Return Type                          | Description                                               |
+| ------------------------------------------------------------ | ------------------------------------ | --------------------------------------------------------- |
+| `Store::new()`                                               | `Result<Self, Error>`                | Open the default store                                    |
+| `Store::open(name: &str)`                                    | `Result<Self, Error>`                | Open a named store                                        |
+| `Store::get(key: &str)`                                      | `Result<Option<Vec<u8>>, Error>`     | Get the value for a key; `None` if key does not exist     |
+| `Store::scan(pattern: &str)`                                 | `Result<Vec<String>, Error>`         | List keys matching a glob-style pattern                   |
+| `Store::zrange_by_score(key: &str, min: f64, max: f64)`      | `Result<Vec<(Vec<u8>, f64)>, Error>` | Get sorted-set members with scores between min and max    |
+| `Store::zscan(key: &str, pattern: &str)`                     | `Result<Vec<(Vec<u8>, f64)>, Error>` | Scan sorted-set members matching a pattern                |
+| `Store::bf_exists(key: &str, item: &str)`                    | `Result<bool, Error>`                | Test whether an item is in a Bloom filter                 |
 
 #### `Error`
 
@@ -387,10 +389,10 @@ pub fn get(key: &str) -> Result<Option<Vec<u8>>, u32>
 pub fn get_effective_at(key: &str, at: u32) -> Result<Option<Vec<u8>>, u32>
 ```
 
-| Function                               | Return Type                    | Description                                          |
-| -------------------------------------- | ------------------------------ | ---------------------------------------------------- |
-| `get(key: &str)`                       | `Result<Option<Vec<u8>>, u32>` | Get the current value of a secret                    |
-| `get_effective_at(key: &str, at: u32)` | `Result<Option<Vec<u8>>, u32>` | Get the secret value effective at a Unix timestamp   |
+| Function                               | Return Type                    | Description                                        |
+| -------------------------------------- | ------------------------------ | -------------------------------------------------- |
+| `get(key: &str)`                       | `Result<Option<Vec<u8>>, u32>` | Get the current value of a secret                  |
+| `get_effective_at(key: &str, at: u32)` | `Result<Option<Vec<u8>>, u32>` | Get the secret value effective at a Unix timestamp |
 
 **Critical difference from the Component Model version**: The error type is `u32` (a raw host status code), not a typed `Error` enum. Map errors explicitly if you need to distinguish failure causes.
 

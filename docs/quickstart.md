@@ -40,7 +40,7 @@ Add dependencies to `Cargo.toml`:
 ```toml
 [dependencies]
 wstd   = "0.6"
-anyhow = "1.0"
+anyhow = "1"
 
 [lib]
 crate-type = ["cdylib"]
@@ -88,8 +88,8 @@ Add dependencies to `Cargo.toml`:
 
 ```toml
 [dependencies]
-fastedge = "0.3"
-anyhow   = "1.0"
+fastedge = "0.3.5"
+anyhow   = "1"
 
 [lib]
 crate-type = ["cdylib"]
@@ -142,14 +142,14 @@ Enable the `json` feature in `Cargo.toml`:
 
 ```toml
 [dependencies]
-fastedge = { version = "0.3", features = ["json"] }
+fastedge = { version = "0.3.5", features = ["json"] }
 ```
 
 ## CDN Apps
 
 CDN applications use a different handler architecture based on proxy-wasm rather than the HTTP handler model described above. They intercept and modify requests passing through the CDN layer and have access to request properties such as geolocation, client IP, and matched CDN rule metadata.
 
-See [CDN_APPS.md](CDN_APPS.md) for the full setup guide, including handler structure, available properties, and build instructions.
+See [CDN_APPS.md](CDN_APPS.md) for the full setup guide, including handler structure, available properties, host services, and build instructions.
 
 ## Next Steps
 
