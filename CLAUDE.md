@@ -84,6 +84,13 @@ Use the decision tree in CONTEXT_INDEX.md to determine what to read. **Only read
 
 ---
 
+## Platform Constraints (MUST follow in all code and examples)
+
+- **Logging:** Only stdout is captured by the FastEdge platform. `eprint!` / `eprintln!` output is silently lost. Always use `print!` / `println!` (or `log::info!` for CDN apps with proxy-wasm log level configured).
+- **Handler preference:** `#[wstd::http_server]` (async) is the recommended handler for new HTTP apps. `#[fastedge::http]` is legacy. All new examples and documentation should lead with `#[wstd::http_server]`.
+- **CDN apps are independent:** CDN apps (proxy-wasm filters) and HTTP apps (standalone handlers) are separate application types, NOT feature-flag variants. They have different architectures, lifecycles, and API surfaces.
+- **Build targets:** `wasm32-wasip1` for CDN apps + basic HTTP, `wasm32-wasip2` for async HTTP (wstd).
+
 ## Anti-Patterns (What NOT to Do)
 
 **Don't:** Read all 5 context docs upfront (~625 lines wasted if you only need one)
@@ -91,12 +98,15 @@ Use the decision tree in CONTEXT_INDEX.md to determine what to read. **Only read
 **Don't:** Read DOCUMENTATION.md — it is superseded by this system
 **Don't:** Read entire architecture docs when you need one specific section
 **Don't:** Modify `wit/` files directly — they come from the `G-Core/FastEdge-wit` submodule
+**Don't:** Hand-edit `docs/` files — they are generated; update `.generation-config.md` instead
+**Don't:** Use `eprintln!` in any code or examples — output is lost on the platform
 
 **Do:** Read `context/CONTEXT_INDEX.md` first — always
 **Do:** Use grep to search CHANGELOG and large source files
 **Do:** Read `examples/` for real-world usage patterns
 **Do:** Read only sections relevant to your current task
 **Do:** Follow the decision tree for targeted reading
+**Do:** Update `fastedge-plugin-source/.generation-config.md` to change consumer docs, then regenerate
 
 ---
 
@@ -162,6 +172,16 @@ FastEdge-sdk-rust/
 │   │   └── ERROR_CODES.md                 <- Host status codes, SDK errors
 │   └── development/
 │       └── BUILD_AND_CI.md                <- Build system, CI, release, examples
+├── docs/                                  <- Consumer docs (GENERATED — do not hand-edit)
+│   ├── SDK_API.md                         <- Handler macros, Body, send_request, errors
+│   ├── HOST_SERVICES.md                   <- HTTP app host services (Component Model)
+│   ├── CDN_APPS.md                        <- CDN app guide (proxy-wasm lifecycle + API)
+│   ├── quickstart.md                      <- Getting started for HTTP + CDN apps
+│   └── INDEX.md                           <- Doc index with reading order
+├── fastedge-plugin-source/                <- Plugin pipeline contract
+│   ├── manifest.json                      <- Source-to-target mapping for plugin
+│   ├── .generation-config.md              <- Generation instructions (edit THIS to change docs/)
+│   └── generate-docs.sh                   <- Tiered parallel generation script
 ├── src/                                   <- Rust source (core SDK)
 │   ├── lib.rs                             <- Entry point, type conversions
 │   ├── http_client.rs                     <- Outbound HTTP
@@ -211,7 +231,7 @@ grep -r "wit_bindgen" src/
 
 ## Quick Reference
 
-**Tech Stack:** Rust (edition 2021), wit-bindgen 0.46, wasm32-wasip1
+**Tech Stack:** Rust (edition 2021), wit-bindgen 0.46, wasm32-wasip1/wasip2
 **Crate:** `fastedge` v0.3.5 on crates.io
 **Docs:** https://docs.rs/fastedge
 **License:** Apache-2.0
@@ -241,4 +261,4 @@ grep -r "wit_bindgen" src/
 
 ---
 
-**Last Updated**: March 2026
+**Last Updated**: April 2026

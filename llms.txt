@@ -6,5 +6,6 @@
 
 - [FastEdge Rust SDK Documentation](docs/INDEX.md)
 - [Getting Started with FastEdge Rust SDK](docs/quickstart.md)
+- [FastEdge Rust SDK — CDN Apps (Proxy-Wasm)](docs/CDN_APPS.md)
 - [FastEdge Rust SDK — Host Services](docs/HOST_SERVICES.md)
 - [FastEdge Rust SDK — Core API](docs/SDK_API.md)

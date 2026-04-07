@@ -1,7 +1,7 @@
 {
   "$schema": "https://fastedge-plugin-source/manifest/v1",
   "repo_id": "fastedge-sdk-rust",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "sources": {
     "sdk-api": {
       "files": ["docs/SDK_API.md"],
@@ -11,7 +11,98 @@
     "host-services": {
       "files": ["docs/HOST_SERVICES.md"],
       "required": true,
-      "description": "Host service modules — key_value::Store, secret, dictionary, utils"
+      "description": "Host service modules (Component Model) — key_value::Store, secret, dictionary, utils"
+    },
+    "cdn-apps": {
+      "files": ["docs/CDN_APPS.md"],
+      "required": true,
+      "description": "CDN app guide — proxy-wasm lifecycle, fastedge::proxywasm::* API surface, request/response manipulation"
+    },
+
+    "http-hello-world-blueprint": {
+      "files": [
+        "examples/http/wasi/hello_world/src/lib.rs",
+        "examples/http/wasi/hello_world/Cargo.toml"
+      ],
+      "required": true,
+      "description": "HTTP WASI Hello World example — base skeleton blueprint extraction (HTTP Rust)"
+    },
+
+    "cdn-hello-world-blueprint": {
+      "files": [
+        "examples/cdn/hello_world/src/lib.rs",
+        "examples/cdn/hello_world/Cargo.toml"
+      ],
+      "required": true,
+      "description": "CDN Hello World example — base skeleton blueprint extraction (CDN Rust)"
+    },
+
+    "cdn-body-blueprint": {
+      "files": [
+        "examples/cdn/body/src/lib.rs",
+        "examples/cdn/body/Cargo.toml"
+      ],
+      "required": true,
+      "description": "CDN Body manipulation example — scaffold blueprint extraction"
+    },
+    "cdn-body-pattern": {
+      "files": [
+        "examples/cdn/body/src/lib.rs",
+        "examples/cdn/body/Cargo.toml"
+      ],
+      "required": true,
+      "description": "CDN Body manipulation example — docs pattern extraction"
+    },
+
+    "http-key-value-blueprint": {
+      "files": [
+        "examples/http/wasi/key_value/src/lib.rs",
+        "examples/http/wasi/key_value/Cargo.toml"
+      ],
+      "required": true,
+      "description": "HTTP WASI KV Store example — scaffold blueprint extraction"
+    },
+    "http-key-value-pattern": {
+      "files": [
+        "examples/http/wasi/key_value/src/lib.rs",
+        "examples/http/wasi/key_value/Cargo.toml"
+      ],
+      "required": true,
+      "description": "HTTP WASI KV Store example — docs pattern extraction"
+    },
+
+    "cdn-jwt-blueprint": {
+      "files": [
+        "examples/cdn/jwt/src/lib.rs",
+        "examples/cdn/jwt/Cargo.toml"
+      ],
+      "required": true,
+      "description": "CDN JWT Auth example — scaffold blueprint extraction"
+    },
+    "cdn-jwt-pattern": {
+      "files": [
+        "examples/cdn/jwt/src/lib.rs",
+        "examples/cdn/jwt/Cargo.toml"
+      ],
+      "required": true,
+      "description": "CDN JWT Auth example — docs pattern extraction"
+    },
+
+    "cdn-geoblock-blueprint": {
+      "files": [
+        "examples/cdn/geoblock/src/lib.rs",
+        "examples/cdn/geoblock/Cargo.toml"
+      ],
+      "required": true,
+      "description": "CDN Geoblock example — scaffold blueprint extraction"
+    },
+    "cdn-geoblock-pattern": {
+      "files": [
+        "examples/cdn/geoblock/src/lib.rs",
+        "examples/cdn/geoblock/Cargo.toml"
+      ],
+      "required": true,
+      "description": "CDN Geoblock example — docs pattern extraction"
     }
   },
   "target_mapping": {
@@ -22,10 +113,60 @@
     "host-services": {
       "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/sdk-reference.md",
       "section": "Rust SDK"
+    },
+    "cdn-apps": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn-apps-rust.md",
+      "section": null
+    },
+
+    "http-hello-world-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/base-http-rust.md",
+      "section": null
+    },
+
+    "cdn-hello-world-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/base-cdn-rust.md",
+      "section": null
+    },
+
+    "cdn-body-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn-rust-body.md",
+      "section": null
+    },
+    "cdn-body-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/examples-rust-body.md",
+      "section": null
+    },
+
+    "http-key-value-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http-rust-kv-store.md",
+      "section": null
+    },
+    "http-key-value-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/examples-rust-kv-store.md",
+      "section": null
+    },
+
+    "cdn-jwt-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn-rust-auth-jwt.md",
+      "section": null
+    },
+    "cdn-jwt-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/examples-rust-auth-jwt.md",
+      "section": null
+    },
+
+    "cdn-geoblock-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn-rust-geoblock.md",
+      "section": null
+    },
+    "cdn-geoblock-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/examples-rust-geoblock.md",
+      "section": null
     }
   },
   "validation": {
     "mode": "advisory",
-    "strict_fields": ["sdk-api", "host-services"]
+    "strict_fields": ["sdk-api", "host-services", "cdn-apps", "http-hello-world-blueprint", "cdn-hello-world-blueprint"]
   }
 }
