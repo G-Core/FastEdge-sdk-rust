@@ -49,15 +49,16 @@ impl HttpContext for HttpBody {
     }
 
     fn on_http_response_body(&mut self, _body_size: usize, end_of_stream: bool) -> Action {
-        // only process error responses
-        let mut status_code = 200;
-        if let Some(status) = self.get_property(vec!["response.status"]) {
-            if status.len() == 2 {
-                status_code = u16::from_be_bytes([status[0], status[1]]);
-                if !(400..600).contains(&status_code) {
-                    return Action::Continue;
-                }
-            }
+        // only process 4xx/5xx error responses
+        let Some(status) = self.get_property(vec!["response.status"]) else {
+            return Action::Continue;
+        };
+        if status.len() != 2 {
+            return Action::Continue;
+        }
+        let status_code = u16::from_be_bytes([status[0], status[1]]);
+        if !(400..600).contains(&status_code) {
+            return Action::Continue;
         }
 
         if !end_of_stream {

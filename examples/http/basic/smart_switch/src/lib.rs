@@ -90,7 +90,7 @@ fn get_device_status(token: &str, device: &str) -> Result<String, StatusCode> {
     let status = json.get(&"components").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?
         .get(&"main").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?
         .get(&"switch").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?
-        .get(&"switch").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?   // this is correct, "switch" two times, this is the structuire of this JSON schema
+        .get(&"switch").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?   // this is correct, "switch" two times, this is the structure of this JSON schema
         .get(&"value").ok_or(StatusCode::INTERNAL_SERVER_ERROR)?.to_string();
 
     Ok(status.trim_matches('"').to_string())
@@ -162,7 +162,7 @@ fn request(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
     Err(status)
 }
 
-// List of acceptible 300-series redirect codes.
+// List of acceptable 300-series redirect codes.
 const REDIRECT_CODES: &[StatusCode] = &[
     StatusCode::MOVED_PERMANENTLY,
     StatusCode::FOUND,
