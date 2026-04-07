@@ -27,6 +27,15 @@ Examples are organized into three categories:
 | [variables_and_secrets](./http/wasi/variables_and_secrets/) | Read an environment variable and a secret |
 | [simple_fetch](./http/wasi/simple_fetch/) | Fetch from a configurable URL and return the response |
 
+### cdn (proxy-wasm)
+
+| Example | Description |
+| --- | --- |
+| [hello_world](./cdn/hello_world/) | Simplest CDN app — logs each lifecycle phase and adds a response header |
+| [headers](./cdn/headers/) | Validate and manipulate HTTP request/response headers |
+| [body](./cdn/body/) | Redact HTTP request/response bodies matching a pattern |
+| [variables_and_secrets](./cdn/variables_and_secrets/) | Read environment variables and secrets for request forwarding |
+
 ## Full Examples
 
 ### http/basic (sync)
@@ -56,15 +65,12 @@ Examples are organized into three categories:
 
 | Example | Description |
 | --- | --- |
-| [headers](./cdn/headers/) | Validate and manipulate HTTP request/response headers |
-| [body](./cdn/body/) | Redact HTTP request/response bodies matching a pattern |
 | [properties](./cdn/properties/) | Extract request properties — URL, path, host, geo data |
 | [log_time](./cdn/log_time/) | Log request and response timestamps |
 | [custom](./cdn/custom/) | Return HTTP status codes based on request path with optional delay |
 | [http_call](./cdn/http_call/) | Make asynchronous HTTP calls to external services |
 | [key_value](./cdn/key_value/) | KV store operations via query parameters |
 | [geo_redirect](./cdn/geo_redirect/) | Route requests to country-specific origins based on geoIP |
-| [variables_and_secrets](./cdn/variables_and_secrets/) | Read environment variables and secrets for request forwarding |
 | [large_env_variable](./cdn/large_env_variable/) | Read large (> 64KB) environment variables using the dictionary API |
 | [jwt](./cdn/jwt/) | Validate JWT tokens on incoming requests (signature and expiration) |
 | [md2html](./cdn/md2html/) | Convert Markdown responses from the origin to HTML |

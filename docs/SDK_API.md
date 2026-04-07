@@ -14,8 +14,8 @@ For `#[wstd::http_server]` (recommended):
 
 ```toml
 [dependencies]
-wstd    = "0.6"
-anyhow  = "1"
+wstd   = "0.6"
+anyhow = "1"
 
 [lib]
 crate-type = ["cdylib"]
@@ -401,10 +401,10 @@ fn fetch(uri: &str) -> Result<String, Error> {
 
 ## Feature Flags
 
-| Flag        | Default  | Effect                                                                              |
-| ----------- | -------- | ----------------------------------------------------------------------------------- |
-| `proxywasm` | enabled  | Enables the `fastedge::proxywasm` module for ProxyWasm ABI compatibility            |
-| `json`      | disabled | Enables `Body::try_from(serde_json::Value)` and adds `serde_json` as a dependency  |
+| Flag        | Default  | Effect                                                                             |
+| ----------- | -------- | ---------------------------------------------------------------------------------- |
+| `proxywasm` | enabled  | Enables the `fastedge::proxywasm` module for ProxyWasm ABI compatibility           |
+| `json`      | disabled | Enables `Body::try_from(serde_json::Value)` and adds `serde_json` as a dependency |
 
 Enable non-default features in `Cargo.toml`:
 
