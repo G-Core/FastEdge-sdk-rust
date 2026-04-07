@@ -4,6 +4,39 @@ This file tracks agent decisions, architectural changes, and context for future 
 
 ---
 
+## [2026-04-07] — Migrated Rust examples from FastEdge-examples
+
+### Overview
+Migrated all Rust examples from the FastEdge-examples repository into this SDK repo, completing the pattern already established for JavaScript (FastEdge-sdk-js) and AssemblyScript (proxy-wasm-sdk-as).
+
+### Examples Added
+
+**CDN (proxy-wasm):**
+- `jwt` — JWT token validation (signature + expiration)
+- `md2html` — Markdown-to-HTML conversion in response body
+- `convert_image` — Image-to-AVIF conversion with configurable quality/speed
+- `custom_error_pages` — Branded error pages using Handlebars templates (includes build.rs, images, message templates)
+- `geoblock` — Country-based request blocking with optional time windows
+
+**HTTP basic (sync):**
+- `s3upload` — S3 file upload via signed URLs
+- `smart_switch` — SmartThings API device toggling
+
+### Decisions
+- Each example follows the existing standalone pattern: empty `[workspace]`, crates.io dependencies (not path deps), `src/lib.rs`, own README
+- `markdown` and `kv-store` from FastEdge-examples were **not** migrated — they duplicate `markdown_render` and `key_value` already in this repo
+- `custom_error_pages` had its Tailwind CSS dependency removed — replaced with hand-written CSS (~60 lines) covering the exact utility classes used. Removed `package.json`, `tailwind.css`, `.prettierrc`
+- `custom_error_pages` had a bug fix: `on_http_response_body` previously defaulted `status_code` to 200 when `response.status` was missing/invalid, which could replace successful responses with the error template. Now returns `Action::Continue` early if the property is missing, not 2 bytes, or outside 4xx/5xx
+- `custom_error_pages` includes 6 fastedge-test fixtures for testing different error states via the built-in responder's `x-debugger-status` header
+- Renamed `tailwind_styles` to `styles` in both Rust source and Handlebars template
+
+### Files Updated
+- `examples/README.md` — Added all 7 new examples to the tables
+- `examples/cdn/` — 5 new example directories
+- `examples/http/basic/` — 2 new example directories
+
+---
+
 ## [2026-03-31] — Added Host-Side Context (Contract, Lifecycle, Properties, Errors)
 
 ### Overview
