@@ -36,7 +36,7 @@ Both share version `0.3.5`, edition 2021.
 
 ### ProxyWasm Layer (`src/proxywasm/`)
 
-Feature-gated behind `proxywasm` (default: enabled). Provides FFI bindings to proxy-wasm host functions.
+Used by **CDN apps** — proxy-wasm filters running inside Gcore's CDN proxy layer. CDN apps are a separate application type from HTTP apps, not a feature-flag variant. The `proxywasm` Cargo feature enables this module.
 
 | File | Lines | Purpose |
 |------|-------|---------|
@@ -124,6 +124,21 @@ cargo build --target wasm32-wasip1 --release --package hello-world
 
 Default build target is `wasm32-wasip1` (set in `.cargo/config.toml`).
 
+**Build targets by app type:**
+
+| App Type | Target | Handler |
+|----------|--------|---------|
+| HTTP (async, recommended) | `wasm32-wasip2` | `#[wstd::http_server]` |
+| HTTP (basic, legacy) | `wasm32-wasip1` | `#[fastedge::http]` |
+| CDN (proxy-wasm) | `wasm32-wasip1` | `proxy_wasm::main!` + traits |
+
+---
+
+## Platform Constraints
+
+- **Logging:** Only stdout is captured. `eprint!` / `eprintln!` output is silently lost and will NOT appear in the platform's log viewer. Use `print!` / `println!` or `log::info!` (with proxy-wasm log level configured for CDN apps).
+- **Dictionary:** `fastedge::dictionary::get()` reads platform-managed environment configuration (set at deployment time, same management as secrets but not encrypted).
+
 ---
 
 ## Testing
@@ -148,4 +163,20 @@ Default build target is `wasm32-wasip1` (set in `.cargo/config.toml`).
 
 ---
 
-**Last Updated**: March 2026
+## Consumer Documentation (`docs/`)
+
+Generated from source code by `fastedge-plugin-source/generate-docs.sh`. These docs are consumed by the fastedge-plugin sync pipeline and serve as the source of truth for SDK reference material in the Claude plugin and (future) MCP server.
+
+| File | Covers |
+|------|--------|
+| `SDK_API.md` | Handler macros, Body type, send_request, errors, feature flags |
+| `HOST_SERVICES.md` | HTTP app host services (Component Model): key_value, secret, dictionary, utils |
+| `CDN_APPS.md` | CDN app guide: proxy-wasm lifecycle, `fastedge::proxywasm::*` API, examples |
+| `quickstart.md` | Getting started for both HTTP and CDN apps |
+| `INDEX.md` | Doc index with reading order by app type |
+
+**Do not hand-edit** — update `.generation-config.md` and regenerate.
+
+---
+
+**Last Updated**: April 2026
