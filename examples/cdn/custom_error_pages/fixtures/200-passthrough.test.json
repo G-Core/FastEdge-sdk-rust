@@ -1,0 +1,10 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Origin returns 200 OK — no error page, response passes through unchanged",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {},
+    "body": ""
+  }
+}

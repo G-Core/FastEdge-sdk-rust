@@ -1,0 +1,13 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Origin returns 500 Internal Server Error — falls back to 5xx message (no specific 500 image)",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "x-debugger-status": "500",
+      "x-debugger-content": "status-only"
+    },
+    "body": ""
+  }
+}

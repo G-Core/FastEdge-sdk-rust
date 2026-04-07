@@ -1,0 +1,124 @@
+/* Custom error pages — hand-written CSS */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Layout */
+.flex {
+  display: flex;
+}
+.inline-block {
+  display: inline-block;
+}
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+.h-screen {
+  height: 100vh;
+}
+.text-center {
+  text-align: center;
+}
+
+/* Spacing */
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.mt-6 {
+  margin-top: 1.5rem;
+}
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.max-h-\[60vh\] {
+  max-height: 60vh;
+}
+
+/* Typography */
+.text-9xl {
+  font-size: 8rem;
+  line-height: 1;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 1.333;
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.556;
+}
+.font-extrabold {
+  font-weight: 800;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.font-medium {
+  font-weight: 500;
+}
+
+/* Colors */
+.bg-yellow-200 {
+  background-color: #f8ead6;
+}
+.bg-orange-600 {
+  background-color: #ff4b00;
+}
+.text-gray-800 {
+  color: #1f2937;
+}
+.text-gray-600 {
+  color: #4b5563;
+}
+.text-gray-500 {
+  color: #6b7280;
+}
+.text-white {
+  color: #fff;
+}
+
+/* Components */
+.rounded {
+  border-radius: 0.25rem;
+}
+.transition {
+  transition: background-color 0.15s ease-in-out;
+}
+.hover\:bg-orange-700:hover {
+  background-color: #c53600;
+}
