@@ -22,6 +22,7 @@ plugins/gcore-fastedge/skills/
       examples-body-rust.md
     sdk-reference-rust.md     # Cross-cutting (no subfolder)
     host-services-rust.md     # Cross-cutting (no subfolder)
+    cdn-apps-rust.md          # Cross-cutting app-type guide (no subfolder)
 ```
 
 Note: `http/base-rust.md` and `cdn/base-rust.md` have the same filename but live in different subfolders. The pipeline's path-based intent matching resolves them to different intent files.
@@ -37,14 +38,17 @@ Note: `http/base-rust.md` and `cdn/base-rust.md` have the same filename but live
 | Docs pattern | `{appType}/examples-{concept}-{lang}.md` | `cdn/examples-body-rust.md` |
 | Cross-cutting SDK ref | `sdk-reference-{lang}.md` | `sdk-reference-rust.md` |
 | Cross-cutting host services | `host-services-{lang}.md` | `host-services-rust.md` |
+| Cross-cutting app-type guide | `{appType}-apps-{lang}.md` | `cdn-apps-rust.md` |
 
 ## Manifest target_mapping Rules
 
-1. **reference_file** paths must include the `http/` or `cdn/` subfolder for app_type-specific content
+1. **reference_file** paths must include the `http/` or `cdn/` subfolder for per-example content (blueprints and patterns). Cross-cutting references (`sdk-reference`, `host-services`, `cdn-apps`) live directly under `fastedge-docs/reference/` with no subfolder
 2. **section** should be `null` for all entries (each file is owned by one repo — no splicing)
-3. **Dual-intent pattern**: each example gets two entries with the same `files` array:
+3. **Dual-intent pattern**: each **feature** example gets two entries with the same `files` array:
    - `{name}-blueprint` → `scaffold/reference/{appType}/{concept}-{lang}.md`
    - `{name}-pattern` → `fastedge-docs/reference/{appType}/examples-{concept}-{lang}.md`
+
+   **Exception**: Base skeleton examples (`http-hello-world`, `cdn-hello-world`) only get a `-blueprint` entry pointing to `scaffold/reference/{appType}/base-{lang}.md`. They have no `-pattern` counterpart because they don't demonstrate a reusable feature pattern.
 
 ## Intent File Matching
 
@@ -59,7 +63,7 @@ This is why `http/base-rust.md` and `cdn/base-rust.md` can coexist — they reso
 
 ## When Adding New Examples
 
-1. Add source entries (paired `-blueprint` and `-pattern`) to `manifest.json`
+1. Add source entries (paired `-blueprint` and `-pattern` for feature examples; `-blueprint` only for base skeletons) to `manifest.json`
 2. Add target_mapping entries pointing to `{appType}/{concept}-{lang}.md` paths
 3. Request intent files be created in `fastedge-plugin` repo (or create via PR):
    - `agent-intent-skills/fastedge-sdk-rust/{appType}/{concept}-{lang}.md` (scaffold)
