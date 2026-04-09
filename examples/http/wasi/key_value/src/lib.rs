@@ -18,6 +18,7 @@ use std::collections::HashMap;
 
 use anyhow::anyhow;
 use fastedge::key_value::{Store, Error as StoreError};
+use serde_json::json;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
 
@@ -37,12 +38,14 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
         Err(StoreError::AccessDenied) => {
             return Ok(Response::builder()
                 .status(403)
-                .body(Body::from("access denied"))?);
+                .header("content-type", "application/json")
+                .body(Body::from(json!({"error": "access denied"}).to_string()))?);
         }
         Err(e) => {
             return Ok(Response::builder()
                 .status(500)
-                .body(Body::from(format!("store open error: {e}")))?);
+                .header("content-type", "application/json")
+                .body(Body::from(json!({"error": format!("store open error: {e}")}).to_string()))?);
         }
     };
 
@@ -53,9 +56,10 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
         "zscan" => handle_zscan(&store, &params)?,
         "bfExists" => handle_bf_exists(&store, &params)?,
         _ => {
-            return Ok(Response::builder().status(400).body(Body::from(format!(
-                "Invalid action '{action}'. Supported: get, scan, zrange, zscan, bfExists"
-            )))?);
+            return Ok(Response::builder()
+                .status(400)
+                .header("content-type", "application/json")
+                .body(Body::from(json!({"error": format!("Invalid action '{action}'. Supported: get, scan, zrange, zscan, bfExists")}).to_string()))?);
         }
     };
 
@@ -70,18 +74,19 @@ fn handle_get(store: &Store, params: &HashMap<&str, &str>) -> anyhow::Result<Str
     match store.get(key) {
         Ok(Some(value)) => {
             let value_str = String::from_utf8_lossy(&value);
-            Ok(format!(
-                r#"{{"store":"{}","action":"get","key":"{}","response":"{}"}}"#,
-                params.get("store").unwrap_or(&""),
-                key,
-                value_str
-            ))
+            Ok(json!({
+                "store": params.get("store").unwrap_or(&""),
+                "action": "get",
+                "key": key,
+                "response": value_str.as_ref()
+            }).to_string())
         }
-        Ok(None) => Ok(format!(
-            r#"{{"store":"{}","action":"get","key":"{}","response":null}}"#,
-            params.get("store").unwrap_or(&""),
-            key
-        )),
+        Ok(None) => Ok(json!({
+            "store": params.get("store").unwrap_or(&""),
+            "action": "get",
+            "key": key,
+            "response": null
+        }).to_string()),
         Err(e) => Err(anyhow!("KV get error: {e}")),
     }
 }
@@ -91,15 +96,12 @@ fn handle_scan(store: &Store, params: &HashMap<&str, &str>) -> anyhow::Result<St
         .get("match")
         .ok_or(anyhow!("missing param 'match'"))?;
     match store.scan(pattern) {
-        Ok(keys) => {
-            let keys_json: Vec<String> = keys.iter().map(|k| format!(r#""{}""#, k)).collect();
-            Ok(format!(
-                r#"{{"store":"{}","action":"scan","match":"{}","response":[{}]}}"#,
-                params.get("store").unwrap_or(&""),
-                pattern,
-                keys_json.join(",")
-            ))
-        }
+        Ok(keys) => Ok(json!({
+            "store": params.get("store").unwrap_or(&""),
+            "action": "scan",
+            "match": pattern,
+            "response": keys
+        }).to_string()),
         Err(e) => Err(anyhow!("KV scan error: {e}")),
     }
 }
@@ -119,21 +121,21 @@ fn handle_zrange(store: &Store, params: &HashMap<&str, &str>) -> anyhow::Result<
 
     match store.zrange_by_score(key, min, max) {
         Ok(entries) => {
-            let entries_json: Vec<String> = entries
+            let entries_json: Vec<serde_json::Value> = entries
                 .iter()
                 .map(|(value, score)| {
                     let value_str = String::from_utf8_lossy(value);
-                    format!(r#"{{"value":"{}","score":{}}}"#, value_str, score)
+                    json!({"value": value_str.as_ref(), "score": score})
                 })
                 .collect();
-            Ok(format!(
-                r#"{{"store":"{}","action":"zrange","key":"{}","min":{},"max":{},"response":[{}]}}"#,
-                params.get("store").unwrap_or(&""),
-                key,
-                min,
-                max,
-                entries_json.join(",")
-            ))
+            Ok(json!({
+                "store": params.get("store").unwrap_or(&""),
+                "action": "zrange",
+                "key": key,
+                "min": min,
+                "max": max,
+                "response": entries_json
+            }).to_string())
         }
         Err(e) => Err(anyhow!("KV zrange error: {e}")),
     }
@@ -147,20 +149,20 @@ fn handle_zscan(store: &Store, params: &HashMap<&str, &str>) -> anyhow::Result<S
 
     match store.zscan(key, pattern) {
         Ok(entries) => {
-            let entries_json: Vec<String> = entries
+            let entries_json: Vec<serde_json::Value> = entries
                 .iter()
                 .map(|(value, score)| {
                     let value_str = String::from_utf8_lossy(value);
-                    format!(r#"{{"value":"{}","score":{}}}"#, value_str, score)
+                    json!({"value": value_str.as_ref(), "score": score})
                 })
                 .collect();
-            Ok(format!(
-                r#"{{"store":"{}","action":"zscan","key":"{}","match":"{}","response":[{}]}}"#,
-                params.get("store").unwrap_or(&""),
-                key,
-                pattern,
-                entries_json.join(",")
-            ))
+            Ok(json!({
+                "store": params.get("store").unwrap_or(&""),
+                "action": "zscan",
+                "key": key,
+                "match": pattern,
+                "response": entries_json
+            }).to_string())
         }
         Err(e) => Err(anyhow!("KV zscan error: {e}")),
     }
@@ -173,13 +175,13 @@ fn handle_bf_exists(store: &Store, params: &HashMap<&str, &str>) -> anyhow::Resu
         .ok_or(anyhow!("missing param 'item'"))?;
 
     match store.bf_exists(key, item) {
-        Ok(exists) => Ok(format!(
-            r#"{{"store":"{}","action":"bfExists","key":"{}","item":"{}","response":{}}}"#,
-            params.get("store").unwrap_or(&""),
-            key,
-            item,
-            exists
-        )),
+        Ok(exists) => Ok(json!({
+            "store": params.get("store").unwrap_or(&""),
+            "action": "bfExists",
+            "key": key,
+            "item": item,
+            "response": exists
+        }).to_string()),
         Err(e) => Err(anyhow!("KV bfExists error: {e}")),
     }
 }
