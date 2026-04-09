@@ -67,6 +67,12 @@ Contract directory consumed by the fastedge-plugin sync pipeline. Contains `mani
 | `fastedge-plugin-source/.generation-config.md` | Generation instructions for each docs/ file (Global Rules, per-file specs) |
 | `fastedge-plugin-source/generate-docs.sh` | Tiered parallel generation script |
 
+### Plugin Integration (read when modifying manifest or examples)
+
+| Document | Lines | Purpose |
+|----------|-------|---------|
+| `PLUGIN_CONTRACT.md` | ~70 | Naming conventions, manifest rules, intent file matching for the fastedge-plugin sync pipeline. Read when adding examples to `manifest.json` or changing `fastedge-plugin-source/`. |
+
 ### External (not in context/)
 
 | Resource | Location | Purpose |
@@ -127,6 +133,7 @@ Contract directory consumed by the fastedge-plugin sync pipeline. Contains `mani
 4. Read `PROJECT_OVERVIEW.md` (examples section)
 5. Read `development/BUILD_AND_CI.md` (example build pattern)
 6. **Logging:** Use `println!` only — `eprintln!` output is lost on the platform
+7. **Plugin sync**: If this example should feed into fastedge-plugin, read `context/PLUGIN_CONTRACT.md` for manifest and naming conventions
 
 ### Understanding the System (New to Codebase)
 1. Read `PROJECT_OVERVIEW.md` (~149 lines)

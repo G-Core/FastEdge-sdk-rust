@@ -107,12 +107,12 @@
   },
   "target_mapping": {
     "sdk-api": {
-      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/sdk-reference.md",
-      "section": "Rust SDK"
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/sdk-reference-rust.md",
+      "section": null
     },
     "host-services": {
-      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/sdk-reference.md",
-      "section": "Rust SDK"
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/host-services-rust.md",
+      "section": null
     },
     "cdn-apps": {
       "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn-apps-rust.md",
@@ -120,48 +120,48 @@
     },
 
     "http-hello-world-blueprint": {
-      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/base-http-rust.md",
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/base-rust.md",
       "section": null
     },
 
     "cdn-hello-world-blueprint": {
-      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/base-cdn-rust.md",
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/base-rust.md",
       "section": null
     },
 
     "cdn-body-blueprint": {
-      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn-rust-body.md",
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/body-rust.md",
       "section": null
     },
     "cdn-body-pattern": {
-      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/examples-rust-body.md",
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-body-rust.md",
       "section": null
     },
 
     "http-key-value-blueprint": {
-      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http-rust-kv-store.md",
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/kv-store-rust.md",
       "section": null
     },
     "http-key-value-pattern": {
-      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/examples-rust-kv-store.md",
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-kv-store-rust.md",
       "section": null
     },
 
     "cdn-jwt-blueprint": {
-      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn-rust-auth-jwt.md",
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/auth-jwt-rust.md",
       "section": null
     },
     "cdn-jwt-pattern": {
-      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/examples-rust-auth-jwt.md",
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-auth-jwt-rust.md",
       "section": null
     },
 
     "cdn-geoblock-blueprint": {
-      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn-rust-geoblock.md",
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/geoblock-rust.md",
       "section": null
     },
     "cdn-geoblock-pattern": {
-      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/examples-rust-geoblock.md",
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-geoblock-rust.md",
       "section": null
     }
   },
