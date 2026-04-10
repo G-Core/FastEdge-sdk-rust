@@ -17,6 +17,7 @@ Defaults to action=get if not specified.
 use fastedge::proxywasm::key_value::Store;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
+use serde_json::json;
 use std::collections::HashMap;
 
 proxy_wasm::main! {{
@@ -53,7 +54,7 @@ impl HttpContext for KvStoreContext {
 
     fn on_http_response_body(&mut self, body_size: usize, end_of_stream: bool) -> Action {
         if !end_of_stream {
-            return Action::StopIterationAndBuffer;
+            return Action::Pause;
         }
 
         let query = self
@@ -117,18 +118,19 @@ impl KvStoreContext {
         match store.get(key) {
             Ok(Some(value)) => {
                 let value_str = String::from_utf8_lossy(&value);
-                Ok(format!(
-                    r#"{{"store":"{}","action":"get","key":"{}","response":"{}"}}"#,
-                    params.get("store").unwrap_or(&""),
-                    key,
-                    value_str
-                ))
+                Ok(json!({
+                    "store": params.get("store").unwrap_or(&""),
+                    "action": "get",
+                    "key": key,
+                    "response": value_str.as_ref()
+                }).to_string())
             }
-            Ok(None) => Ok(format!(
-                r#"{{"store":"{}","action":"get","key":"{}","response":null}}"#,
-                params.get("store").unwrap_or(&""),
-                key
-            )),
+            Ok(None) => Ok(json!({
+                "store": params.get("store").unwrap_or(&""),
+                "action": "get",
+                "key": key,
+                "response": null
+            }).to_string()),
             Err(e) => Err(format!("KV get error: {}", e)),
         }
     }
@@ -136,15 +138,12 @@ impl KvStoreContext {
     fn handle_scan(&self, store: &Store, params: &HashMap<&str, &str>) -> Result<String, String> {
         let pattern = *params.get("match").ok_or("Missing required param 'match' for 'scan' action")?;
         match store.scan(pattern) {
-            Ok(keys) => {
-                let keys_json: Vec<String> = keys.iter().map(|k| format!(r#""{}""#, k)).collect();
-                Ok(format!(
-                    r#"{{"store":"{}","action":"scan","match":"{}","response":[{}]}}"#,
-                    params.get("store").unwrap_or(&""),
-                    pattern,
-                    keys_json.join(",")
-                ))
-            }
+            Ok(keys) => Ok(json!({
+                "store": params.get("store").unwrap_or(&""),
+                "action": "scan",
+                "match": pattern,
+                "response": keys
+            }).to_string()),
             Err(e) => Err(format!("KV scan error: {}", e)),
         }
     }
@@ -164,21 +163,21 @@ impl KvStoreContext {
 
         match store.zrange_by_score(key, min, max) {
             Ok(entries) => {
-                let entries_json: Vec<String> = entries
+                let entries_json: Vec<serde_json::Value> = entries
                     .iter()
                     .map(|(value, score)| {
                         let value_str = String::from_utf8_lossy(value);
-                        format!(r#"{{"value":"{}","score":{}}}"#, value_str, score)
+                        json!({"value": value_str.as_ref(), "score": score})
                     })
                     .collect();
-                Ok(format!(
-                    r#"{{"store":"{}","action":"zrange","key":"{}","min":{},"max":{},"response":[{}]}}"#,
-                    params.get("store").unwrap_or(&""),
-                    key,
-                    min,
-                    max,
-                    entries_json.join(",")
-                ))
+                Ok(json!({
+                    "store": params.get("store").unwrap_or(&""),
+                    "action": "zrange",
+                    "key": key,
+                    "min": min,
+                    "max": max,
+                    "response": entries_json
+                }).to_string())
             }
             Err(e) => Err(format!("KV zrange error: {}", e)),
         }
@@ -190,20 +189,20 @@ impl KvStoreContext {
 
         match store.zscan(key, pattern) {
             Ok(entries) => {
-                let entries_json: Vec<String> = entries
+                let entries_json: Vec<serde_json::Value> = entries
                     .iter()
                     .map(|(value, score)| {
                         let value_str = String::from_utf8_lossy(value);
-                        format!(r#"{{"value":"{}","score":{}}}"#, value_str, score)
+                        json!({"value": value_str.as_ref(), "score": score})
                     })
                     .collect();
-                Ok(format!(
-                    r#"{{"store":"{}","action":"zscan","key":"{}","match":"{}","response":[{}]}}"#,
-                    params.get("store").unwrap_or(&""),
-                    key,
-                    pattern,
-                    entries_json.join(",")
-                ))
+                Ok(json!({
+                    "store": params.get("store").unwrap_or(&""),
+                    "action": "zscan",
+                    "key": key,
+                    "match": pattern,
+                    "response": entries_json
+                }).to_string())
             }
             Err(e) => Err(format!("KV zscan error: {}", e)),
         }
@@ -214,13 +213,13 @@ impl KvStoreContext {
         let item = *params.get("item").ok_or("Missing required param 'item' for 'bfExists' action")?;
 
         match store.bf_exists(key, item) {
-            Ok(exists) => Ok(format!(
-                r#"{{"store":"{}","action":"bfExists","key":"{}","item":"{}","response":{}}}"#,
-                params.get("store").unwrap_or(&""),
-                key,
-                item,
-                exists
-            )),
+            Ok(exists) => Ok(json!({
+                "store": params.get("store").unwrap_or(&""),
+                "action": "bfExists",
+                "key": key,
+                "item": item,
+                "response": exists
+            }).to_string()),
             Err(e) => Err(format!("KV bfExists error: {}", e)),
         }
     }
@@ -231,7 +230,7 @@ impl KvStoreContext {
             vec!["response", "status"],
             Some(b"500"),
         );
-        let error_body = format!(r#"{{"error":"{}"}}"#, msg);
+        let error_body = json!({"error": msg}).to_string();
         self.set_http_response_body(0, body_size, error_body.as_bytes()).ok();
     }
 }
