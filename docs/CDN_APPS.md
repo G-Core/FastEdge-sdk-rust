@@ -89,7 +89,7 @@ proxy_wasm::main! {{
 
 ### Root Context
 
-The root context is a singleton created once when the filter loads. Its primary role is to create a new HTTP context for each incoming request.
+The root context is a singleton created once when the filter loads. Its primary role is to create a new HTTP context for each lifecycle callback invocation.
 
 ```rust,no_run
 # use proxy_wasm::traits::*;
@@ -109,11 +109,11 @@ impl RootContext for MyAppRoot {
 }
 ```
 
-`get_type()` must return `Some(ContextType::HttpContext)` for HTTP traffic interception. `create_http_context` is called once per request and receives a unique `context_id`.
+`get_type()` must return `Some(ContextType::HttpContext)` for HTTP traffic interception. `create_http_context` is called once per lifecycle callback invocation and receives a unique `context_id`.
 
 ### HTTP Context
 
-The HTTP context is where request and response processing happens. A new instance is created for each request by `create_http_context`.
+The HTTP context is where request and response processing happens. A new instance is created for each lifecycle callback invocation — not once per request. See [Hook State Isolation](#hook-state-isolation) for the consequences this has on state management.
 
 ```rust,no_run
 # use proxy_wasm::traits::*;
@@ -175,6 +175,40 @@ impl HttpContext for MyApp {
 }
 ```
 
+### Hook State Isolation
+
+On the FastEdge CDN platform, an HTTP context instance exists only for the duration of a single lifecycle callback invocation. It does **not** persist across the request. Different hooks may run on entirely different servers: `on_http_request_headers` runs in nginx, while `on_http_request_body`, `on_http_response_headers`, and `on_http_response_body` run in core-proxy.
+
+This has critical consequences for application design:
+
+- Struct fields on the HTTP context do **not** persist between callbacks.
+- A fresh context instance is created for each callback invocation.
+- Storing data as a struct field in one callback and reading it in another callback does **not** work.
+
+To pass data between callbacks, use `self.set_property` and `self.get_property` with a custom property path. The host preserves these values across callback invocations for the same logical request:
+
+```rust,no_run
+# use proxy_wasm::traits::*;
+# use proxy_wasm::types::*;
+# struct MyApp;
+# impl Context for MyApp {}
+impl HttpContext for MyApp {
+    fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
+        // Store a value for use in a later callback
+        self.set_property(vec!["my_custom_key"], Some(b"my_value"));
+        Action::Continue
+    }
+
+    fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
+        // Retrieve the value set in a previous callback
+        if let Some(value) = self.get_property(vec!["my_custom_key"]) {
+            let _ = value; // use value
+        }
+        Action::Continue
+    }
+}
+```
+
 ## Request and Response Manipulation
 
 ### Reading Headers and Properties
@@ -188,15 +222,13 @@ impl HttpContext for MyApp {
     fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
         // Read a request header
         if let Some(auth) = self.get_http_request_header("Authorization") {
-            // use auth value
-            let _ = auth;
+            let _ = auth; // use auth value
         }
 
         // Read a request property (UTF-8 string)
         if let Some(path_bytes) = self.get_property(vec!["request.path"]) {
             if let Ok(path) = std::str::from_utf8(&path_bytes) {
-                // use path
-                let _ = path;
+                let _ = path; // use path
             }
         }
 
@@ -226,12 +258,14 @@ impl HttpContext for MyApp {
     fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
         // Add a new response header
         self.add_http_response_header("x-powered-by", "FastEdge");
-        // Remove a response header
+        // Attempt to remove a response header
         self.set_http_response_header("server", None);
         Action::Continue
     }
 }
 ```
+
+**Known limitation**: On the FastEdge CDN platform, passing `None` to `set_http_request_header` or `set_http_response_header` sets the header value to an empty string rather than removing the header entirely. When checking for header absence, test for an empty string as well as a missing value.
 
 ### Generating Responses
 
@@ -264,14 +298,28 @@ impl HttpContext for MyApp {
 
 CDN apps access request metadata through `self.get_property(vec![...])`. The return type is `Option<Vec<u8>>`.
 
-| Property path              | Type                  | Description                                 |
-| -------------------------- | --------------------- | ------------------------------------------- |
-| `["request.path"]`         | UTF-8 string          | Request URL path                            |
-| `["request.query"]`        | UTF-8 string          | Query string                                |
-| `["request.country"]`      | UTF-8 string          | Client country code (geo-IP lookup)         |
-| `["response", "status"]`   | 2-byte big-endian u16 | Response status code (response phase only)  |
+| Property               | Encoding              | Description                                            |
+| ---------------------- | --------------------- | ------------------------------------------------------ |
+| `request.path`         | UTF-8 string          | URL path                                               |
+| `request.query`        | UTF-8 string          | Query string                                           |
+| `request.url`          | UTF-8 string          | Full request URL                                       |
+| `request.host`         | UTF-8 string          | Domain (may have `shield_` prefix on edge shield nodes) |
+| `request.scheme`       | UTF-8 string          | HTTP scheme (from X-Forwarded-Proto)                   |
+| `request.extension`    | UTF-8 string          | File extension                                         |
+| `request.x_real_ip`    | UTF-8 string          | Client IP address                                      |
+| `request.country`      | UTF-8 string          | 2-letter ISO country code (geo-IP lookup)              |
+| `request.country.name` | UTF-8 string          | Full country name                                      |
+| `request.city`         | UTF-8 string          | City name                                              |
+| `request.region`       | UTF-8 string          | Region/state                                           |
+| `request.continent`    | UTF-8 string          | Continent                                              |
+| `request.asn`          | UTF-8 string          | Autonomous System Number                               |
+| `request.geo.lat`      | UTF-8 string          | Latitude                                               |
+| `request.geo.long`     | UTF-8 string          | Longitude                                              |
+| `response.status`      | 2-byte big-endian u16 | Response status code (response phase only)             |
 
-Most properties are UTF-8 strings that can be decoded with `std::str::from_utf8()`. The `response.status` property is a binary-encoded integer, not a string — it must be decoded as a big-endian `u16`:
+Most properties are UTF-8 strings decoded with `std::str::from_utf8()`. The `response.status` property is binary-encoded and must be decoded as a big-endian `u16`. Do not use `String::from_utf8` for this property.
+
+Geo-IP properties (`request.country`, `request.country.name`, `request.city`, `request.region`, `request.continent`, `request.geo.lat`, `request.geo.long`) are derived from the client IP address.
 
 ```rust,no_run
 # use proxy_wasm::traits::*;
@@ -327,15 +375,15 @@ Provides persistent key-value storage. The API shape mirrors `fastedge::key_valu
 pub struct Store { /* ... */ }
 ```
 
-| Method                                                  | Return Type                          | Description                                             |
-| ------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------- |
-| `Store::new()`                                          | `Result<Self, Error>`                | Open the default store                                  |
-| `Store::open(name: &str)`                               | `Result<Self, Error>`                | Open a named store                                      |
-| `Store::get(key: &str)`                                 | `Result<Option<Vec<u8>>, Error>`     | Get the value for a key; `None` if key does not exist   |
-| `Store::scan(pattern: &str)`                            | `Result<Vec<String>, Error>`         | List keys matching a glob-style pattern                 |
-| `Store::zrange_by_score(key: &str, min: f64, max: f64)` | `Result<Vec<(Vec<u8>, f64)>, Error>` | Get sorted-set members with scores between min and max  |
-| `Store::zscan(key: &str, pattern: &str)`                | `Result<Vec<(Vec<u8>, f64)>, Error>` | Scan sorted-set members matching a pattern              |
-| `Store::bf_exists(key: &str, item: &str)`               | `Result<bool, Error>`                | Test whether an item is in a Bloom filter               |
+| Method                                                    | Return Type                          | Description                                            |
+| --------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------ |
+| `Store::new()`                                            | `Result<Self, Error>`                | Open the default store                                 |
+| `Store::open(name: &str)`                                 | `Result<Self, Error>`                | Open a named store                                     |
+| `Store::get(key: &str)`                                   | `Result<Option<Vec<u8>>, Error>`     | Get the value for a key; `None` if key does not exist  |
+| `Store::scan(pattern: &str)`                              | `Result<Vec<String>, Error>`         | List keys matching a glob-style pattern                |
+| `Store::zrange_by_score(key: &str, min: f64, max: f64)`   | `Result<Vec<(Vec<u8>, f64)>, Error>` | Get sorted-set members with scores between min and max |
+| `Store::zscan(key: &str, pattern: &str)`                  | `Result<Vec<(Vec<u8>, f64)>, Error>` | Scan sorted-set members matching a pattern             |
+| `Store::bf_exists(key: &str, item: &str)`                 | `Result<bool, Error>`                | Test whether an item is in a Bloom filter              |
 
 #### `Error`
 
