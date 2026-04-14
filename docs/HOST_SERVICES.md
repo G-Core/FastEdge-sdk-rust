@@ -76,11 +76,11 @@ Scans the store for keys matching a glob-style pattern. Returns a list of matchi
 
 Supported glob syntax:
 
-| Pattern   | Matches                                     |
-| --------- | ------------------------------------------- |
-| `*`       | Any sequence of characters within a segment |
-| `?`       | Any single character                        |
-| `[abc]`   | Any character in the set                    |
+| Pattern | Matches                                     |
+| ------- | ------------------------------------------- |
+| `*`     | Any sequence of characters within a segment |
+| `?`     | Any single character                        |
+| `[abc]` | Any character in the set                    |
 
 ```rust,no_run
 use fastedge::key_value::Store;
@@ -345,14 +345,14 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
 
 ### When to Use Dictionary vs Key-Value vs Secrets
 
-| Criterion                    | `dictionary`                           | `key_value`                               | `secret`                                    |
-| ---------------------------- | -------------------------------------- | ----------------------------------------- | ------------------------------------------- |
-| **Mutability**               | Read-only; set at deployment time      | Read-only from application code           | Read-only; managed by platform              |
-| **Value type**               | UTF-8 strings only                     | Arbitrary bytes                           | Arbitrary bytes                             |
-| **Advanced data structures** | No                                     | Sorted sets, bloom filters, glob scan     | No                                          |
-| **Confidentiality**          | Not encrypted; visible in config       | Not encrypted at the application layer    | Encrypted at rest; access-controlled        |
-| **Typical use cases**        | Feature flags, routing config, tuning  | Caching, counters, state, rate-limit data | API keys, tokens, certificates, credentials |
-| **Versioning / rotation**    | No                                     | No                                        | Yes, via `get_effective_at`                 |
+| Criterion                    | `dictionary`                          | `key_value`                               | `secret`                                    |
+| ---------------------------- | ------------------------------------- | ----------------------------------------- | ------------------------------------------- |
+| **Mutability**               | Read-only; set at deployment time     | Read-only from application code           | Read-only; managed by platform              |
+| **Value type**               | UTF-8 strings only                    | Arbitrary bytes                           | Arbitrary bytes                             |
+| **Advanced data structures** | No                                    | Sorted sets, bloom filters, glob scan     | No                                          |
+| **Confidentiality**          | Not encrypted; visible in config      | Not encrypted at the application layer    | Encrypted at rest; access-controlled        |
+| **Typical use cases**        | Feature flags, routing config, tuning | Caching, counters, state, rate-limit data | API keys, tokens, certificates, credentials |
+| **Versioning / rotation**    | No                                    | No                                        | Yes, via `get_effective_at`                 |
 
 Use `dictionary` for simple, non-sensitive string configuration that is known at deployment time. Use `key_value` for larger datasets, binary values, or data that requires advanced query patterns. Use `secret` for any value that must be kept confidential.
 

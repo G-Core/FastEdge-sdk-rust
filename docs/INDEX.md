@@ -4,12 +4,12 @@ Documentation for the `fastedge` crate (v0.3.5) — a Rust SDK for building edge
 
 ## Documents
 
-| File                                 | Description                                                                                                                                                    |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [quickstart.md](quickstart.md)       | Getting started: project setup, writing a handler, building to WASM (`wasm32-wasip2` for async, `wasm32-wasip1` for basic/CDN)                                 |
-| [SDK_API.md](SDK_API.md)             | Core API: handler macros (`#[wstd::http_server]`, `#[fastedge::http]`), Body type, outbound HTTP (`send_request`), errors, feature flags                       |
-| [HOST_SERVICES.md](HOST_SERVICES.md) | Host services for HTTP apps: key-value store, secrets, dictionary, diagnostics                                                                                 |
-| [CDN_APPS.md](CDN_APPS.md)           | CDN apps: proxy-wasm lifecycle, `fastedge::proxywasm::*` API surface, request/response manipulation                                                            |
+| File                                 | Description                                                                                                                              |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| [quickstart.md](quickstart.md)       | Getting started: project setup, writing a handler, building to WASM (`wasm32-wasip2` for async, `wasm32-wasip1` for basic/CDN)           |
+| [SDK_API.md](SDK_API.md)             | Core API: handler macros (`#[wstd::http_server]`, `#[fastedge::http]`), Body type, outbound HTTP (`send_request`), errors, feature flags |
+| [HOST_SERVICES.md](HOST_SERVICES.md) | Host services for HTTP apps: key-value store, secrets, dictionary, diagnostics                                                           |
+| [CDN_APPS.md](CDN_APPS.md)           | CDN apps: proxy-wasm lifecycle, `fastedge::proxywasm::*` API surface, request/response manipulation                                      |
 
 ## Suggested Reading Order
 

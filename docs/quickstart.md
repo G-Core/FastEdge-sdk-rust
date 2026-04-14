@@ -133,10 +133,10 @@ Both commands produce a `.wasm` binary in the respective `target/<target>/releas
 
 ## Feature Flags
 
-| Feature       | Default | Description                               |
-| ------------- | ------- | ----------------------------------------- |
-| `proxywasm`   | yes     | Enable ProxyWasm compatibility layer      |
-| `json`        | no      | Enable JSON body support via `serde_json` |
+| Feature     | Default | Description                               |
+| ----------- | ------- | ----------------------------------------- |
+| `proxywasm` | yes     | Enable ProxyWasm compatibility layer      |
+| `json`      | no      | Enable JSON body support via `serde_json` |
 
 Enable the `json` feature in `Cargo.toml`:
 
