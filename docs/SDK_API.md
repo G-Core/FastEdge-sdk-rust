@@ -25,8 +25,8 @@ For `#[fastedge::http]` (basic):
 
 ```toml
 [dependencies]
-fastedge = "0.3"
-anyhow   = "1.0"
+fastedge = "0.3.5"
+anyhow   = "1"
 
 [lib]
 crate-type = ["cdylib"]
@@ -410,14 +410,14 @@ Enable non-default features in `Cargo.toml`:
 
 ```toml
 [dependencies]
-fastedge = { version = "0.3", features = ["json"] }
+fastedge = { version = "0.3.5", features = ["json"] }
 ```
 
 Disable the default `proxywasm` feature if you do not need it:
 
 ```toml
 [dependencies]
-fastedge = { version = "0.3", default-features = false }
+fastedge = { version = "0.3.5", default-features = false }
 ```
 
 ---

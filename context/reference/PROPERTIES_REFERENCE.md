@@ -2,6 +2,8 @@
 
 Properties are read-only metadata about the current request and client, available via `proxy_get_property()` in ProxyWasm apps. They provide context that isn't in the HTTP headers themselves.
 
+**Path format:** Always pass the property identifier as a single dotted string in a one-element vec — e.g., `vec!["request.path"]`, `vec!["request.geo.long"]`. Do **not** split on dots (e.g., `vec!["request", "country"]` is incorrect).
+
 ---
 
 ## Available Properties
@@ -40,13 +42,13 @@ Properties are read-only metadata about the current request and client, availabl
 // In an HttpContext implementation
 fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
     // Get client's country
-    if let Some(country) = self.get_property(vec!["request", "country"]) {
+    if let Some(country) = self.get_property(vec!["request.country"]) {
         let country_str = String::from_utf8(country).unwrap_or_default();
         // Use for geo-routing, access control, etc.
     }
 
     // Get client IP
-    if let Some(ip) = self.get_property(vec!["request", "x_real_ip"]) {
+    if let Some(ip) = self.get_property(vec!["request.x_real_ip"]) {
         // Use for rate limiting, logging, etc.
     }
 

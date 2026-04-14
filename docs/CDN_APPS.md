@@ -151,11 +151,11 @@ All callbacks have default no-op implementations. Override only the phases your 
 
 Every lifecycle callback returns an `Action` that controls what happens next.
 
-| Action                           | Meaning                                                                     |
-| -------------------------------- | --------------------------------------------------------------------------- |
-| `Action::Continue`               | Pass the request or response through to the next stage                      |
-| `Action::Pause`                  | Stop processing; used after `send_http_response` to short-circuit origin    |
-| `Action::StopIterationAndBuffer` | Buffer the current body chunk; continue accumulating until `end_of_stream`  |
+| Action                           | Meaning                                                                    |
+| -------------------------------- | -------------------------------------------------------------------------- |
+| `Action::Continue`               | Pass the request or response through to the next stage                     |
+| `Action::Pause`                  | Stop processing; used after `send_http_response` to short-circuit origin   |
+| `Action::StopIterationAndBuffer` | Buffer the current body chunk; continue accumulating until `end_of_stream` |
 
 For body callbacks, return `Action::StopIterationAndBuffer` until `end_of_stream` is `true`, then process the full body and return `Action::Continue`.
 
@@ -298,24 +298,26 @@ impl HttpContext for MyApp {
 
 CDN apps access request metadata through `self.get_property(vec![...])`. The return type is `Option<Vec<u8>>`.
 
-| Property               | Encoding              | Description                                            |
-| ---------------------- | --------------------- | ------------------------------------------------------ |
-| `request.path`         | UTF-8 string          | URL path                                               |
-| `request.query`        | UTF-8 string          | Query string                                           |
-| `request.url`          | UTF-8 string          | Full request URL                                       |
-| `request.host`         | UTF-8 string          | Domain (may have `shield_` prefix on edge shield nodes) |
-| `request.scheme`       | UTF-8 string          | HTTP scheme (from X-Forwarded-Proto)                   |
-| `request.extension`    | UTF-8 string          | File extension                                         |
-| `request.x_real_ip`    | UTF-8 string          | Client IP address                                      |
-| `request.country`      | UTF-8 string          | 2-letter ISO country code (geo-IP lookup)              |
-| `request.country.name` | UTF-8 string          | Full country name                                      |
-| `request.city`         | UTF-8 string          | City name                                              |
-| `request.region`       | UTF-8 string          | Region/state                                           |
-| `request.continent`    | UTF-8 string          | Continent                                              |
-| `request.asn`          | UTF-8 string          | Autonomous System Number                               |
-| `request.geo.lat`      | UTF-8 string          | Latitude                                               |
-| `request.geo.long`     | UTF-8 string          | Longitude                                              |
-| `response.status`      | 2-byte big-endian u16 | Response status code (response phase only)             |
+**Path format:** Always pass the property identifier as a single dotted string in a one-element vec — e.g., `vec!["request.path"]`, `vec!["response.status"]`, `vec!["request.geo.long"]`. Do **not** split on dots (e.g., `vec!["response", "status"]` is incorrect).
+
+| Property               | Encoding              | Description                                                                      |
+| ---------------------- | --------------------- | -------------------------------------------------------------------------------- |
+| `request.path`         | UTF-8 string          | URL path                                                                         |
+| `request.query`        | UTF-8 string          | Query string                                                                     |
+| `request.url`          | UTF-8 string          | Full request URL                                                                 |
+| `request.host`         | UTF-8 string          | Domain (may have `shield_` prefix on edge shield nodes)                          |
+| `request.scheme`       | UTF-8 string          | HTTP scheme (from X-Forwarded-Proto)                                             |
+| `request.extension`    | UTF-8 string          | File extension                                                                   |
+| `request.x_real_ip`    | UTF-8 string          | Client IP address                                                                |
+| `request.country`      | UTF-8 string          | 2-letter ISO country code (geo-IP)                                               |
+| `request.country.name` | UTF-8 string          | Full country name                                                                |
+| `request.city`         | UTF-8 string          | City name                                                                        |
+| `request.region`       | UTF-8 string          | Region/state                                                                     |
+| `request.continent`    | UTF-8 string          | Continent                                                                        |
+| `request.asn`          | UTF-8 string          | Autonomous System Number                                                         |
+| `request.geo.lat`      | UTF-8 string          | Latitude                                                                         |
+| `request.geo.long`     | UTF-8 string          | Longitude                                                                        |
+| `response.status`      | 2-byte big-endian u16 | Response status code (**binary, NOT a string** — decode with `u16::from_be_bytes`) |
 
 Most properties are UTF-8 strings decoded with `std::str::from_utf8()`. The `response.status` property is binary-encoded and must be decoded as a big-endian `u16`. Do not use `String::from_utf8` for this property.
 
@@ -329,7 +331,7 @@ Geo-IP properties (`request.country`, `request.country.name`, `request.city`, `r
 impl HttpContext for MyApp {
     fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
         // response.status is a 2-byte big-endian u16 — do NOT use String::from_utf8
-        if let Some(bytes) = self.get_property(vec!["response", "status"]) {
+        if let Some(bytes) = self.get_property(vec!["response.status"]) {
             if bytes.len() == 2 {
                 let status = u16::from_be_bytes([bytes[0], bytes[1]]);
                 println!("upstream status: {}", status);
@@ -375,15 +377,15 @@ Provides persistent key-value storage. The API shape mirrors `fastedge::key_valu
 pub struct Store { /* ... */ }
 ```
 
-| Method                                                    | Return Type                          | Description                                            |
-| --------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------ |
-| `Store::new()`                                            | `Result<Self, Error>`                | Open the default store                                 |
-| `Store::open(name: &str)`                                 | `Result<Self, Error>`                | Open a named store                                     |
-| `Store::get(key: &str)`                                   | `Result<Option<Vec<u8>>, Error>`     | Get the value for a key; `None` if key does not exist  |
-| `Store::scan(pattern: &str)`                              | `Result<Vec<String>, Error>`         | List keys matching a glob-style pattern                |
-| `Store::zrange_by_score(key: &str, min: f64, max: f64)`   | `Result<Vec<(Vec<u8>, f64)>, Error>` | Get sorted-set members with scores between min and max |
-| `Store::zscan(key: &str, pattern: &str)`                  | `Result<Vec<(Vec<u8>, f64)>, Error>` | Scan sorted-set members matching a pattern             |
-| `Store::bf_exists(key: &str, item: &str)`                 | `Result<bool, Error>`                | Test whether an item is in a Bloom filter              |
+| Method                                                  | Return Type                          | Description                                            |
+| ------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------ |
+| `Store::new()`                                          | `Result<Self, Error>`                | Open the default store                                 |
+| `Store::open(name: &str)`                               | `Result<Self, Error>`                | Open a named store                                     |
+| `Store::get(key: &str)`                                 | `Result<Option<Vec<u8>>, Error>`     | Get the value for a key; `None` if key does not exist  |
+| `Store::scan(pattern: &str)`                            | `Result<Vec<String>, Error>`         | List keys matching a glob-style pattern                |
+| `Store::zrange_by_score(key: &str, min: f64, max: f64)` | `Result<Vec<(Vec<u8>, f64)>, Error>` | Get sorted-set members with scores between min and max |
+| `Store::zscan(key: &str, pattern: &str)`                | `Result<Vec<(Vec<u8>, f64)>, Error>` | Scan sorted-set members matching a pattern             |
+| `Store::bf_exists(key: &str, item: &str)`               | `Result<bool, Error>`                | Test whether an item is in a Bloom filter              |
 
 #### `Error`
 
@@ -395,11 +397,11 @@ pub enum Error {
 }
 ```
 
-| Variant         | Description                                                  |
-| --------------- | ------------------------------------------------------------ |
-| `NoSuchStore`   | The store label is not recognized by the host                |
-| `AccessDenied`  | The application does not have access to the specified store  |
-| `Other(String)` | An implementation-specific error (e.g., I/O failure)         |
+| Variant         | Description                                                 |
+| --------------- | ----------------------------------------------------------- |
+| `NoSuchStore`   | The store label is not recognized by the host               |
+| `AccessDenied`  | The application does not have access to the specified store |
+| `Other(String)` | An implementation-specific error (e.g., I/O failure)        |
 
 #### Example — Bloom filter check in request headers phase
 
