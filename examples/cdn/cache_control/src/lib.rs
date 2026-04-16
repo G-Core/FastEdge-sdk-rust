@@ -46,7 +46,7 @@ impl HttpContext for CacheControlContext {
         let status_code = self
             .get_property(vec!["response.status"])
             .and_then(|bytes| {
-                if bytes.len() >= 2 {
+                if bytes.len() == 2 {
                     Some(u16::from_be_bytes([bytes[0], bytes[1]]))
                 } else {
                     None

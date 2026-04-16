@@ -110,15 +110,8 @@ impl HttpContext for AbTestingContext {
         };
         let new_path = format!("{}{}", variant_path, path);
 
-        // Update the full URL with the new path
-        if let Some(url_bytes) = self.get_property(vec!["request.url"]) {
-            if let Ok(url) = String::from_utf8(url_bytes) {
-                if let Some(idx) = url.find(&path) {
-                    let new_url = format!("{}{}{}", &url[..idx], new_path, &url[idx + path.len()..]);
-                    self.set_property(vec!["request.url"], Some(new_url.as_bytes()));
-                }
-            }
-        }
+        // Update the request path directly to avoid ambiguous URL rewriting.
+        self.set_property(vec!["request.path"], Some(new_path.as_bytes()));
 
         // Add variant headers for upstream visibility
         self.add_http_request_header("X-Experiment", &experiment_name);

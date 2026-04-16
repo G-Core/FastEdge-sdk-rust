@@ -68,17 +68,28 @@ impl HttpContext for CorsContext {
                 .unwrap_or_else(|| "Content-Type, Authorization".to_string());
             let max_age = env::var("MAX_AGE").unwrap_or_else(|_| "86400".to_string());
 
-            self.send_http_response(
-                204,
-                vec![
-                    ("Access-Control-Allow-Origin", &origin),
-                    ("Access-Control-Allow-Methods", &allow_methods),
-                    ("Access-Control-Allow-Headers", &allow_headers),
-                    ("Access-Control-Max-Age", &max_age),
-                    ("Content-Length", "0"),
-                ],
-                None,
-            );
+            let effective_origin = if allowed_origins == "*" {
+                "*".to_string()
+            } else {
+                origin
+            };
+
+            let mut headers = vec![
+                ("Access-Control-Allow-Origin", effective_origin.as_str()),
+                ("Access-Control-Allow-Methods", allow_methods.as_str()),
+                ("Access-Control-Allow-Headers", allow_headers.as_str()),
+                ("Access-Control-Max-Age", max_age.as_str()),
+                ("Content-Length", "0"),
+            ];
+
+            // Vary: Origin is needed when the response varies by origin,
+            // so shared caches don't serve a cached response for a different origin.
+            // Not needed when Allow-Origin is "*" (response is the same for all origins).
+            if effective_origin != "*" {
+                headers.push(("Vary", "Origin"));
+            }
+
+            self.send_http_response(204, headers, None);
 
             return Action::Pause;
         }
@@ -104,7 +115,9 @@ impl HttpContext for CorsContext {
         };
 
         self.add_http_response_header("Access-Control-Allow-Origin", &effective_origin);
-        self.add_http_response_header("Vary", "Origin");
+        if effective_origin != "*" {
+            self.add_http_response_header("Vary", "Origin");
+        }
 
         if let Ok(expose) = env::var("EXPOSE_HEADERS") {
             if !expose.is_empty() {
