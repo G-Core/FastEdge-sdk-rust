@@ -1,0 +1,24 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Origin not in allow list — no CORS headers added, request continues without CORS",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug/api/data",
+    "headers": {
+      "host": "api.example.com",
+      "Origin": "https://evil.example.com"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": "{\"data\": \"ok\"}"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}

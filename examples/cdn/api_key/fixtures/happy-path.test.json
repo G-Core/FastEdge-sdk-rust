@@ -1,0 +1,24 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Valid API key — request passes through with X-API-Key header stripped",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "api.example.com",
+      "X-API-Key": "test-api-key-12345"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": "{\"status\": \"ok\"}"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}

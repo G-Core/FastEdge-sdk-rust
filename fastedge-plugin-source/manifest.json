@@ -1,7 +1,7 @@
 {
   "$schema": "https://fastedge-plugin-source/manifest/v1",
   "repo_id": "fastedge-sdk-rust",
-  "version": "1.1.0",
+  "version": "1.4.0",
   "sources": {
     "sdk-api": {
       "files": ["docs/SDK_API.md"],
@@ -103,6 +103,234 @@
       ],
       "required": true,
       "description": "CDN Geoblock example — docs pattern extraction"
+    },
+
+    "cdn-env-secrets-blueprint": {
+      "files": [
+        "examples/cdn/variables_and_secrets/src/lib.rs",
+        "examples/cdn/variables_and_secrets/Cargo.toml",
+        "examples/cdn/variables_and_secrets/README.md"
+      ],
+      "required": true,
+      "description": "CDN Variables and Secrets example — scaffold blueprint extraction"
+    },
+    "cdn-env-secrets-pattern": {
+      "files": [
+        "examples/cdn/variables_and_secrets/src/lib.rs",
+        "examples/cdn/variables_and_secrets/Cargo.toml",
+        "examples/cdn/variables_and_secrets/README.md"
+      ],
+      "required": true,
+      "description": "CDN Variables and Secrets example — docs pattern extraction"
+    },
+
+    "cdn-properties-blueprint": {
+      "files": [
+        "examples/cdn/properties/src/lib.rs",
+        "examples/cdn/properties/Cargo.toml",
+        "examples/cdn/properties/README.md"
+      ],
+      "required": true,
+      "description": "CDN Properties example — scaffold blueprint extraction"
+    },
+    "cdn-properties-pattern": {
+      "files": [
+        "examples/cdn/properties/src/lib.rs",
+        "examples/cdn/properties/Cargo.toml",
+        "examples/cdn/properties/README.md"
+      ],
+      "required": true,
+      "description": "CDN Properties example — docs pattern extraction"
+    },
+
+    "cdn-georedirect-blueprint": {
+      "files": [
+        "examples/cdn/geo_redirect/src/lib.rs",
+        "examples/cdn/geo_redirect/Cargo.toml",
+        "examples/cdn/geo_redirect/README.md"
+      ],
+      "required": true,
+      "description": "CDN Geo Redirect example — scaffold blueprint extraction"
+    },
+    "cdn-georedirect-pattern": {
+      "files": [
+        "examples/cdn/geo_redirect/src/lib.rs",
+        "examples/cdn/geo_redirect/Cargo.toml",
+        "examples/cdn/geo_redirect/README.md"
+      ],
+      "required": true,
+      "description": "CDN Geo Redirect example — docs pattern extraction"
+    },
+
+    "cdn-httpcall-blueprint": {
+      "files": [
+        "examples/cdn/http_call/src/lib.rs",
+        "examples/cdn/http_call/Cargo.toml",
+        "examples/cdn/http_call/README.md"
+      ],
+      "required": true,
+      "description": "CDN HTTP Call example — scaffold blueprint extraction"
+    },
+    "cdn-httpcall-pattern": {
+      "files": [
+        "examples/cdn/http_call/src/lib.rs",
+        "examples/cdn/http_call/Cargo.toml",
+        "examples/cdn/http_call/README.md"
+      ],
+      "required": true,
+      "description": "CDN HTTP Call example — docs pattern extraction"
+    },
+
+    "cdn-key-value-blueprint": {
+      "files": [
+        "examples/cdn/key_value/src/lib.rs",
+        "examples/cdn/key_value/Cargo.toml",
+        "examples/cdn/key_value/README.md"
+      ],
+      "required": true,
+      "description": "CDN KV Store example — scaffold blueprint extraction"
+    },
+    "cdn-key-value-pattern": {
+      "files": [
+        "examples/cdn/key_value/src/lib.rs",
+        "examples/cdn/key_value/Cargo.toml",
+        "examples/cdn/key_value/README.md"
+      ],
+      "required": true,
+      "description": "CDN KV Store example — docs pattern extraction"
+    },
+
+    "cdn-headers-blueprint": {
+      "files": [
+        "examples/cdn/headers/src/lib.rs",
+        "examples/cdn/headers/Cargo.toml",
+        "examples/cdn/headers/README.md"
+      ],
+      "required": true,
+      "description": "CDN Headers manipulation example — scaffold blueprint extraction"
+    },
+    "cdn-headers-pattern": {
+      "files": [
+        "examples/cdn/headers/src/lib.rs",
+        "examples/cdn/headers/Cargo.toml",
+        "examples/cdn/headers/README.md"
+      ],
+      "required": true,
+      "description": "CDN Headers manipulation example — docs pattern extraction"
+    },
+
+    "cdn-cors-blueprint": {
+      "files": [
+        "examples/cdn/cors/src/lib.rs",
+        "examples/cdn/cors/Cargo.toml",
+        "examples/cdn/cors/README.md"
+      ],
+      "required": true,
+      "description": "CDN CORS example — scaffold blueprint extraction"
+    },
+    "cdn-cors-pattern": {
+      "files": [
+        "examples/cdn/cors/src/lib.rs",
+        "examples/cdn/cors/Cargo.toml",
+        "examples/cdn/cors/README.md"
+      ],
+      "required": true,
+      "description": "CDN CORS example — docs pattern extraction"
+    },
+
+    "cdn-abtesting-blueprint": {
+      "files": [
+        "examples/cdn/ab_testing/src/lib.rs",
+        "examples/cdn/ab_testing/Cargo.toml",
+        "examples/cdn/ab_testing/README.md"
+      ],
+      "required": true,
+      "description": "CDN A/B Testing example — scaffold blueprint extraction"
+    },
+    "cdn-abtesting-pattern": {
+      "files": [
+        "examples/cdn/ab_testing/src/lib.rs",
+        "examples/cdn/ab_testing/Cargo.toml",
+        "examples/cdn/ab_testing/README.md"
+      ],
+      "required": true,
+      "description": "CDN A/B Testing example — docs pattern extraction"
+    },
+
+    "cdn-apikey-blueprint": {
+      "files": [
+        "examples/cdn/api_key/src/lib.rs",
+        "examples/cdn/api_key/Cargo.toml",
+        "examples/cdn/api_key/README.md"
+      ],
+      "required": true,
+      "description": "CDN API Key validation example — scaffold blueprint extraction"
+    },
+    "cdn-apikey-pattern": {
+      "files": [
+        "examples/cdn/api_key/src/lib.rs",
+        "examples/cdn/api_key/Cargo.toml",
+        "examples/cdn/api_key/README.md"
+      ],
+      "required": true,
+      "description": "CDN API Key validation example — docs pattern extraction"
+    },
+
+    "cdn-custom-error-pages-blueprint": {
+      "files": [
+        "examples/cdn/custom_error_pages/src/lib.rs",
+        "examples/cdn/custom_error_pages/Cargo.toml",
+        "examples/cdn/custom_error_pages/README.md"
+      ],
+      "required": true,
+      "description": "CDN Custom Error Pages example — scaffold blueprint extraction"
+    },
+    "cdn-custom-error-pages-pattern": {
+      "files": [
+        "examples/cdn/custom_error_pages/src/lib.rs",
+        "examples/cdn/custom_error_pages/Cargo.toml",
+        "examples/cdn/custom_error_pages/README.md"
+      ],
+      "required": true,
+      "description": "CDN Custom Error Pages example — docs pattern extraction"
+    },
+
+    "cdn-large-env-variable-blueprint": {
+      "files": [
+        "examples/cdn/large_env_variable/src/lib.rs",
+        "examples/cdn/large_env_variable/Cargo.toml",
+        "examples/cdn/large_env_variable/README.md"
+      ],
+      "required": true,
+      "description": "CDN Large Env Variable / Dictionary example — scaffold blueprint extraction"
+    },
+    "cdn-large-env-variable-pattern": {
+      "files": [
+        "examples/cdn/large_env_variable/src/lib.rs",
+        "examples/cdn/large_env_variable/Cargo.toml",
+        "examples/cdn/large_env_variable/README.md"
+      ],
+      "required": true,
+      "description": "CDN Large Env Variable / Dictionary example — docs pattern extraction"
+    },
+
+    "cdn-cache-control-blueprint": {
+      "files": [
+        "examples/cdn/cache_control/src/lib.rs",
+        "examples/cdn/cache_control/Cargo.toml",
+        "examples/cdn/cache_control/README.md"
+      ],
+      "required": true,
+      "description": "CDN Cache Control example — scaffold blueprint extraction"
+    },
+    "cdn-cache-control-pattern": {
+      "files": [
+        "examples/cdn/cache_control/src/lib.rs",
+        "examples/cdn/cache_control/Cargo.toml",
+        "examples/cdn/cache_control/README.md"
+      ],
+      "required": true,
+      "description": "CDN Cache Control example — docs pattern extraction"
     }
   },
   "target_mapping": {
@@ -162,6 +390,114 @@
     },
     "cdn-geoblock-pattern": {
       "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-geoblock-rust.md",
+      "section": null
+    },
+
+    "cdn-env-secrets-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/env-secrets-rust.md",
+      "section": null
+    },
+    "cdn-env-secrets-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-env-secrets-rust.md",
+      "section": null
+    },
+
+    "cdn-properties-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/properties-rust.md",
+      "section": null
+    },
+    "cdn-properties-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-properties-rust.md",
+      "section": null
+    },
+
+    "cdn-georedirect-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/geo-redirect-rust.md",
+      "section": null
+    },
+    "cdn-georedirect-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-geo-redirect-rust.md",
+      "section": null
+    },
+
+    "cdn-httpcall-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/http-call-rust.md",
+      "section": null
+    },
+    "cdn-httpcall-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-http-call-rust.md",
+      "section": null
+    },
+
+    "cdn-key-value-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/kv-store-rust.md",
+      "section": null
+    },
+    "cdn-key-value-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-kv-store-rust.md",
+      "section": null
+    },
+
+    "cdn-headers-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/headers-rust.md",
+      "section": null
+    },
+    "cdn-headers-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-headers-rust.md",
+      "section": null
+    },
+
+    "cdn-cors-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/cors-rust.md",
+      "section": null
+    },
+    "cdn-cors-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-cors-rust.md",
+      "section": null
+    },
+
+    "cdn-abtesting-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/ab-testing-rust.md",
+      "section": null
+    },
+    "cdn-abtesting-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-ab-testing-rust.md",
+      "section": null
+    },
+
+    "cdn-apikey-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/api-key-rust.md",
+      "section": null
+    },
+    "cdn-apikey-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-api-key-rust.md",
+      "section": null
+    },
+
+    "cdn-custom-error-pages-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/custom-error-pages-rust.md",
+      "section": null
+    },
+    "cdn-custom-error-pages-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-custom-error-pages-rust.md",
+      "section": null
+    },
+
+    "cdn-large-env-variable-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/large-dictionary-rust.md",
+      "section": null
+    },
+    "cdn-large-env-variable-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-large-dictionary-rust.md",
+      "section": null
+    },
+
+    "cdn-cache-control-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/cache-control-rust.md",
+      "section": null
+    },
+    "cdn-cache-control-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-cache-control-rust.md",
       "section": null
     }
   },

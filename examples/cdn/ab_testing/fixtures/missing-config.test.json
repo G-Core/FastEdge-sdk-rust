@@ -1,0 +1,17 @@
+{
+  "appType": "proxy-wasm",
+  "description": "No env vars configured — returns 500 misconfigured error",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "properties": {
+    "request.host": "example.com",
+    "request.path": "/landing"
+  },
+  "logLevel": 2
+}

@@ -1,0 +1,23 @@
+{
+  "appType": "proxy-wasm",
+  "description": "No Origin header (same-origin or non-browser request) — CORS processing skipped entirely",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug/api/data",
+    "headers": {
+      "host": "api.example.com"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": "{\"data\": \"ok\"}"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}
