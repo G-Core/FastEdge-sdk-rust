@@ -1,0 +1,28 @@
+{
+  "appType": "proxy-wasm",
+  "description": "New visitor with no experiment cookie — assigns variant and rewrites path",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "properties": {
+    "request.host": "example.com",
+    "request.path": "/landing",
+    "request.url": "http://example.com/landing"
+  },
+  "response": {
+    "headers": {
+      "content-type": "text/html"
+    },
+    "body": "<html><body>Landing page</body></html>"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}

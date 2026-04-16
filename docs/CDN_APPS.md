@@ -59,6 +59,62 @@ fastedge = { version = "0.3", features = ["proxywasm"] }
 
 The `proxywasm` feature flag is required to access `fastedge::proxywasm::*`. Without it, `fastedge` only exposes Component Model APIs, which are not available in the proxy-wasm environment.
 
+### Minimal Example
+
+A complete CDN app that adds a response header and logs each lifecycle phase:
+
+```rust,no_run
+use log::info;
+use proxy_wasm::traits::*;
+use proxy_wasm::types::*;
+
+proxy_wasm::main! {{
+    proxy_wasm::set_log_level(LogLevel::Trace);
+    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(HelloWorldRoot) });
+}}
+
+struct HelloWorldRoot;
+
+impl Context for HelloWorldRoot {}
+
+impl RootContext for HelloWorldRoot {
+    fn get_type(&self) -> Option<ContextType> {
+        Some(ContextType::HttpContext)
+    }
+
+    fn create_http_context(&self, _: u32) -> Option<Box<dyn HttpContext>> {
+        Some(Box::new(HelloWorld))
+    }
+}
+
+struct HelloWorld;
+
+impl Context for HelloWorld {}
+
+impl HttpContext for HelloWorld {
+    fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
+        info!("Hello from on_http_request_headers");
+        Action::Continue
+    }
+
+    fn on_http_request_body(&mut self, _: usize, _: bool) -> Action {
+        info!("Hello from on_http_request_body");
+        Action::Continue
+    }
+
+    fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
+        self.add_http_response_header("x-powered-by", "FastEdge");
+        info!("Hello from on_http_response_headers");
+        Action::Continue
+    }
+
+    fn on_http_response_body(&mut self, _: usize, _: bool) -> Action {
+        info!("Hello from on_http_response_body");
+        Action::Continue
+    }
+}
+```
+
 ### Build
 
 ```sh
@@ -138,12 +194,12 @@ Both `Context` and `HttpContext` must be implemented. The `Context` impl can be 
 
 ### Lifecycle Callbacks
 
-| Callback                                                          | Phase            | Description                                         |
-| ----------------------------------------------------------------- | ---------------- | --------------------------------------------------- |
-| `on_http_request_headers(num_headers, end_of_stream) -> Action`   | Request headers  | Inspect or modify request headers before forwarding |
-| `on_http_request_body(body_size, end_of_stream) -> Action`        | Request body     | Inspect or modify request body before forwarding    |
-| `on_http_response_headers(num_headers, end_of_stream) -> Action`  | Response headers | Inspect or modify response headers from origin      |
-| `on_http_response_body(body_size, end_of_stream) -> Action`       | Response body    | Inspect or modify response body from origin         |
+| Callback                                                         | Phase            | Description                                         |
+| ---------------------------------------------------------------- | ---------------- | --------------------------------------------------- |
+| `on_http_request_headers(num_headers, end_of_stream) -> Action`  | Request headers  | Inspect or modify request headers before forwarding |
+| `on_http_request_body(body_size, end_of_stream) -> Action`       | Request body     | Inspect or modify request body before forwarding    |
+| `on_http_response_headers(num_headers, end_of_stream) -> Action` | Response headers | Inspect or modify response headers from origin      |
+| `on_http_response_body(body_size, end_of_stream) -> Action`      | Response body    | Inspect or modify response body from origin         |
 
 All callbacks have default no-op implementations. Override only the phases your app needs to process.
 

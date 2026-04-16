@@ -1,0 +1,24 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Wildcard ALLOWED_ORIGINS=* — returns * as Access-Control-Allow-Origin for any origin",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug/api/public",
+    "headers": {
+      "host": "api.example.com",
+      "Origin": "https://anywhere.example.com"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": "{\"public\": true}"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "fixtures/wildcard.env"
+  },
+  "logLevel": 2
+}

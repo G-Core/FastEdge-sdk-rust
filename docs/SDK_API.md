@@ -215,14 +215,14 @@ pub struct Body { /* private fields */ }
 
 ### Constructors
 
-| Constructor                                | Content-Type                | Notes                                                              |
-| ------------------------------------------ | --------------------------- | ------------------------------------------------------------------ |
-| `Body::from(value: String)`                | `text/plain; charset=utf-8` |                                                                    |
-| `Body::from(value: &'static str)`          | `text/plain; charset=utf-8` |                                                                    |
-| `Body::from(value: Vec<u8>)`               | `application/octet-stream`  |                                                                    |
-| `Body::from(value: &'static [u8])`         | `application/octet-stream`  |                                                                    |
-| `Body::empty()`                            | `text/plain; charset=utf-8` | Zero-length body                                                   |
-| `Body::try_from(value: serde_json::Value)` | `application/json`          | Requires `json` feature; returns `Result<Body, serde_json::Error>` |
+| Constructor                                  | Content-Type                | Notes                                                              |
+| -------------------------------------------- | --------------------------- | ------------------------------------------------------------------ |
+| `Body::from(value: String)`                  | `text/plain; charset=utf-8` |                                                                    |
+| `Body::from(value: &'static str)`            | `text/plain; charset=utf-8` |                                                                    |
+| `Body::from(value: Vec<u8>)`                 | `application/octet-stream`  |                                                                    |
+| `Body::from(value: &'static [u8])`           | `application/octet-stream`  |                                                                    |
+| `Body::empty()`                              | `text/plain; charset=utf-8` | Zero-length body                                                   |
+| `Body::try_from(value: serde_json::Value)`   | `application/json`          | Requires `json` feature; returns `Result<Body, serde_json::Error>` |
 
 ```rust
 use fastedge::body::Body;
@@ -247,10 +247,10 @@ assert_eq!(body.content_type(), "application/json");
 
 ### Methods
 
-| Method                          | Return Type | Description                                         |
-| ------------------------------- | ----------- | --------------------------------------------------- |
-| `content_type(&self) -> String` | `String`    | Returns the MIME type set when the body was created |
-| `empty() -> Self`               | `Body`      | Constructs a zero-length body                       |
+| Method                           | Return Type | Description                                         |
+| -------------------------------- | ----------- | --------------------------------------------------- |
+| `content_type(&self) -> String`  | `String`    | Returns the MIME type set when the body was created |
+| `empty() -> Self`                | `Body`      | Constructs a zero-length body                       |
 
 All methods from `bytes::Bytes` are available via `Deref`:
 
@@ -267,12 +267,12 @@ let slice: &[u8] = &body[..];
 
 Content-type is determined at construction time and cannot be changed after creation.
 
-| Input type          | Resulting content-type      |
-| ------------------- | --------------------------- |
-| `String` / `&str`   | `text/plain; charset=utf-8` |
-| `Vec<u8>` / `&[u8]` | `application/octet-stream`  |
-| `serde_json::Value` | `application/json`          |
-| `Body::empty()`     | `text/plain; charset=utf-8` |
+| Input type            | Resulting content-type      |
+| --------------------- | --------------------------- |
+| `String` / `&str`     | `text/plain; charset=utf-8` |
+| `Vec<u8>` / `&[u8]`   | `application/octet-stream`  |
+| `serde_json::Value`   | `application/json`          |
+| `Body::empty()`       | `text/plain; charset=utf-8` |
 
 To send a response with a content-type that does not match automatic detection, set the `Content-Type` header explicitly on the response builder:
 
@@ -370,13 +370,13 @@ pub enum Error {
 }
 ```
 
-| Variant                           | When it occurs                                                                                     |
-| --------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `UnsupportedMethod(http::Method)` | `send_request` was called with a method other than GET, POST, PUT, DELETE, HEAD, PATCH, or OPTIONS |
-| `BindgenHttpError`                | The host runtime returned an error during request execution                                        |
-| `HttpError(http::Error)`          | An error occurred constructing or parsing an HTTP message                                          |
-| `InvalidBody`                     | The request or response body could not be encoded or decoded                                       |
-| `InvalidStatusCode(u16)`          | A status code outside the range 100–599 was encountered                                            |
+| Variant                             | When it occurs                                                                                       |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `UnsupportedMethod(http::Method)`   | `send_request` was called with a method other than GET, POST, PUT, DELETE, HEAD, PATCH, or OPTIONS   |
+| `BindgenHttpError`                  | The host runtime returned an error during request execution                                          |
+| `HttpError(http::Error)`            | An error occurred constructing or parsing an HTTP message                                            |
+| `InvalidBody`                       | The request or response body could not be encoded or decoded                                         |
+| `InvalidStatusCode(u16)`            | A status code outside the range 100–599 was encountered                                              |
 
 `Error` implements `std::error::Error` and `std::fmt::Display`. It is compatible with `anyhow` and `?` propagation.
 
@@ -401,10 +401,10 @@ fn fetch(uri: &str) -> Result<String, Error> {
 
 ## Feature Flags
 
-| Flag        | Default  | Effect                                                                             |
-| ----------- | -------- | ---------------------------------------------------------------------------------- |
-| `proxywasm` | enabled  | Enables the `fastedge::proxywasm` module for ProxyWasm ABI compatibility           |
-| `json`      | disabled | Enables `Body::try_from(serde_json::Value)` and adds `serde_json` as a dependency |
+| Flag          | Default    | Effect                                                                              |
+| ------------- | ---------- | ----------------------------------------------------------------------------------- |
+| `proxywasm`   | enabled    | Enables the `fastedge::proxywasm` module for ProxyWasm ABI compatibility            |
+| `json`        | disabled   | Enables `Body::try_from(serde_json::Value)` and adds `serde_json` as a dependency  |
 
 Enable non-default features in `Cargo.toml`:
 
@@ -432,15 +432,15 @@ use fastedge::http::{Method, Request, Response, StatusCode, HeaderMap, Uri};
 
 **Supported HTTP methods** (the complete set accepted by `send_request`):
 
-| Constant          | Method    |
-| ----------------- | --------- |
-| `Method::GET`     | `GET`     |
-| `Method::POST`    | `POST`    |
-| `Method::PUT`     | `PUT`     |
-| `Method::DELETE`  | `DELETE`  |
-| `Method::HEAD`    | `HEAD`    |
-| `Method::PATCH`   | `PATCH`   |
-| `Method::OPTIONS` | `OPTIONS` |
+| Constant            | Method      |
+| ------------------- | ----------- |
+| `Method::GET`       | `GET`       |
+| `Method::POST`      | `POST`      |
+| `Method::PUT`       | `PUT`       |
+| `Method::DELETE`    | `DELETE`    |
+| `Method::HEAD`      | `HEAD`      |
+| `Method::PATCH`     | `PATCH`     |
+| `Method::OPTIONS`   | `OPTIONS`   |
 
 ---
 

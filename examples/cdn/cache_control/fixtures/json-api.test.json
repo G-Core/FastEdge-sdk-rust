@@ -1,0 +1,23 @@
+{
+  "appType": "proxy-wasm",
+  "description": "JSON API response with API_MAX_AGE=0 — sets no-cache, no-store for API data",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug/api/data",
+    "headers": {
+      "host": "api.example.com"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": "{\"items\": []}"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}

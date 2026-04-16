@@ -1,0 +1,23 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Image response — sets long-lived immutable cache for static assets",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug/logo.png",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "image/png"
+    },
+    "body": ""
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}

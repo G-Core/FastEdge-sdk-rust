@@ -1,0 +1,18 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Wrong API key — returns 403 Forbidden",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "api.example.com",
+      "X-API-Key": "wrong-key-99999"
+    },
+    "body": ""
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}

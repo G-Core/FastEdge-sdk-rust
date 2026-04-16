@@ -1,0 +1,17 @@
+{
+  "appType": "proxy-wasm",
+  "description": "No X-API-Key header — returns 401 with WWW-Authenticate challenge",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "api.example.com"
+    },
+    "body": ""
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}

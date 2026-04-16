@@ -1,0 +1,23 @@
+{
+  "appType": "proxy-wasm",
+  "description": "HTML response — sets public cache with must-revalidate and Vary header",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "text/html; charset=utf-8"
+    },
+    "body": "<html><body>Hello</body></html>"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}

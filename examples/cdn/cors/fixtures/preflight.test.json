@@ -1,0 +1,21 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Preflight OPTIONS request — returns 204 with full CORS headers, no origin fetch",
+  "request": {
+    "method": "OPTIONS",
+    "url": "http://fastedge-builtin.debug/api/data",
+    "headers": {
+      "host": "api.example.com",
+      "Origin": "https://app.example.com",
+      ":method": "OPTIONS",
+      "Access-Control-Request-Method": "POST",
+      "Access-Control-Request-Headers": "Content-Type, Authorization, X-Custom-Header"
+    },
+    "body": ""
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2
+}
