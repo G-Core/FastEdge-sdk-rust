@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v5
 
       - name: Check manifest ↔ copilot-instructions sync
         run: bash fastedge-plugin-source/check-copilot-sync.sh
