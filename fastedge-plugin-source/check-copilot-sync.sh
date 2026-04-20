@@ -46,7 +46,7 @@ if [ -f "$MANIFEST" ]; then
     exit 1
   fi
 
-  doc_files=$(jq -r '.sources[].files[]' "$MANIFEST" | grep -E '^(docs|schemas)/' | sort -u)
+  doc_files=$(jq -r '.sources[].files[] | select(startswith("docs/") or startswith("schemas/"))' "$MANIFEST" | sort -u)
 
   missing=()
   for doc in $doc_files; do
@@ -99,8 +99,9 @@ fi
 # known gaps during rollout.
 
 if [ -d "examples" ] && [ -f "$MANIFEST" ]; then
-  # Get all examples/ file paths from the manifest
-  manifest_examples=$(jq -r '.sources[].files[]' "$MANIFEST" | grep '^examples/' | sort -u)
+  # Get all examples/ file paths from the manifest (filter in jq to avoid
+  # grep exit-1 on no matches, which would kill the script under pipefail)
+  manifest_examples=$(jq -r '.sources[].files[] | select(startswith("examples/"))' "$MANIFEST" | sort -u)
 
   # Find example project directories (contain package.json, Cargo.toml, or asconfig.json)
   # Handles flat (examples/<name>/) and nested (examples/cdn/<name>/) structures
@@ -109,7 +110,8 @@ if [ -d "examples" ] && [ -f "$MANIFEST" ]; then
     [ -z "$marker_file" ] && continue
     project_dir=$(dirname "$marker_file")
     # Check if any manifest file starts with this project directory
-    if [ -z "$manifest_examples" ] || ! printf '%s\n' "$manifest_examples" | grep -q "^${project_dir}/"; then
+    # Uses awk index() for literal prefix match (grep would treat . [ + as regex)
+    if [ -z "$manifest_examples" ] || ! printf '%s\n' "$manifest_examples" | awk -v prefix="${project_dir}/" 'index($0, prefix) == 1 {found=1; exit} END {exit !found}'; then
       untracked+=("$project_dir")
     fi
   done < <(find examples/ -maxdepth 4 \( -name "package.json" -o -name "Cargo.toml" -o -name "asconfig.json" \) -not -path "*/node_modules/*" 2>/dev/null | sort)
