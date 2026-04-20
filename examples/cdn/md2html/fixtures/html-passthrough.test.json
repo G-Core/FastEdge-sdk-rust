@@ -1,18 +1,18 @@
 {
   "appType": "proxy-wasm",
-  "description": "Country code DE - redirects to Germany-specific origin",
+  "description": "Upstream returns text/html — no conversion, passed through unchanged",
   "request": {
     "method": "GET",
     "url": "http://fastedge-builtin.debug",
     "headers": {
-      "host": "example.com"
+      "host": "example.com",
+      "content-type": "text/html",
+      "x-debugger-content": "body-only"
     },
-    "body": ""
+    "body": "<html><body>Already HTML</body></html>"
   },
   "properties": {
-    "request.country": "DE",
-    "request.host": "example.com",
-    "request.path": "/test"
+    "request.path": "/page.html"
   },
   "dotenv": {
     "enabled": true,

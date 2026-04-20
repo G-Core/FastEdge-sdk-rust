@@ -1,6 +1,6 @@
 {
   "appType": "proxy-wasm",
-  "description": "Valid request with host header - exercises header add/set/remove operations",
+  "description": "LARGE_CONFIG not set — x-config-size header shows 0",
   "request": {
     "method": "GET",
     "url": "http://fastedge-builtin.debug",
@@ -9,10 +9,7 @@
     },
     "body": ""
   },
-  "response": {
-    "headers": {},
-    "body": ""
-  },
+  "logLevel": 2,
   "wasm": {
     "path": "<workspace>/.fastedge-debug/app.wasm",
     "description": "Default debugger WASM binary"

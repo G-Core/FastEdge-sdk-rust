@@ -6,5 +6,9 @@
     "url": "http://fastedge-builtin.debug",
     "headers": {},
     "body": ""
+  },
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
   }
 }
