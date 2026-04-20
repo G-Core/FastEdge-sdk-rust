@@ -97,7 +97,7 @@ impl HttpContext for HttpBody {
         html.push_str("</body></html>");
 
         let body = html.as_bytes();
-        self.set_http_response_body(0, body.len(), body);
+        self.set_http_response_body(0, body_size, body);
         println!("Converted");
 
         Action::Continue
