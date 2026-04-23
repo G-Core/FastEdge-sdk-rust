@@ -1,7 +1,7 @@
 [workspace]
 
 [package]
-name = "outbound_fetch"
+name = "static_assets_wasi"
 version = "0.1.0"
 edition = "2021"
 
