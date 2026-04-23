@@ -1,0 +1,23 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Basic request — verifies x-powered-by header is added to response",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "text/html"
+    },
+    "body": "<html><body>Hello World</body></html>"
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

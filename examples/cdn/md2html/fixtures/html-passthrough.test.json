@@ -1,0 +1,26 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Upstream returns text/html — no conversion, passed through unchanged",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com",
+      "content-type": "text/html",
+      "x-debugger-content": "body-only"
+    },
+    "body": "<html><body>Already HTML</body></html>"
+  },
+  "properties": {
+    "request.path": "/page.html"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

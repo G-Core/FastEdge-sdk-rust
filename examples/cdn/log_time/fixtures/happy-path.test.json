@@ -1,0 +1,21 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Basic request — verifies time logging at request and response phases",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {},
+    "body": ""
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

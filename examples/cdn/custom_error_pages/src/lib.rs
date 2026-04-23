@@ -48,7 +48,7 @@ impl HttpContext for HttpBody {
         Action::Continue
     }
 
-    fn on_http_response_body(&mut self, _body_size: usize, end_of_stream: bool) -> Action {
+    fn on_http_response_body(&mut self, body_size: usize, end_of_stream: bool) -> Action {
         // only process 4xx/5xx error responses
         let Some(status) = self.get_property(vec!["response.status"]) else {
             return Action::Continue;
@@ -139,7 +139,7 @@ impl HttpContext for HttpBody {
 
         let html_body = handlebars.render("error_template", &page_data).unwrap();
         let body = html_body.as_bytes();
-        self.set_http_response_body(0, body.len(), body);
+        self.set_http_response_body(0, body_size, body);
 
         Action::Continue
     }

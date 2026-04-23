@@ -1,0 +1,26 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Upstream returns text/markdown — converted to HTML with BASE path prefix",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com",
+      "content-type": "text/markdown",
+      "x-debugger-content": "body-only"
+    },
+    "body": "# Hello World\n\nThis is a **markdown** document.\n\n- Item 1\n- Item 2\n"
+  },
+  "properties": {
+    "request.path": "/readme.md"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}
