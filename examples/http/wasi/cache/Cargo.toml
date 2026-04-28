@@ -1,0 +1,17 @@
+[workspace]
+
+[package]
+name = "cache_wasi"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wstd = "0.6"
+fastedge = { path = "../../../../" }
+anyhow = "1"
+querystring = "1.1"
+
+
