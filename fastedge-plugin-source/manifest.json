@@ -19,6 +19,12 @@
       "description": "CDN app guide — proxy-wasm lifecycle, fastedge::proxywasm::* API surface, request/response manipulation"
     },
 
+    "quickstart": {
+      "files": ["docs/quickstart.md"],
+      "required": true,
+      "description": "Installation, project setup, async vs sync handler, basic build for HTTP and CDN apps"
+    },
+
     "http-hello-world-blueprint": {
       "files": [
         "examples/http/wasi/hello_world/src/lib.rs",
@@ -344,6 +350,11 @@
     },
     "cdn-apps": {
       "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn-apps-rust.md",
+      "section": null
+    },
+
+    "quickstart": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/quickstart-rust.md",
       "section": null
     },
 
