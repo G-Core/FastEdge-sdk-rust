@@ -2,12 +2,15 @@
  * Copyright 2025 G-Core Innovations SARL
  */
 /*
-Example app demonstrating response caching via the async cache interface.
+Example app demonstrating response caching via the cache interface.
 
 The app reads ORIGIN_HOST from the environment, forwards the incoming request
 to that origin, and caches the response body keyed by the request path.
 On subsequent requests for the same path the cached body is returned directly
 without hitting the origin.
+
+Cache reads and writes use the synchronous `fastedge::cache` API; upstream
+HTTP I/O still uses the async `wstd` client.
 
 Environment variables:
   ORIGIN_HOST   Base URL of the upstream origin, e.g. https://api.example.com
@@ -43,7 +46,7 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
     let cache_key = format!("cache:{path_and_query}");
 
     // Return cached response if available
-    if let Some(cached) = cache::get(cache_key.clone()).await? {
+    if let Some(cached) = cache::get(&cache_key)? {
         println!("cache hit: {cache_key}");
         return Ok(Response::builder()
             .status(200)
@@ -78,7 +81,7 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
 
     // Only cache successful responses
     if status.is_success() {
-        cache::set(cache_key, body_bytes.clone(), Some(ttl_ms)).await?;
+        cache::set(&cache_key, &body_bytes, Some(ttl_ms))?;
     }
 
     // Replay original response
@@ -90,4 +93,3 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
     }
     Ok(builder.body(Body::from(body_bytes))?)
 }
-

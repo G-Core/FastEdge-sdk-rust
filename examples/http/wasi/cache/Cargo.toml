@@ -12,6 +12,3 @@ crate-type = ["cdylib"]
 wstd = "0.6"
 fastedge = { path = "../../../../" }
 anyhow = "1"
-querystring = "1.1"
-
-

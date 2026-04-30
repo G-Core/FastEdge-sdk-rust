@@ -2,7 +2,7 @@
  * Copyright 2025 G-Core Innovations SARL
  */
 /*
-Example app demonstrating cache-aside pattern via the sync cache interface.
+Example app demonstrating cache-aside pattern via the cache interface.
 
 On each request the app:
   1. Builds a cache key from the request path.
@@ -21,7 +21,7 @@ Build:
 use std::env;
 
 use fastedge::body::Body;
-use fastedge::cache::sync as cache;
+use fastedge::cache;
 use fastedge::http::{Request, Response, StatusCode};
 
 #[fastedge::http]

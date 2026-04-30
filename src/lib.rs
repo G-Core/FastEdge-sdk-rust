@@ -197,34 +197,38 @@
 //! }
 //! ```
 //!
-//! ### Using the Cache (async handler)
+//! ### Using the Cache
 //!
 //! ```no_run
-//! use wstd::http::body::Body;
-//! use wstd::http::{Request, Response};
+//! use anyhow::Result;
+//! use fastedge::body::Body;
+//! use fastedge::cache;
+//! use fastedge::http::{Request, Response, StatusCode};
 //!
-//! #[wstd::http_server]
-//! async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
+//! #[fastedge::http]
+//! fn main(_req: Request<Body>) -> Result<Response<Body>> {
 //!     let key = "home:rendered";
 //!
 //!     // Return cached response if available
-//!     if let Some(cached) = fastedge::cache::get(key).await? {
-//!         return Ok(Response::builder()
-//!             .status(200)
+//!     if let Some(cached) = cache::get(key)? {
+//!         return Response::builder()
+//!             .status(StatusCode::OK)
 //!             .header("x-cache", "hit")
-//!             .body(Body::from(cached))?);
+//!             .body(Body::from(cached))
+//!             .map_err(Into::into);
 //!     }
 //!
 //!     // Compute the response
 //!     let content = b"<h1>Hello</h1>".to_vec();
 //!
 //!     // Store it for 60 seconds
-//!     fastedge::cache::set(key, content.clone(), Some(60_000)).await?;
+//!     cache::set(key, content.clone(), Some(60_000))?;
 //!
-//!     Ok(Response::builder()
-//!         .status(200)
+//!     Response::builder()
+//!         .status(StatusCode::OK)
 //!         .header("x-cache", "miss")
-//!         .body(Body::from(content))?)
+//!         .body(Body::from(content))
+//!         .map_err(Into::into)
 //! }
 //! ```
 pub extern crate http;
@@ -407,11 +411,11 @@ pub mod key_value {
     pub use crate::gcore::fastedge::key_value::Error;
 }
 
-/// Asynchronous cache API for FastEdge applications.
+/// Synchronous cache API for FastEdge applications.
 ///
-/// This module exposes the async cache interface generated from the Component Model
-/// bindings. Operations may suspend and must be `.await`-ed inside an async handler
-/// (e.g. `#[wstd::http_server]`).
+/// This module exposes the cache interface generated from the Component Model
+/// bindings. Calls are blocking and can be used directly inside a sync handler
+/// (e.g. `#[fastedge::http]`).
 ///
 /// # Operations
 ///
@@ -422,8 +426,6 @@ pub mod key_value {
 /// - [`cache::incr`] — atomically increment (or decrement) an integer value
 /// - [`cache::expire`] — update the TTL of an existing key
 ///
-/// For synchronous runtimes, use [`cache::sync`] instead.
-///
 /// # Examples
 ///
 /// ## Fetch a value
@@ -431,13 +433,11 @@ pub mod key_value {
 /// ```no_run
 /// use fastedge::cache;
 ///
-/// # async fn example() -> anyhow::Result<()> {
-/// match cache::get("session:abc123").await? {
+/// match cache::get("session:abc123")? {
 ///     Some(data) => println!("cached: {}", String::from_utf8_lossy(&data)),
 ///     None => println!("cache miss"),
 /// }
-/// # Ok(())
-/// # }
+/// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
 ///
 /// ## Write a value
@@ -445,14 +445,12 @@ pub mod key_value {
 /// ```no_run
 /// use fastedge::cache;
 ///
-/// # async fn example() -> anyhow::Result<()> {
 /// // Store with a 5-minute TTL
-/// cache::set("session:abc123", b"user-data".to_vec(), Some(300_000)).await?;
+/// cache::set("session:abc123", b"user-data".to_vec(), Some(300_000))?;
 ///
 /// // Store with no expiry
-/// cache::set("config:flags", b"enabled".to_vec(), None).await?;
-/// # Ok(())
-/// # }
+/// cache::set("config:flags", b"enabled".to_vec(), None)?;
+/// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
 ///
 /// ## Delete a key
@@ -460,10 +458,8 @@ pub mod key_value {
 /// ```no_run
 /// use fastedge::cache;
 ///
-/// # async fn example() -> anyhow::Result<()> {
-/// cache::delete("session:abc123").await?;
-/// # Ok(())
-/// # }
+/// cache::delete("session:abc123")?;
+/// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
 ///
 /// ## Check existence
@@ -471,12 +467,10 @@ pub mod key_value {
 /// ```no_run
 /// use fastedge::cache;
 ///
-/// # async fn example() -> anyhow::Result<()> {
-/// if cache::exists("session:abc123").await? {
+/// if cache::exists("session:abc123")? {
 ///     println!("key is present");
 /// }
-/// # Ok(())
-/// # }
+/// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
 ///
 /// ## Increment a counter
@@ -484,16 +478,14 @@ pub mod key_value {
 /// ```no_run
 /// use fastedge::cache;
 ///
-/// # async fn example() -> anyhow::Result<()> {
 /// // Increment by 1
-/// let hits = cache::incr("page:home:hits", 1).await?;
+/// let hits = cache::incr("page:home:hits", 1)?;
 /// println!("total hits: {hits}");
 ///
 /// // Decrement by 5
-/// let remaining = cache::incr("rate-limit:user:42", -5).await?;
+/// let remaining = cache::incr("rate-limit:user:42", -5)?;
 /// println!("remaining tokens: {remaining}");
-/// # Ok(())
-/// # }
+/// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
 ///
 /// ## Update a key's expiry
@@ -501,132 +493,26 @@ pub mod key_value {
 /// ```no_run
 /// use fastedge::cache;
 ///
-/// # async fn example() -> anyhow::Result<()> {
 /// // Extend session TTL by 10 minutes
-/// let updated = cache::expire("session:abc123", 600_000).await?;
+/// let updated = cache::expire("session:abc123", 600_000)?;
 /// if !updated {
 ///     println!("key no longer exists");
 /// }
-/// # Ok(())
-/// # }
+/// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
 pub mod cache {
     #[doc(inline)]
-    pub use crate::gcore::fastedge::cache::get;
+    pub use crate::gcore::fastedge::cache_sync::get;
     #[doc(inline)]
-    pub use crate::gcore::fastedge::cache::set;
+    pub use crate::gcore::fastedge::cache_sync::set;
     #[doc(inline)]
-    pub use crate::gcore::fastedge::cache::delete;
+    pub use crate::gcore::fastedge::cache_sync::delete;
     #[doc(inline)]
-    pub use crate::gcore::fastedge::cache::exists;
+    pub use crate::gcore::fastedge::cache_sync::exists;
     #[doc(inline)]
-    pub use crate::gcore::fastedge::cache::incr;
+    pub use crate::gcore::fastedge::cache_sync::incr;
     #[doc(inline)]
-    pub use crate::gcore::fastedge::cache::expire;
-
-    /// Synchronous cache API.
-    ///
-    /// This submodule mirrors [`super`] but uses blocking bindings for hosts
-    /// that provide synchronous cache calls. Use this in sync handlers
-    /// (e.g. `#[fastedge::http]`) where `.await` is not available.
-    ///
-    /// # Operations
-    ///
-    /// - [`sync::get`] — fetch a cached value by key
-    /// - [`sync::set`] — write or overwrite a value by key (with optional TTL)
-    /// - [`sync::delete`] — remove a key from the cache
-    /// - [`sync::exists`] — check whether a key is present
-    /// - [`sync::incr`] — atomically increment (or decrement) an integer value
-    /// - [`sync::expire`] — update the TTL of an existing key
-    ///
-    /// # Examples
-    ///
-    /// ## Fetch a value
-    ///
-    /// ```no_run
-    /// use fastedge::cache::sync as cache;
-    ///
-    /// match cache::get("session:abc123")? {
-    ///     Some(data) => println!("cached: {}", String::from_utf8_lossy(&data)),
-    ///     None => println!("cache miss"),
-    /// }
-    /// # Ok::<(), Box<dyn std::error::Error>>(())
-    /// ```
-    ///
-    /// ## Write a value
-    ///
-    /// ```no_run
-    /// use fastedge::cache::sync as cache;
-    ///
-    /// // Store with a 5-minute TTL
-    /// cache::set("session:abc123", b"user-data".to_vec(), Some(300_000))?;
-    ///
-    /// // Store with no expiry
-    /// cache::set("config:flags", b"enabled".to_vec(), None)?;
-    /// # Ok::<(), Box<dyn std::error::Error>>(())
-    /// ```
-    ///
-    /// ## Delete a key
-    ///
-    /// ```no_run
-    /// use fastedge::cache::sync as cache;
-    ///
-    /// cache::delete("session:abc123")?;
-    /// # Ok::<(), Box<dyn std::error::Error>>(())
-    /// ```
-    ///
-    /// ## Check existence
-    ///
-    /// ```no_run
-    /// use fastedge::cache::sync as cache;
-    ///
-    /// if cache::exists("session:abc123")? {
-    ///     println!("key is present");
-    /// }
-    /// # Ok::<(), Box<dyn std::error::Error>>(())
-    /// ```
-    ///
-    /// ## Increment a counter
-    ///
-    /// ```no_run
-    /// use fastedge::cache::sync as cache;
-    ///
-    /// // Increment by 1
-    /// let hits = cache::incr("page:home:hits", 1)?;
-    /// println!("total hits: {hits}");
-    ///
-    /// // Decrement by 5
-    /// let remaining = cache::incr("rate-limit:user:42", -5)?;
-    /// println!("remaining tokens: {remaining}");
-    /// # Ok::<(), Box<dyn std::error::Error>>(())
-    /// ```
-    ///
-    /// ## Update a key's expiry
-    ///
-    /// ```no_run
-    /// use fastedge::cache::sync as cache;
-    ///
-    /// // Extend session TTL by 10 minutes
-    /// let updated = cache::expire("session:abc123", 600_000)?;
-    /// if !updated {
-    ///     println!("key no longer exists");
-    /// }
-    /// # Ok::<(), Box<dyn std::error::Error>>(())
-    /// ```
-    pub mod sync {
-        #[doc(inline)]
-        pub use crate::gcore::fastedge::cache_sync::get;
-        #[doc(inline)]
-        pub use crate::gcore::fastedge::cache_sync::set;
-        #[doc(inline)]
-        pub use crate::gcore::fastedge::cache_sync::delete;
-        #[doc(inline)]
-        pub use crate::gcore::fastedge::cache_sync::exists;
-        #[doc(inline)]
-        pub use crate::gcore::fastedge::cache_sync::incr;
-        #[doc(inline)]
-        pub use crate::gcore::fastedge::cache_sync::expire;
-    }
+    pub use crate::gcore::fastedge::cache_sync::expire;
 }
 
 
