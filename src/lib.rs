@@ -196,6 +196,41 @@
 //!     }
 //! }
 //! ```
+//!
+//! ### Using the Cache
+//!
+//! ```no_run
+//! use anyhow::Result;
+//! use fastedge::body::Body;
+//! use fastedge::cache;
+//! use fastedge::http::{Request, Response, StatusCode};
+//!
+//! #[fastedge::http]
+//! fn main(_req: Request<Body>) -> Result<Response<Body>> {
+//!     let key = "home:rendered";
+//!
+//!     // Return cached response if available
+//!     if let Some(cached) = cache::get(key)? {
+//!         return Response::builder()
+//!             .status(StatusCode::OK)
+//!             .header("x-cache", "hit")
+//!             .body(Body::from(cached))
+//!             .map_err(Into::into);
+//!     }
+//!
+//!     // Compute the response
+//!     let content = b"<h1>Hello</h1>".to_vec();
+//!
+//!     // Store it for 60 seconds
+//!     cache::set(key, content.clone(), Some(60_000))?;
+//!
+//!     Response::builder()
+//!         .status(StatusCode::OK)
+//!         .header("x-cache", "miss")
+//!         .body(Body::from(content))
+//!         .map_err(Into::into)
+//! }
+//! ```
 pub extern crate http;
 
 pub use fastedge_derive::http;
@@ -376,6 +411,111 @@ pub mod key_value {
     pub use crate::gcore::fastedge::key_value::Error;
 }
 
+/// Synchronous cache API for FastEdge applications.
+///
+/// This module exposes the cache interface generated from the Component Model
+/// bindings. Calls are blocking and can be used directly inside a sync handler
+/// (e.g. `#[fastedge::http]`).
+///
+/// # Operations
+///
+/// - [`cache::get`] — fetch a cached value by key
+/// - [`cache::set`] — write or overwrite a value by key (with optional TTL)
+/// - [`cache::delete`] — remove a key from the cache
+/// - [`cache::exists`] — check whether a key is present
+/// - [`cache::incr`] — atomically increment (or decrement) an integer value
+/// - [`cache::expire`] — update the TTL of an existing key
+///
+/// # Examples
+///
+/// ## Fetch a value
+///
+/// ```no_run
+/// use fastedge::cache;
+///
+/// match cache::get("session:abc123")? {
+///     Some(data) => println!("cached: {}", String::from_utf8_lossy(&data)),
+///     None => println!("cache miss"),
+/// }
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+///
+/// ## Write a value
+///
+/// ```no_run
+/// use fastedge::cache;
+///
+/// // Store with a 5-minute TTL
+/// cache::set("session:abc123", b"user-data".to_vec(), Some(300_000))?;
+///
+/// // Store with no expiry
+/// cache::set("config:flags", b"enabled".to_vec(), None)?;
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+///
+/// ## Delete a key
+///
+/// ```no_run
+/// use fastedge::cache;
+///
+/// cache::delete("session:abc123")?;
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+///
+/// ## Check existence
+///
+/// ```no_run
+/// use fastedge::cache;
+///
+/// if cache::exists("session:abc123")? {
+///     println!("key is present");
+/// }
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+///
+/// ## Increment a counter
+///
+/// ```no_run
+/// use fastedge::cache;
+///
+/// // Increment by 1
+/// let hits = cache::incr("page:home:hits", 1)?;
+/// println!("total hits: {hits}");
+///
+/// // Decrement by 5
+/// let remaining = cache::incr("rate-limit:user:42", -5)?;
+/// println!("remaining tokens: {remaining}");
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+///
+/// ## Update a key's expiry
+///
+/// ```no_run
+/// use fastedge::cache;
+///
+/// // Extend session TTL by 10 minutes
+/// let updated = cache::expire("session:abc123", 600_000)?;
+/// if !updated {
+///     println!("key no longer exists");
+/// }
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+pub mod cache {
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::cache_sync::get;
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::cache_sync::set;
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::cache_sync::delete;
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::cache_sync::exists;
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::cache_sync::incr;
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::cache_sync::expire;
+}
+
+
 /// FastEdge-specific utility functions for diagnostics and statistics.
 ///
 /// This module provides utilities for debugging and monitoring your FastEdge applications.
@@ -443,7 +583,7 @@ pub enum Error {
 
 /// HTTP request and response body types.
 ///
-/// This module provides the [`Body`] type which wraps [`Bytes`] and tracks content-type information.
+/// This module provides the [`Body`](body::Body) type which wraps [`Bytes`](bytes::Bytes) and tracks content-type information.
 /// The body type automatically handles content-type detection based on the input data.
 ///
 /// # Examples
