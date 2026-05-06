@@ -104,9 +104,7 @@ impl HttpContext for KvStoreContext {
             }
         };
 
-        if let Err(e) = self.set_http_response_body(0, body_size, body.as_bytes()) {
-            proxy_wasm::hostcalls::log(LogLevel::Error, &format!("failed to set body: {:?}", e)).ok();
-        }
+        self.set_http_response_body(0, body_size, body.as_bytes());
 
         Action::Continue
     }
@@ -231,6 +229,6 @@ impl KvStoreContext {
             Some(b"500"),
         );
         let error_body = json!({"error": msg}).to_string();
-        self.set_http_response_body(0, body_size, error_body.as_bytes()).ok();
+        self.set_http_response_body(0, body_size, error_body.as_bytes());
     }
 }
