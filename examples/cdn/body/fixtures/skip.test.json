@@ -9,5 +9,9 @@
       "x-debugger-content": "body-only"
     },
     "body": "Hello World, this is a test message"
+  },
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
   }
 }

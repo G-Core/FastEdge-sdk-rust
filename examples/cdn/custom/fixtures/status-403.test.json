@@ -1,0 +1,20 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Path /403 — returns 403 Forbidden local response",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "properties": {
+    "request.path": "/403"
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

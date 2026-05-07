@@ -19,5 +19,9 @@
     "enabled": true,
     "path": "."
   },
-  "logLevel": 2
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
 }

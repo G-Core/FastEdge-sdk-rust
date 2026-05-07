@@ -260,7 +260,10 @@ PROMPT
       return 130
     fi
 
-    claude -p --model "$MODEL" "$prompt" > "$tmpfile"
+    # Pipe prompt via stdin to avoid Linux's MAX_ARG_STRLEN (~128KB per argv string).
+    # Large prompts (source files + existing doc for incremental updates) exceed
+    # this limit as an SDK grows; stdin has no such cap.
+    claude -p --model "$MODEL" > "$tmpfile" <<<"$prompt"
 
     # Validate: first non-empty line must start with #
     local first_line

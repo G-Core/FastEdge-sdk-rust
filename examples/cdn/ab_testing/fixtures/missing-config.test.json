@@ -13,5 +13,9 @@
     "request.host": "example.com",
     "request.path": "/landing"
   },
-  "logLevel": 2
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
 }
