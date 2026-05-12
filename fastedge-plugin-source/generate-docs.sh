@@ -210,6 +210,8 @@ $(cat "$full_path")
 # Existing Content for docs/$target
 Use this as the baseline. Preserve all accurate content and manual additions. Only change what is incorrect, incomplete, or missing per the source code. Keep sections not covered by the instructions above. Apply table formatting rules to all tables.
 
+If the existing content is already accurate against the source code, output it verbatim with zero preamble or acknowledgement — your output starts at the # of the level-1 heading regardless of whether you made changes.
+
 <existing>
 $existing_doc
 </existing>
@@ -223,7 +225,7 @@ $existing_doc
   # sometimes produces conversational preamble or asks for permission.
   local prompt
   prompt="$(cat <<PROMPT
-OUTPUT CONSTRAINT: Your output is piped directly to a file. Output ONLY raw markdown. No conversational text. No preamble. No "here is" or "I'll generate". No questions. No explanation. No permission requests. Start your very first character with # (the level-1 heading). End with the last line of markdown.
+OUTPUT CONSTRAINT: Your output is piped directly to a file. Output ONLY raw markdown. No conversational text. No preamble. No "here is" or "I'll generate". No "the existing content is accurate", "no changes needed", "outputting verbatim", or any similar acknowledgement — this applies equally when the existing content needs no changes. No questions. No explanation. No permission requests. Start your very first character with # (the level-1 heading). End with the last line of markdown.
 
 Generate docs/$target for the $PACKAGE_NAME crate.
 
@@ -246,7 +248,17 @@ PROMPT
   # available for incremental updates.
   local tmpfile
   tmpfile=$(mktemp "$DOCS_DIR/.${target}.XXXXXX")
-  trap "rm -f '$tmpfile'" RETURN
+  # Note: we do NOT trap-rm the tmpfile on RETURN. Failed-validation output is
+  # preserved under $DOCS_DIR/.failures/ for prompt-debugging (see below) —
+  # the success path mv's the tmpfile out, the interrupt path rm's it explicitly,
+  # and after max_attempts we explicitly rm the working tmpfile.
+
+  # Failure-preservation directory. Accumulates across runs so you can compare
+  # what the model emits on attempt 1 vs 2 vs 3 and across invocations.
+  # Lives in a subdir so the startup cleanup glob (`.*.md.[a-zA-Z0-9]*`) does
+  # NOT reach in. Prune manually when it grows; nothing else does.
+  local failure_dir="$DOCS_DIR/.failures"
+  mkdir -p "$failure_dir"
 
   # Retry loop: validate that the model produced raw markdown (starts with #)
   # On large prompts, the model occasionally produces conversational output
@@ -265,16 +277,35 @@ PROMPT
     # this limit as an SDK grows; stdin has no such cap.
     claude -p --model "$MODEL" > "$tmpfile" <<<"$prompt"
 
-    # Validate: first non-empty line must start with #
-    local first_line
-    first_line=$(grep -m1 '.' "$tmpfile" || true)
-    if [[ "$first_line" == \#* ]]; then
-      mv "$tmpfile" "$DOCS_DIR/$target"
+    # Validate + salvage. The model intermittently leaks a conversational
+    # preamble like "I'll write the markdown now." before the real document,
+    # despite the OUTPUT CONSTRAINT in the prompt. Rather than discard those
+    # outputs and retry (wasting API quota on otherwise-good content), find
+    # the first level-1 heading and treat everything from there forward as
+    # the doc. The original is still saved to .failures/ so the prompt can
+    # be tuned later.
+    local stripped
+    stripped=$(awk '/^# / { found=1 } found' "$tmpfile")
+
+    if [ -n "$stripped" ]; then
+      # Detect preamble: anything before the first '# ' line is preamble.
+      local first_heading_line
+      first_heading_line=$(grep -n -m1 '^# ' "$tmpfile" | cut -d: -f1)
+      if [ "${first_heading_line:-1}" -gt 1 ]; then
+        local preamble_copy="$failure_dir/${target}.preamble.attempt-${attempt}.$(date +%s).md"
+        cp "$tmpfile" "$preamble_copy"
+        echo "  Stripped $((first_heading_line - 1)) preamble line(s) from $target (attempt $attempt) — original saved to $preamble_copy"
+      fi
+      printf '%s\n' "$stripped" > "$DOCS_DIR/$target"
+      rm -f "$tmpfile"
       echo "  Done: docs/$target"
       return 0
     fi
 
-    echo "  Attempt $attempt/$max_attempts failed for $target (got conversational output), retrying..."
+    # No level-1 heading anywhere — genuine failure. Save and retry.
+    local failed_copy="$failure_dir/${target}.attempt-${attempt}.$(date +%s).md"
+    cp "$tmpfile" "$failed_copy"
+    echo "  Attempt $attempt/$max_attempts failed for $target (no '# ' heading found in output) — saved to $failed_copy, retrying..."
     attempt=$((attempt + 1))
   done
 

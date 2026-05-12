@@ -14,3 +14,7 @@ target/
 
 # FastEdge debugger artifacts
 **/.fastedge-debug/
+
+# Doc-generator failure artifacts — rejected/preamble-leaked claude -p
+# outputs preserved for prompt-debugging. Prune manually.
+docs/.failures/
