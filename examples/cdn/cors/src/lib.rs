@@ -8,9 +8,10 @@ Handles preflight OPTIONS requests and adds CORS response headers
 for allowed origins. Supports configurable origin allow-lists,
 methods, and exposed headers.
 
-Required configuration:
+Configuration:
   - Environment variable: ALLOWED_ORIGINS (comma-separated origins or "*")
-Optional configuration:
+    When unset or empty the filter is dormant — requests pass through
+    without CORS headers, so browsers will block cross-origin access.
   - Environment variable: ALLOWED_METHODS (default: "GET, POST, PUT, DELETE, OPTIONS")
   - Environment variable: MAX_AGE (default: "86400")
   - Environment variable: EXPOSE_HEADERS (response headers to expose)

@@ -33,17 +33,11 @@ impl RootContext for AbTestingRoot {
     }
 
     fn create_http_context(&self, _: u32) -> Option<Box<dyn HttpContext>> {
-        Some(Box::new(AbTestingContext {
-            variant: String::new(),
-            experiment_name: String::new(),
-        }))
+        Some(Box::new(AbTestingContext))
     }
 }
 
-struct AbTestingContext {
-    variant: String,
-    experiment_name: String,
-}
+struct AbTestingContext;
 
 impl Context for AbTestingContext {}
 
@@ -94,9 +88,6 @@ impl HttpContext for AbTestingContext {
             assigned = if now % 2 == 0 { "A" } else { "B" }.to_string();
         }
 
-        self.variant = assigned.clone();
-        self.experiment_name = experiment_name.clone();
-
         // Rewrite request path
         let path = self
             .get_property(vec!["request.path"])
@@ -130,16 +121,21 @@ impl HttpContext for AbTestingContext {
     }
 
     fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
-        if self.variant.is_empty() {
+        // Recover the assigned variant and experiment name from the request headers set in
+        // on_http_request_headers. Instance state does not survive the nginx -> core-proxy hop.
+        let Some(variant) = self.get_http_request_header("X-Variant") else {
             return Action::Continue;
-        }
+        };
+        let Some(experiment_name) = self.get_http_request_header("X-Experiment") else {
+            return Action::Continue;
+        };
 
         let cookie = format!(
             "fe_exp_{}={}; Path=/; Max-Age=86400; SameSite=Lax",
-            self.experiment_name, self.variant
+            experiment_name, variant
         );
         self.add_http_response_header("Set-Cookie", &cookie);
-        self.add_http_response_header("X-Variant", &self.variant);
+        self.add_http_response_header("X-Variant", &variant);
 
         Action::Continue
     }

@@ -1,0 +1,24 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Path /200 — passes through with Action::Continue",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "properties": {
+    "request.path": "/200"
+  },
+  "response": {
+    "headers": {},
+    "body": ""
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

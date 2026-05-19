@@ -10,5 +10,9 @@
   "dotenv": {
     "enabled": true,
     "path": "."
+  },
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
   }
 }
