@@ -1,10 +1,9 @@
 {
   "expected": {
-    "status": 200,
-    "logs": ["cannot load image"],
+    "logs": [" bytes -> ", "image/avif"],
     "headers": {
-      "Vary": "Image-Format"
+      "Content-Type": "image/avif"
     },
-    "noLogs": ["not transforming"]
+    "noLogs": ["not transforming", "cannot load image"]
   }
 }

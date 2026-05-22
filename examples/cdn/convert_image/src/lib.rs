@@ -1,6 +1,6 @@
+use image::*;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
-use image::*;
 use std::{env, env::VarError, io::Cursor, str::from_utf8};
 
 proxy_wasm::main! {{
@@ -27,13 +27,12 @@ struct ConvertImageContext;
 impl Context for ConvertImageContext {}
 
 impl HttpContext for ConvertImageContext {
-    fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action
-    {
+    fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
         // this header is used to select correct image version from cache
         self.add_http_request_header("Image-Format", "original");
 
         // get extension
-        let Some(ext)= self.get_property(vec!["request.extension"]) else {
+        let Some(ext) = self.get_property(vec!["request.extension"]) else {
             println!("No extension in request path, not transforming");
             return Action::Continue;
         };
@@ -53,7 +52,10 @@ impl HttpContext for ConvertImageContext {
             return Action::Continue;
         };
         if !image_list.split(',').any(|entry| entry == ext) {
-            println!("extension {} is not in the list of formats to transform: {}, not transforming", ext, image_list);
+            println!(
+                "extension {} is not in the list of formats to transform: {}, not transforming",
+                ext, image_list
+            );
             return Action::Continue;
         }
 
@@ -79,12 +81,14 @@ impl HttpContext for ConvertImageContext {
         Action::Continue
     }
 
-    fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action
-    {
+    fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
         // only process 200 responses
         if let Some(status) = self.rsp_status() {
             if status != 200 {
-                println!("Response status is {} instead of expected 200, not transforming", status);
+                println!(
+                    "Response status is {} instead of expected 200, not transforming",
+                    status
+                );
                 return Action::Continue;
             }
         } else {
@@ -114,13 +118,13 @@ impl HttpContext for ConvertImageContext {
         Action::Continue
     }
 
-    fn on_http_response_body(&mut self, body_size: usize, end_of_stream: bool) -> Action
-    {
-        if !end_of_stream { // wait till we get complete body
+    fn on_http_response_body(&mut self, body_size: usize, end_of_stream: bool) -> Action {
+        if !end_of_stream {
+            // wait till we get complete body
             return Action::Pause;
         }
 
-        let Some(content_type)= self.get_property(vec!["response.content-type"]) else {
+        let Some(content_type) = self.get_property(vec!["response.content-type"]) else {
             return Action::Continue;
         };
 
@@ -133,7 +137,10 @@ impl HttpContext for ConvertImageContext {
 
         if content_type != "image/avif" {
             // should never happen
-            println!("Content-Type {} is not supported, not transforming", content_type);
+            println!(
+                "Content-Type {} is not supported, not transforming",
+                content_type
+            );
             return Action::Continue;
         }
 
@@ -143,25 +150,29 @@ impl HttpContext for ConvertImageContext {
                 Ok(i) => i,
                 Err(e) => {
                     println!("cannot load image to memory {}, not converting", e);
-                    return Action::Continue
+                    return Action::Continue;
                 }
             };
 
             let mut out = Vec::new();
             let mut c = Cursor::new(&mut out);
-            let res = img.write_with_encoder(
-                    codecs::avif::AvifEncoder::new_with_speed_quality(
-                        &mut c,
-                        u8_param("AVIF_SPEED", 1, 10, 5),
-                        u8_param("AVIF_QUALITY", 1, 100, 70))
-            );
+            let res = img.write_with_encoder(codecs::avif::AvifEncoder::new_with_speed_quality(
+                &mut c,
+                u8_param("AVIF_SPEED", 1, 10, 5),
+                u8_param("AVIF_QUALITY", 1, 100, 70),
+            ));
 
             match res {
                 Ok(_) => {
-                    println!("{} bytes -> {} bytes {}", body_size, out.len(), content_type);
+                    println!(
+                        "{} bytes -> {} bytes {}",
+                        body_size,
+                        out.len(),
+                        content_type
+                    );
                     self.set_http_response_body(0, body_size, &out)
                 }
-                Err(e) => println!("cannot store transformed image {}", e)
+                Err(e) => println!("cannot store transformed image {}", e),
             }
         } else {
             println!("No response body to transform");
@@ -173,7 +184,7 @@ impl HttpContext for ConvertImageContext {
 
 impl ConvertImageContext {
     fn rsp_status(&mut self) -> Option<u16> {
-        if let Some(status)= self.get_property(vec!["response.status"]) {
+        if let Some(status) = self.get_property(vec!["response.status"]) {
             if status.len() != 2 {
                 println!("HTTP status property is not 2 bytes");
                 return None;
@@ -184,8 +195,7 @@ impl ConvertImageContext {
     }
 }
 
-fn str_param(name: &str) -> Result<String, VarError>
-{
+fn str_param(name: &str) -> Result<String, VarError> {
     let val = env::var(name)?;
     if val.is_empty() {
         return Err(VarError::NotPresent);
@@ -194,8 +204,7 @@ fn str_param(name: &str) -> Result<String, VarError>
     Ok(val)
 }
 
-fn u8_param(name: &str, min: u8, max: u8, default: u8) -> u8
-{
+fn u8_param(name: &str, min: u8, max: u8, default: u8) -> u8 {
     let Ok(val) = env::var(name) else {
         println!("Param {} is not set, using default value {}", name, default);
         return default;
@@ -207,17 +216,26 @@ fn u8_param(name: &str, min: u8, max: u8, default: u8) -> u8
 
     let val = match val.parse() {
         Err(_) => {
-            println!("Param {} is not a valid number, using default value {}", name, default);
+            println!(
+                "Param {} is not a valid number, using default value {}",
+                name, default
+            );
             return default;
         }
         Ok(v) => v,
     };
     if val < min {
-        println!("Param {} is below minimum {}, using default value {}", name, min, default);
+        println!(
+            "Param {} is below minimum {}, using default value {}",
+            name, min, default
+        );
         return default;
     }
     if val > max {
-        println!("Param {} is above maximum {}, using default value {}", name, max, default);
+        println!(
+            "Param {} is above maximum {}, using default value {}",
+            name, max, default
+        );
         return default;
     }
 

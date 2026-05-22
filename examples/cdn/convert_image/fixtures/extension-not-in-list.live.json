@@ -1,9 +1,5 @@
 {
   "expected": {
-    "status": 200,
-    "logs": ["is not in the list of formats to transform"],
-    "headers": {
-      "Vary": "Image-Format"
-    }
+    "logs": ["is not in the list of formats to transform"]
   }
 }

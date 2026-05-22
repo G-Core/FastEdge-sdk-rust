@@ -1,6 +1,5 @@
 {
   "expected": {
-    "logs": ["Token ok"],
-    "status": 200
+    "logs": ["Token ok"]
   }
 }

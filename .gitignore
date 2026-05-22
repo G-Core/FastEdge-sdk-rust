@@ -15,6 +15,9 @@ target/
 # FastEdge debugger artifacts
 **/.fastedge-debug/
 
+# build artifacts
+**/*.wasm
+
 # example project lock files
 examples/**/pnpm-lock.yaml
 examples/**/package-lock.json

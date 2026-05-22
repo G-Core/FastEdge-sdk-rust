@@ -1,9 +1,3 @@
 {
-  "expected": {
-    "status": 200,
-    "logs": ["FORMATS_TO_TRANSFORM param is not set, not transforming"],
-    "headers": {
-      "Vary": "Image-Format"
-    }
-  }
+  "_skip_live": "FORMATS_TO_TRANSFORM is set on the deployed app — this scenario requires a separate deployment with no env vars"
 }

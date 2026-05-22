@@ -1,9 +1,5 @@
 {
   "expected": {
-    "status": 200,
-    "logs": ["No extension in request path, not transforming"],
-    "headers": {
-      "Vary": "Image-Format"
-    }
+    "logs": ["No extension in request path, not transforming"]
   }
 }

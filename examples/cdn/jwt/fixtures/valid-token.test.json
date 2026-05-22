@@ -6,7 +6,7 @@
     "url": "http://fastedge-builtin.debug",
     "headers": {
       "host": "example.com",
-      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjQxMDI0NDQ4MDB9.hS9YgaBPC0uo7LQi1_ai0FdI_vu20wU9wG1-PG6-CG0"
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjQxMDI0NDQ4MDB9.h4nrvZCtvX1OtRJMjID961FJGw2kkRM0zySLXN7VEtg"
     },
     "body": ""
   },
