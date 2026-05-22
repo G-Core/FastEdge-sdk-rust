@@ -72,10 +72,7 @@ impl HttpContext for PropertiesContext {
         println!(" scheme = {} ", String::from_utf8_lossy(&scheme));
         self.add_http_response_header_bytes("request-scheme", &scheme);
 
-        let Some(extension) = self.get_property(vec![REQUEST_EXTENSION]) else {
-            self.send_http_response(555, vec![], None);
-            return Action::Pause;
-        };
+        let extension = self.get_property(vec![REQUEST_EXTENSION]).unwrap_or_default();
         println!(" extension = {} ", String::from_utf8_lossy(&extension));
         self.add_http_response_header_bytes("request-extension", &extension);
 

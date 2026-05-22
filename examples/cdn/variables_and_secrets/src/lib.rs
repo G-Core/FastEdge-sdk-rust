@@ -49,8 +49,8 @@ impl HttpContext for VariablesContext {
             .and_then(|v| String::from_utf8(v).ok())
             .unwrap_or_default();
 
-        proxy_wasm::hostcalls::log(LogLevel::Info, &format!("USERNAME: {}", username)).ok();
-        proxy_wasm::hostcalls::log(LogLevel::Info, &format!("PASSWORD: {}", password)).ok();
+        println!("USERNAME: {}", username);
+        println!("PASSWORD: {}", password);
 
         self.add_http_request_header("x-env-username", &username);
         self.add_http_request_header("x-env-password", &password);

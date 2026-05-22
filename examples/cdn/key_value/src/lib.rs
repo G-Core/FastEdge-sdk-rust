@@ -223,7 +223,7 @@ impl KvStoreContext {
     }
 
     fn send_error(&self, msg: &str, body_size: usize) {
-        proxy_wasm::hostcalls::log(LogLevel::Error, msg).ok();
+        println!("{}", msg);
         self.set_property(
             vec!["response", "status"],
             Some(b"500"),
