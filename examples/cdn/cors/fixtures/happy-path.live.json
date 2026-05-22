@@ -1,0 +1,10 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "https://app.example.com",
+      "vary": "Origin",
+      "access-control-expose-headers": "X-Request-Id, X-RateLimit-Remaining"
+    }
+  }
+}

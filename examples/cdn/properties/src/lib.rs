@@ -1,20 +1,18 @@
 use log::info;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
-use std::borrow::Cow;
-
 proxy_wasm::main! {{
     proxy_wasm::set_log_level(LogLevel::Trace);
-    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(HttpHeadersRoot) });
+    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(PropertiesRoot) });
 }}
 
-struct HttpHeadersRoot;
+struct PropertiesRoot;
 
-impl Context for HttpHeadersRoot {}
+impl Context for PropertiesRoot {}
 
-impl RootContext for HttpHeadersRoot {
+impl RootContext for PropertiesRoot {
     fn create_http_context(&self, context_id: u32) -> Option<Box<dyn HttpContext>> {
-        Some(Box::new(HttpHeaders { context_id }))
+        Some(Box::new(PropertiesContext { context_id }))
     }
 
     fn get_type(&self) -> Option<ContextType> {
@@ -22,11 +20,11 @@ impl RootContext for HttpHeadersRoot {
     }
 }
 
-struct HttpHeaders {
+struct PropertiesContext {
     context_id: u32,
 }
 
-impl Context for HttpHeaders {}
+impl Context for PropertiesContext {}
 
 pub const REQUEST_URI: &str = "request.url";
 pub const REQUEST_HOST: &str = "request.host";
@@ -44,7 +42,7 @@ pub const REQUEST_REGION: &str = "request.region";
 pub const REQUEST_CONTINENT: &str = "request.continent";
 pub const REQUEST_COUNTRY_NAME: &str = "request.country.name";
 
-impl HttpContext for HttpHeaders {
+impl HttpContext for PropertiesContext {
     fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
         let Some(uri) = self.get_property(vec![REQUEST_URI]) else {
             self.send_http_response(551, vec![], None);
@@ -110,7 +108,7 @@ impl HttpContext for HttpHeaders {
         self.add_http_response_header_bytes("request-city", &city);
 
         let Some(value) = self.get_property(vec![REQUEST_ASN]) else {
-            self.send_http_response(561, vec![], None);
+            self.send_http_response(560, vec![], None);
             return Action::Pause;
         };
         println!(" asn = {} ", String::from_utf8_lossy(&value));
@@ -201,19 +199,3 @@ impl HttpContext for HttpHeaders {
     }
 }
 
-pub fn deserialize_country_names(bytes: &[u8]) -> Vec<Cow<'_, str>> {
-    let mut path = Vec::new();
-    if bytes.is_empty() {
-        return path;
-    }
-    let mut p = 0;
-    while p < bytes.len() {
-        let s = p;
-        while p < bytes.len() && bytes[p] != 0 {
-            p += 1;
-        }
-        path.push(String::from_utf8_lossy(&bytes[s..p]));
-        p += 1;
-    }
-    path
-}

@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 401,
+    "headers": {
+      "www-authenticate": "API-Key"
+    },
+    "body": "Missing X-API-Key header"
+  }
+}

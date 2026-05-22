@@ -1,12 +1,12 @@
 {
   "appType": "proxy-wasm",
-  "description": "Wildcard ALLOWED_ORIGINS=* — returns * as Access-Control-Allow-Origin for any origin",
+  "description": "Request path has no file extension — app sets Image-Format: original and does not schedule conversion",
   "request": {
     "method": "GET",
-    "url": "http://fastedge-builtin.debug/api/public",
+    "url": "http://fastedge-builtin.debug/api/data",
     "headers": {
-      "host": "api.example.com",
-      "Origin": "https://anywhere.example.com"
+      "host": "example.com",
+      "User-Agent": "Mozilla/5.0 TestBrowser"
     },
     "body": ""
   },
@@ -14,11 +14,10 @@
     "headers": {
       "content-type": "application/json"
     },
-    "body": "{\"public\": true}"
+    "body": "{\"ok\":true}"
   },
-  "dotenv": {
-    "enabled": true,
-    "path": "wildcard"
+  "properties": {
+    "request.extension": ""
   },
   "logLevel": 2,
   "wasm": {

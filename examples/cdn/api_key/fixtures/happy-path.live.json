@@ -1,0 +1,6 @@
+{
+  "expected": {
+    "logs": ["API key validated successfully"],
+    "status": 200
+  }
+}

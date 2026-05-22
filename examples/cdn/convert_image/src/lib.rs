@@ -5,28 +5,28 @@ use std::{env, env::VarError, io::Cursor, str::from_utf8};
 
 proxy_wasm::main! {{
     proxy_wasm::set_log_level(LogLevel::Trace);
-    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(HttpBodyRoot) });
+    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(ConvertImageRoot) });
 }}
 
-struct HttpBodyRoot;
+struct ConvertImageRoot;
 
-impl Context for HttpBodyRoot {}
+impl Context for ConvertImageRoot {}
 
-impl RootContext for HttpBodyRoot {
+impl RootContext for ConvertImageRoot {
     fn get_type(&self) -> Option<ContextType> {
         Some(ContextType::HttpContext)
     }
 
     fn create_http_context(&self, _: u32) -> Option<Box<dyn HttpContext>> {
-        Some(Box::new(HttpBody))
+        Some(Box::new(ConvertImageContext))
     }
 }
 
-struct HttpBody;
+struct ConvertImageContext;
 
-impl Context for HttpBody {}
+impl Context for ConvertImageContext {}
 
-impl HttpContext for HttpBody {
+impl HttpContext for ConvertImageContext {
     fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action
     {
         // this header is used to select correct image version from cache
@@ -62,6 +62,10 @@ impl HttpContext for HttpBody {
             println!("User-Agent header is not set, not transforming");
             return Action::Continue;
         };
+        if ua.is_empty() {
+            println!("User-Agent header is not set, not transforming");
+            return Action::Continue;
+        }
         if let Ok(ua_to_ignore) = str_param("IGNORED_UA_LIST") {
             if ua_to_ignore.split(",").any(|entry| ua.contains(entry)) {
                 println!("User-Agent is in ignore list, not transforming");
@@ -167,7 +171,7 @@ impl HttpContext for HttpBody {
     }
 }
 
-impl HttpBody {
+impl ConvertImageContext {
     fn rsp_status(&mut self) -> Option<u16> {
         if let Some(status)= self.get_property(vec!["response.status"]) {
             if status.len() != 2 {

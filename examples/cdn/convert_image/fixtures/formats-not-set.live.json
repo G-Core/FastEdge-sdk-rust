@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 200,
+    "logs": ["FORMATS_TO_TRANSFORM param is not set, not transforming"],
+    "headers": {
+      "Vary": "Image-Format"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "expected": {
+    "status": 200,
+    "logs": [
+      "USERNAME: cdn-test-user",
+      "PASSWORD: cdn-test-secret"
+    ],
+    "bodyContains": "x-env-username"
+  }
+}

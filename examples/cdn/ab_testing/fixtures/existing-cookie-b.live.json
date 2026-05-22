@@ -1,0 +1,10 @@
+{
+  "expected": {
+    "logs": ["A/B test \"homepage-hero\": variant B, path /b/landing"],
+    "headers": {
+      "set-cookie": "fe_exp_homepage-hero=B; Path=/; Max-Age=86400; SameSite=Lax",
+      "x-variant": "B"
+    },
+    "status": 200
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "expected": {
+    "logs": ["Auth header is empty"],
+    "status": 401,
+    "body": "No Authorization header"
+  }
+}

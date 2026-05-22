@@ -1,13 +1,12 @@
 {
   "appType": "proxy-wasm",
-  "description": "Image response — sets long-lived immutable cache for static assets",
+  "description": "JWT with wrong signature — returns 403 token invalid",
   "request": {
     "method": "GET",
-    "url": "http://fastedge-builtin.debug/logo.png",
+    "url": "http://fastedge-builtin.debug",
     "headers": {
       "host": "example.com",
-      "content-type": "image/png",
-      "x-debugger-content": "body-only"
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjQxMDI0NDQ4MDB9.INVALIDSIGNATUREXXXXXXXXXXXXXXXXXXXXXXX"
     },
     "body": ""
   },

@@ -1,0 +1,31 @@
+{
+  "appType": "proxy-wasm",
+  "description": "All conditions met — extension jpg in list, valid User-Agent — Image-Format: image/avif set; empty body causes graceful decode failure (logs 'cannot load image')",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug/photo.jpg",
+    "headers": {
+      "host": "example.com",
+      "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "image/jpeg"
+    },
+    "body": ""
+  },
+  "properties": {
+    "request.extension": "jpg"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 200,
+    "logs": ["User-Agent is in ignore list, not transforming"],
+    "headers": {
+      "Vary": "Image-Format"
+    }
+  }
+}

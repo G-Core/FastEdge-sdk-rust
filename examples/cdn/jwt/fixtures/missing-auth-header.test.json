@@ -1,13 +1,11 @@
 {
   "appType": "proxy-wasm",
-  "description": "Image response — sets long-lived immutable cache for static assets",
+  "description": "No Authorization header — returns 401",
   "request": {
     "method": "GET",
-    "url": "http://fastedge-builtin.debug/logo.png",
+    "url": "http://fastedge-builtin.debug",
     "headers": {
-      "host": "example.com",
-      "content-type": "image/png",
-      "x-debugger-content": "body-only"
+      "host": "example.com"
     },
     "body": ""
   },

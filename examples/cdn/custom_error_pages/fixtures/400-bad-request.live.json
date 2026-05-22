@@ -1,0 +1,10 @@
+{
+  "expected": {
+    "status": 400,
+    "headers": {
+      "content-type": "text/html",
+      "transfer-encoding": "Chunked"
+    },
+    "bodyContains": ["<html", "Bad Request", "The server could not understand your request."]
+  }
+}

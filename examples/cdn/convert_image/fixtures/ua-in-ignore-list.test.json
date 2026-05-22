@@ -1,0 +1,31 @@
+{
+  "appType": "proxy-wasm",
+  "description": "User-Agent matches IGNORED_UA_LIST substring — app does not schedule conversion",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug/photo.jpg",
+    "headers": {
+      "host": "example.com",
+      "User-Agent": "Googlebot/2.1 (+http://www.google.com/bot.html)"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "image/jpeg"
+    },
+    "body": ""
+  },
+  "properties": {
+    "request.extension": "jpg"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "expected": {
+    "logs": [
+      "uri = http://fastedge-builtin.debug?test=value",
+      "host = fastedge-builtin.debug",
+      "path = /?test=value",
+      "scheme = http",
+      "query=test=value",
+      "client_ip = 203.0.113.1",
+      "country = LU",
+      "city = Luxembourg",
+      "asn = 12345"
+    ],
+    "headers": {
+      "request-uri": "http://fastedge-builtin.debug?test=value",
+      "request-host": "fastedge-builtin.debug",
+      "request-path": "/?test=value",
+      "request-scheme": "http",
+      "request-query": "test=value",
+      "request-x-real-ip": "203.0.113.1",
+      "request-country": "LU",
+      "request-city": "Luxembourg",
+      "request-asn": "12345"
+    },
+    "status": 200
+  }
+}

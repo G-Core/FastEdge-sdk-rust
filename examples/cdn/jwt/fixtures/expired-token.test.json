@@ -1,13 +1,12 @@
 {
   "appType": "proxy-wasm",
-  "description": "Image response — sets long-lived immutable cache for static assets",
+  "description": "Expired JWT (exp in 2020) — returns 403",
   "request": {
     "method": "GET",
-    "url": "http://fastedge-builtin.debug/logo.png",
+    "url": "http://fastedge-builtin.debug",
     "headers": {
       "host": "example.com",
-      "content-type": "image/png",
-      "x-debugger-content": "body-only"
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjE1Nzc4MzY4MDB9.o2sMzlEidVwpvt0_96jdm6Zs68Kxi6MHDRo9EU4bGV0"
     },
     "body": ""
   },
