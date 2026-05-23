@@ -1,7 +1,7 @@
 {
   "$schema": "https://fastedge-plugin-source/manifest/v1",
   "repo_id": "fastedge-sdk-rust",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "sources": {
     "sdk-api": {
       "files": ["docs/SDK_API.md"],
@@ -17,6 +17,12 @@
       "files": ["docs/CDN_APPS.md"],
       "required": true,
       "description": "CDN app guide — proxy-wasm lifecycle, fastedge::proxywasm::* API surface, request/response manipulation"
+    },
+
+    "quickstart": {
+      "files": ["docs/quickstart.md"],
+      "required": true,
+      "description": "Installation, project setup, async vs sync handler, basic build for HTTP and CDN apps"
     },
 
     "http-hello-world-blueprint": {
@@ -331,6 +337,439 @@
       ],
       "required": true,
       "description": "CDN Cache Control example — docs pattern extraction"
+    },
+
+    "cdn-convert-image-blueprint": {
+      "files": [
+        "examples/cdn/convert_image/src/lib.rs",
+        "examples/cdn/convert_image/Cargo.toml",
+        "examples/cdn/convert_image/README.md"
+      ],
+      "required": true,
+      "description": "CDN Image Conversion example — scaffold blueprint extraction"
+    },
+    "cdn-convert-image-pattern": {
+      "files": [
+        "examples/cdn/convert_image/src/lib.rs",
+        "examples/cdn/convert_image/Cargo.toml",
+        "examples/cdn/convert_image/README.md"
+      ],
+      "required": true,
+      "description": "CDN Image Conversion example — docs pattern extraction"
+    },
+
+    "cdn-custom-blueprint": {
+      "files": [
+        "examples/cdn/custom/src/lib.rs",
+        "examples/cdn/custom/Cargo.toml",
+        "examples/cdn/custom/README.md"
+      ],
+      "required": true,
+      "description": "CDN Custom Response example — scaffold blueprint extraction"
+    },
+    "cdn-custom-pattern": {
+      "files": [
+        "examples/cdn/custom/src/lib.rs",
+        "examples/cdn/custom/Cargo.toml",
+        "examples/cdn/custom/README.md"
+      ],
+      "required": true,
+      "description": "CDN Custom Response example — docs pattern extraction"
+    },
+
+    "cdn-log-time-blueprint": {
+      "files": [
+        "examples/cdn/log_time/src/lib.rs",
+        "examples/cdn/log_time/Cargo.toml",
+        "examples/cdn/log_time/README.md"
+      ],
+      "required": true,
+      "description": "CDN Log Time example — scaffold blueprint extraction"
+    },
+    "cdn-log-time-pattern": {
+      "files": [
+        "examples/cdn/log_time/src/lib.rs",
+        "examples/cdn/log_time/Cargo.toml",
+        "examples/cdn/log_time/README.md"
+      ],
+      "required": true,
+      "description": "CDN Log Time example — docs pattern extraction"
+    },
+
+    "cdn-md2html-blueprint": {
+      "files": [
+        "examples/cdn/md2html/src/lib.rs",
+        "examples/cdn/md2html/Cargo.toml",
+        "examples/cdn/md2html/README.md"
+      ],
+      "required": true,
+      "description": "CDN Markdown-to-HTML example — scaffold blueprint extraction"
+    },
+    "cdn-md2html-pattern": {
+      "files": [
+        "examples/cdn/md2html/src/lib.rs",
+        "examples/cdn/md2html/Cargo.toml",
+        "examples/cdn/md2html/README.md"
+      ],
+      "required": true,
+      "description": "CDN Markdown-to-HTML example — docs pattern extraction"
+    },
+
+    "http-basic-hello-world-blueprint": {
+      "files": [
+        "examples/http/basic/hello_world/src/lib.rs",
+        "examples/http/basic/hello_world/Cargo.toml",
+        "examples/http/basic/hello_world/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Hello World example (sync handler) — scaffold blueprint extraction"
+    },
+    "http-basic-hello-world-pattern": {
+      "files": [
+        "examples/http/basic/hello_world/src/lib.rs",
+        "examples/http/basic/hello_world/Cargo.toml",
+        "examples/http/basic/hello_world/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Hello World example (sync handler) — docs pattern extraction"
+    },
+
+    "http-basic-api-wrapper-blueprint": {
+      "files": [
+        "examples/http/basic/api_wrapper/src/lib.rs",
+        "examples/http/basic/api_wrapper/Cargo.toml",
+        "examples/http/basic/api_wrapper/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic API Wrapper example — scaffold blueprint extraction"
+    },
+    "http-basic-api-wrapper-pattern": {
+      "files": [
+        "examples/http/basic/api_wrapper/src/lib.rs",
+        "examples/http/basic/api_wrapper/Cargo.toml",
+        "examples/http/basic/api_wrapper/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic API Wrapper example — docs pattern extraction"
+    },
+
+    "http-basic-backend-blueprint": {
+      "files": [
+        "examples/http/basic/backend/src/lib.rs",
+        "examples/http/basic/backend/Cargo.toml",
+        "examples/http/basic/backend/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Backend Proxy example — scaffold blueprint extraction"
+    },
+    "http-basic-backend-pattern": {
+      "files": [
+        "examples/http/basic/backend/src/lib.rs",
+        "examples/http/basic/backend/Cargo.toml",
+        "examples/http/basic/backend/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Backend Proxy example — docs pattern extraction"
+    },
+
+    "http-basic-cache-blueprint": {
+      "files": [
+        "examples/http/basic/cache/src/lib.rs",
+        "examples/http/basic/cache/Cargo.toml"
+      ],
+      "required": true,
+      "description": "HTTP Basic Cache example — scaffold blueprint extraction"
+    },
+    "http-basic-cache-pattern": {
+      "files": [
+        "examples/http/basic/cache/src/lib.rs",
+        "examples/http/basic/cache/Cargo.toml"
+      ],
+      "required": true,
+      "description": "HTTP Basic Cache example — docs pattern extraction"
+    },
+
+    "http-basic-markdown-render-blueprint": {
+      "files": [
+        "examples/http/basic/markdown_render/src/lib.rs",
+        "examples/http/basic/markdown_render/Cargo.toml",
+        "examples/http/basic/markdown_render/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Markdown Render example — scaffold blueprint extraction"
+    },
+    "http-basic-markdown-render-pattern": {
+      "files": [
+        "examples/http/basic/markdown_render/src/lib.rs",
+        "examples/http/basic/markdown_render/Cargo.toml",
+        "examples/http/basic/markdown_render/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Markdown Render example — docs pattern extraction"
+    },
+
+    "http-basic-outbound-fetch-blueprint": {
+      "files": [
+        "examples/http/basic/outbound_fetch/src/lib.rs",
+        "examples/http/basic/outbound_fetch/Cargo.toml",
+        "examples/http/basic/outbound_fetch/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Outbound Fetch example — scaffold blueprint extraction"
+    },
+    "http-basic-outbound-fetch-pattern": {
+      "files": [
+        "examples/http/basic/outbound_fetch/src/lib.rs",
+        "examples/http/basic/outbound_fetch/Cargo.toml",
+        "examples/http/basic/outbound_fetch/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Outbound Fetch example — docs pattern extraction"
+    },
+
+    "http-basic-print-blueprint": {
+      "files": [
+        "examples/http/basic/print/src/lib.rs",
+        "examples/http/basic/print/Cargo.toml",
+        "examples/http/basic/print/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Print / Logging example — scaffold blueprint extraction"
+    },
+    "http-basic-print-pattern": {
+      "files": [
+        "examples/http/basic/print/src/lib.rs",
+        "examples/http/basic/print/Cargo.toml",
+        "examples/http/basic/print/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Print / Logging example — docs pattern extraction"
+    },
+
+    "http-basic-s3upload-blueprint": {
+      "files": [
+        "examples/http/basic/s3upload/src/lib.rs",
+        "examples/http/basic/s3upload/Cargo.toml",
+        "examples/http/basic/s3upload/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic S3 Upload example — scaffold blueprint extraction"
+    },
+    "http-basic-s3upload-pattern": {
+      "files": [
+        "examples/http/basic/s3upload/src/lib.rs",
+        "examples/http/basic/s3upload/Cargo.toml",
+        "examples/http/basic/s3upload/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic S3 Upload example — docs pattern extraction"
+    },
+
+    "http-basic-secret-blueprint": {
+      "files": [
+        "examples/http/basic/secret/src/lib.rs",
+        "examples/http/basic/secret/Cargo.toml",
+        "examples/http/basic/secret/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Secrets example — scaffold blueprint extraction"
+    },
+    "http-basic-secret-pattern": {
+      "files": [
+        "examples/http/basic/secret/src/lib.rs",
+        "examples/http/basic/secret/Cargo.toml",
+        "examples/http/basic/secret/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Secrets example — docs pattern extraction"
+    },
+
+    "http-basic-smart-switch-blueprint": {
+      "files": [
+        "examples/http/basic/smart_switch/src/lib.rs",
+        "examples/http/basic/smart_switch/Cargo.toml",
+        "examples/http/basic/smart_switch/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Smart Switch / Routing example — scaffold blueprint extraction"
+    },
+    "http-basic-smart-switch-pattern": {
+      "files": [
+        "examples/http/basic/smart_switch/src/lib.rs",
+        "examples/http/basic/smart_switch/Cargo.toml",
+        "examples/http/basic/smart_switch/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Smart Switch / Routing example — docs pattern extraction"
+    },
+
+    "http-basic-watermark-blueprint": {
+      "files": [
+        "examples/http/basic/watermark/src/lib.rs",
+        "examples/http/basic/watermark/Cargo.toml",
+        "examples/http/basic/watermark/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Watermark example — scaffold blueprint extraction"
+    },
+    "http-basic-watermark-pattern": {
+      "files": [
+        "examples/http/basic/watermark/src/lib.rs",
+        "examples/http/basic/watermark/Cargo.toml",
+        "examples/http/basic/watermark/README.md"
+      ],
+      "required": true,
+      "description": "HTTP Basic Watermark example — docs pattern extraction"
+    },
+
+    "http-wasi-cache-blueprint": {
+      "files": [
+        "examples/http/wasi/cache/src/lib.rs",
+        "examples/http/wasi/cache/Cargo.toml"
+      ],
+      "required": true,
+      "description": "HTTP WASI Cache example — scaffold blueprint extraction"
+    },
+    "http-wasi-cache-pattern": {
+      "files": [
+        "examples/http/wasi/cache/src/lib.rs",
+        "examples/http/wasi/cache/Cargo.toml"
+      ],
+      "required": true,
+      "description": "HTTP WASI Cache example — docs pattern extraction"
+    },
+
+    "http-wasi-geo-redirect-blueprint": {
+      "files": [
+        "examples/http/wasi/geo_redirect/src/lib.rs",
+        "examples/http/wasi/geo_redirect/Cargo.toml",
+        "examples/http/wasi/geo_redirect/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Geo Redirect example — scaffold blueprint extraction"
+    },
+    "http-wasi-geo-redirect-pattern": {
+      "files": [
+        "examples/http/wasi/geo_redirect/src/lib.rs",
+        "examples/http/wasi/geo_redirect/Cargo.toml",
+        "examples/http/wasi/geo_redirect/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Geo Redirect example — docs pattern extraction"
+    },
+
+    "http-wasi-headers-blueprint": {
+      "files": [
+        "examples/http/wasi/headers/src/lib.rs",
+        "examples/http/wasi/headers/Cargo.toml",
+        "examples/http/wasi/headers/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Headers Manipulation example — scaffold blueprint extraction"
+    },
+    "http-wasi-headers-pattern": {
+      "files": [
+        "examples/http/wasi/headers/src/lib.rs",
+        "examples/http/wasi/headers/Cargo.toml",
+        "examples/http/wasi/headers/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Headers Manipulation example — docs pattern extraction"
+    },
+
+    "http-wasi-large-env-variable-blueprint": {
+      "files": [
+        "examples/http/wasi/large_env_variable/src/lib.rs",
+        "examples/http/wasi/large_env_variable/Cargo.toml",
+        "examples/http/wasi/large_env_variable/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Large Env Variable / Dictionary example — scaffold blueprint extraction"
+    },
+    "http-wasi-large-env-variable-pattern": {
+      "files": [
+        "examples/http/wasi/large_env_variable/src/lib.rs",
+        "examples/http/wasi/large_env_variable/Cargo.toml",
+        "examples/http/wasi/large_env_variable/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Large Env Variable / Dictionary example — docs pattern extraction"
+    },
+
+    "http-wasi-outbound-fetch-blueprint": {
+      "files": [
+        "examples/http/wasi/outbound_fetch/src/lib.rs",
+        "examples/http/wasi/outbound_fetch/Cargo.toml",
+        "examples/http/wasi/outbound_fetch/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Outbound Fetch example — scaffold blueprint extraction"
+    },
+    "http-wasi-outbound-fetch-pattern": {
+      "files": [
+        "examples/http/wasi/outbound_fetch/src/lib.rs",
+        "examples/http/wasi/outbound_fetch/Cargo.toml",
+        "examples/http/wasi/outbound_fetch/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Outbound Fetch example — docs pattern extraction"
+    },
+
+    "http-wasi-secret-rollover-blueprint": {
+      "files": [
+        "examples/http/wasi/secret_rollover/src/lib.rs",
+        "examples/http/wasi/secret_rollover/Cargo.toml",
+        "examples/http/wasi/secret_rollover/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Secret Rollover example — scaffold blueprint extraction"
+    },
+    "http-wasi-secret-rollover-pattern": {
+      "files": [
+        "examples/http/wasi/secret_rollover/src/lib.rs",
+        "examples/http/wasi/secret_rollover/Cargo.toml",
+        "examples/http/wasi/secret_rollover/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Secret Rollover example — docs pattern extraction"
+    },
+
+    "http-wasi-simple-fetch-blueprint": {
+      "files": [
+        "examples/http/wasi/simple_fetch/src/lib.rs",
+        "examples/http/wasi/simple_fetch/Cargo.toml",
+        "examples/http/wasi/simple_fetch/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Simple Fetch example — scaffold blueprint extraction"
+    },
+    "http-wasi-simple-fetch-pattern": {
+      "files": [
+        "examples/http/wasi/simple_fetch/src/lib.rs",
+        "examples/http/wasi/simple_fetch/Cargo.toml",
+        "examples/http/wasi/simple_fetch/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Simple Fetch example — docs pattern extraction"
+    },
+
+    "http-wasi-variables-and-secrets-blueprint": {
+      "files": [
+        "examples/http/wasi/variables_and_secrets/src/lib.rs",
+        "examples/http/wasi/variables_and_secrets/Cargo.toml",
+        "examples/http/wasi/variables_and_secrets/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Variables and Secrets example — scaffold blueprint extraction"
+    },
+    "http-wasi-variables-and-secrets-pattern": {
+      "files": [
+        "examples/http/wasi/variables_and_secrets/src/lib.rs",
+        "examples/http/wasi/variables_and_secrets/Cargo.toml",
+        "examples/http/wasi/variables_and_secrets/README.md"
+      ],
+      "required": true,
+      "description": "HTTP WASI Variables and Secrets example — docs pattern extraction"
     }
   },
   "target_mapping": {
@@ -344,6 +783,11 @@
     },
     "cdn-apps": {
       "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn-apps-rust.md",
+      "section": null
+    },
+
+    "quickstart": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/quickstart-rust.md",
       "section": null
     },
 
@@ -498,6 +942,213 @@
     },
     "cdn-cache-control-pattern": {
       "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-cache-control-rust.md",
+      "section": null
+    },
+
+    "cdn-convert-image-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/convert-image-rust.md",
+      "section": null
+    },
+    "cdn-convert-image-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-convert-image-rust.md",
+      "section": null
+    },
+
+    "cdn-custom-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/custom-rust.md",
+      "section": null
+    },
+    "cdn-custom-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-custom-rust.md",
+      "section": null
+    },
+
+    "cdn-log-time-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/log-time-rust.md",
+      "section": null
+    },
+    "cdn-log-time-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-log-time-rust.md",
+      "section": null
+    },
+
+    "cdn-md2html-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/md2html-rust.md",
+      "section": null
+    },
+    "cdn-md2html-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-md2html-rust.md",
+      "section": null
+    },
+
+    "http-basic-hello-world-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/hello-world-basic-rust.md",
+      "section": null
+    },
+    "http-basic-hello-world-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-hello-world-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-api-wrapper-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/api-wrapper-basic-rust.md",
+      "section": null
+    },
+    "http-basic-api-wrapper-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-api-wrapper-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-backend-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/backend-basic-rust.md",
+      "section": null
+    },
+    "http-basic-backend-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-backend-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-cache-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/cache-basic-rust.md",
+      "section": null
+    },
+    "http-basic-cache-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-cache-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-markdown-render-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/markdown-render-basic-rust.md",
+      "section": null
+    },
+    "http-basic-markdown-render-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-markdown-render-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-outbound-fetch-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/outbound-fetch-basic-rust.md",
+      "section": null
+    },
+    "http-basic-outbound-fetch-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-outbound-fetch-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-print-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/print-basic-rust.md",
+      "section": null
+    },
+    "http-basic-print-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-print-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-s3upload-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/s3upload-basic-rust.md",
+      "section": null
+    },
+    "http-basic-s3upload-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-s3upload-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-secret-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/secret-basic-rust.md",
+      "section": null
+    },
+    "http-basic-secret-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-secret-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-smart-switch-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/smart-switch-basic-rust.md",
+      "section": null
+    },
+    "http-basic-smart-switch-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-smart-switch-basic-rust.md",
+      "section": null
+    },
+
+    "http-basic-watermark-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/watermark-basic-rust.md",
+      "section": null
+    },
+    "http-basic-watermark-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-watermark-basic-rust.md",
+      "section": null
+    },
+
+    "http-wasi-cache-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/cache-wasi-rust.md",
+      "section": null
+    },
+    "http-wasi-cache-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-cache-wasi-rust.md",
+      "section": null
+    },
+
+    "http-wasi-geo-redirect-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/geo-redirect-wasi-rust.md",
+      "section": null
+    },
+    "http-wasi-geo-redirect-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-geo-redirect-wasi-rust.md",
+      "section": null
+    },
+
+    "http-wasi-headers-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/headers-wasi-rust.md",
+      "section": null
+    },
+    "http-wasi-headers-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-headers-wasi-rust.md",
+      "section": null
+    },
+
+    "http-wasi-large-env-variable-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/large-env-variable-wasi-rust.md",
+      "section": null
+    },
+    "http-wasi-large-env-variable-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-large-env-variable-wasi-rust.md",
+      "section": null
+    },
+
+    "http-wasi-outbound-fetch-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/outbound-fetch-wasi-rust.md",
+      "section": null
+    },
+    "http-wasi-outbound-fetch-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-outbound-fetch-wasi-rust.md",
+      "section": null
+    },
+
+    "http-wasi-secret-rollover-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/secret-rollover-wasi-rust.md",
+      "section": null
+    },
+    "http-wasi-secret-rollover-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-secret-rollover-wasi-rust.md",
+      "section": null
+    },
+
+    "http-wasi-simple-fetch-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/simple-fetch-wasi-rust.md",
+      "section": null
+    },
+    "http-wasi-simple-fetch-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-simple-fetch-wasi-rust.md",
+      "section": null
+    },
+
+    "http-wasi-variables-and-secrets-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/variables-and-secrets-wasi-rust.md",
+      "section": null
+    },
+    "http-wasi-variables-and-secrets-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-variables-and-secrets-wasi-rust.md",
       "section": null
     }
   },

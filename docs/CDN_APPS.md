@@ -54,7 +54,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 proxy-wasm = "0.2"
-fastedge = { version = "0.3", features = ["proxywasm"] }
+fastedge = { version = "0.4", features = ["proxywasm"] }
 ```
 
 The `proxywasm` feature flag is required to access `fastedge::proxywasm::*`. Without it, `fastedge` only exposes Component Model APIs, which are not available in the proxy-wasm environment.
@@ -141,6 +141,9 @@ proxy_wasm::main! {{
         Box::new(MyAppRoot)
     });
 }}
+# struct MyAppRoot;
+# impl proxy_wasm::traits::Context for MyAppRoot {}
+# impl proxy_wasm::traits::RootContext for MyAppRoot {}
 ```
 
 ### Root Context
@@ -150,6 +153,9 @@ The root context is a singleton created once when the filter loads. Its primary 
 ```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
+# struct MyApp;
+# impl Context for MyApp {}
+# impl HttpContext for MyApp {}
 struct MyAppRoot;
 
 impl Context for MyAppRoot {}

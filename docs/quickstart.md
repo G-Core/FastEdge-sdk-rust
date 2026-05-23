@@ -88,7 +88,7 @@ Add dependencies to `Cargo.toml`:
 
 ```toml
 [dependencies]
-fastedge = "0.3.5"
+fastedge = "0.4.0"
 anyhow   = "1"
 
 [lib]
@@ -124,10 +124,10 @@ The compiled `.wasm` file is written to `target/wasm32-wasip1/release/`.
 
 ## Build
 
-| Handler path            | Build command                                  |
-| ----------------------- | ---------------------------------------------- |
-| Async (`wstd`)          | `cargo build --target wasm32-wasip2 --release` |
-| Sync (`fastedge::http`) | `cargo build --target wasm32-wasip1 --release` |
+| Handler path            | Build command                                    |
+| ----------------------- | ------------------------------------------------ |
+| Async (`wstd`)          | `cargo build --target wasm32-wasip2 --release`   |
+| Sync (`fastedge::http`) | `cargo build --target wasm32-wasip1 --release`   |
 
 Both commands produce a `.wasm` binary in the respective `target/<target>/release/` directory. Neither path requires `cargo-component`.
 
@@ -142,7 +142,7 @@ Enable the `json` feature in `Cargo.toml`:
 
 ```toml
 [dependencies]
-fastedge = { version = "0.3.5", features = ["json"] }
+fastedge = { version = "0.4.0", features = ["json"] }
 ```
 
 ## CDN Apps
