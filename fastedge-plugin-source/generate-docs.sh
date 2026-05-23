@@ -286,11 +286,12 @@ PROMPT
     # the doc. The original is still saved to .failures/ so the prompt can
     # be tuned later.
     local stripped
-    # Fence-aware level-1-only salvage: skip lines inside ``` fences and only
-    # treat a lone `# ` heading (not `##`/`###` or `#include` lines) as the
-    # document start. This avoids false positives from sub-headings and
-    # code-fence-internal `#`-prefixed lines (e.g. shell comments, #include).
-    stripped=$(awk '/^```/ { in_fence = !in_fence; next } !in_fence && /^#[^#]/ { found=1 } found' "$tmpfile")
+    # Fence-aware level-1-only salvage: track ``` fences so that #-prefixed
+    # lines inside a fence (shell comments, #include, etc.) don't trigger the
+    # heading-detection scan. Fence delimiter lines are NOT skipped — they fall
+    # through to `found { print }` so fenced code blocks are preserved intact
+    # in the output. Only a bare `# ` heading outside a fence sets found=1.
+    stripped=$(awk '/^```/ { in_fence = !in_fence } !in_fence && /^#[^#]/ { found=1 } found' "$tmpfile")
 
     # Post-strip validation: confirm the salvaged output actually starts with a
     # level-1 heading. If awk matched something that looks like `#!` (shebang)
