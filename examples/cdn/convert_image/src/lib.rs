@@ -32,7 +32,11 @@ impl HttpContext for ConvertImageContext {
         self.add_http_request_header("Image-Format", "original");
 
         // get extension
-        let Some(ext) = self.get_property(vec!["request.extension"]) else {
+        let path = self.get_property(vec!["request.path"]).map(|v| String::from_utf8(v).unwrap_or_default()).unwrap_or_default();
+        println!("request.path={path:?}");
+        let raw_ext = self.get_property(vec!["request.extension"]);
+        println!("request.extension={raw_ext:?}");
+        let Some(ext) = raw_ext else {
             println!("No extension in request path, not transforming");
             return Action::Continue;
         };

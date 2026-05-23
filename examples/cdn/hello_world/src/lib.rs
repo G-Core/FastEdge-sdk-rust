@@ -1,8 +1,3 @@
-
-
-
-
-
 use log::info;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;

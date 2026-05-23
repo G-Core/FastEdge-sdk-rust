@@ -26,7 +26,7 @@ On every request, reads the following properties and adds each as a response hea
 | `request.region` | `request-country-region` |
 | `request.continent` | `request-continent` |
 
-If any property is missing the handler sends a 55x error response and stops — each property has a unique status code to identify exactly which lookup failed.
+If any property is missing the handler sends a 55x error response and stops — each property has a unique status code to identify exactly which lookup failed. `request.extension` is the exception: because a URL path often has no file extension, a missing value defaults to an empty string instead of triggering an error.
 
 ## Query-param overrides
 
