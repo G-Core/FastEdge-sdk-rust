@@ -56,7 +56,7 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
         Ok(s) => s,
         Err(StoreError::AccessDenied) => {
             return json_response(
-                500,
+                403,
                 json!({ "error": "access denied opening denylist store" }),
             );
         }

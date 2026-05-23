@@ -100,5 +100,6 @@ The correct WASM target is picked up automatically from the nearest `.cargo/conf
 
 Install both targets once with `rustup target add wasm32-wasip1 wasm32-wasip2`.
 
-Each example depends on the [`fastedge`](https://crates.io/crates/fastedge) crate from crates.io
-(except a handful of `http/wasi/*` examples that only need `wstd`).
+Most examples depend on the [`fastedge`](https://crates.io/crates/fastedge) crate. The majority
+reference a published version from crates.io; a small number use a path dependency to the local
+workspace (e.g. examples that exercise unreleased APIs).
