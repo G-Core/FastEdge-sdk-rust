@@ -62,6 +62,8 @@ Files in `docs/` are **machine-generated** from source code by `./fastedge-plugi
 | `src/proxywasm/dictionary.rs`                 | `docs/HOST_SERVICES.md` |
 | `src/proxywasm/utils.rs`                      | `docs/HOST_SERVICES.md` |
 | `src/proxywasm/` (CDN lifecycle, FFI)         | `docs/CDN_APPS.md`    |
+| `examples/http/wasi/hello_world/src/lib.rs`   | `docs/quickstart.md`  |
+| `examples/http/basic/hello_world/src/lib.rs`  | `docs/quickstart.md`  |
 | `Cargo.toml` (version, features)              | `docs/INDEX.md`       |
 | `fastedge-plugin-source/manifest.json`        | `.github/copilot-instructions.md` |
 
