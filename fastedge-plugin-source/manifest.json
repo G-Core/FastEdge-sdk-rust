@@ -458,7 +458,8 @@
     "http-basic-cache-pattern": {
       "files": [
         "examples/http/basic/cache/src/lib.rs",
-        "examples/http/basic/cache/Cargo.toml"
+        "examples/http/basic/cache/Cargo.toml",
+        "examples/http/basic/cache/README.md"
       ],
       "required": true,
       "description": "HTTP Basic Cache example (legacy sync handler) — reference pattern (docs only, not scaffold)"
@@ -573,7 +574,8 @@
     "http-wasi-cache-blueprint": {
       "files": [
         "examples/http/wasi/cache/src/lib.rs",
-        "examples/http/wasi/cache/Cargo.toml"
+        "examples/http/wasi/cache/Cargo.toml",
+        "examples/http/wasi/cache/README.md"
       ],
       "required": true,
       "description": "HTTP WASI Cache example — scaffold blueprint"
@@ -581,7 +583,8 @@
     "http-wasi-cache-pattern": {
       "files": [
         "examples/http/wasi/cache/src/lib.rs",
-        "examples/http/wasi/cache/Cargo.toml"
+        "examples/http/wasi/cache/Cargo.toml",
+        "examples/http/wasi/cache/README.md"
       ],
       "required": true,
       "description": "HTTP WASI Cache example — reference pattern (docs)"
