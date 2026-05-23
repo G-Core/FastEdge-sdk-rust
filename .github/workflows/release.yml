@@ -75,6 +75,7 @@ jobs:
           esac
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
           sed -i "s/^version = \"[0-9]*\.[0-9]*\.[0-9]*\"/version = \"$NEW_VERSION\"/" Cargo.toml
+          sed -i "s|fastedge-derive = { path = \"derive\", version = \"[0-9]*\.[0-9]*\" }|fastedge-derive = { path = \"derive\", version = \"$MAJOR.$MINOR\" }|" Cargo.toml
           cargo update --workspace
           echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
           echo "New version: v$NEW_VERSION"

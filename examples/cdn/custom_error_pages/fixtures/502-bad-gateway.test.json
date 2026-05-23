@@ -9,5 +9,9 @@
       "x-debugger-content": "status-only"
     },
     "body": ""
+  },
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
   }
 }
