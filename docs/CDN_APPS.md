@@ -27,6 +27,7 @@ CDN apps come in two tiers depending on whether they need FastEdge host services
 
 **Tier 1 — Basic CDN app** (no FastEdge host services):
 
+```toml
 [package]
 name = "my-cdn-app"
 version = "0.1.0"
@@ -38,9 +39,11 @@ crate-type = ["cdylib"]
 [dependencies]
 proxy-wasm = "0.2"
 log = "0.4"
+```
 
 **Tier 2 — CDN app with FastEdge host services** (KV, secrets, dictionary):
 
+```toml
 [package]
 name = "my-cdn-app"
 version = "0.1.0"
@@ -51,7 +54,8 @@ crate-type = ["cdylib"]
 
 [dependencies]
 proxy-wasm = "0.2"
-fastedge = { version = "0.3", features = ["proxywasm"] }
+fastedge = { version = "0.4", features = ["proxywasm"] }
+```
 
 The `proxywasm` feature flag is required to access `fastedge::proxywasm::*`. Without it, `fastedge` only exposes Component Model APIs, which are not available in the proxy-wasm environment.
 
@@ -59,6 +63,7 @@ The `proxywasm` feature flag is required to access `fastedge::proxywasm::*`. Wit
 
 A complete CDN app that adds a response header and logs each lifecycle phase:
 
+```rust,no_run
 use log::info;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
@@ -108,10 +113,13 @@ impl HttpContext for HelloWorld {
         Action::Continue
     }
 }
+```
 
 ### Build
 
+```sh
 cargo build --target wasm32-wasip1 --release
+```
 
 CDN apps and basic HTTP apps share the same build target: `wasm32-wasip1`. Only async WASI HTTP apps using `#[wstd::http_server]` target `wasm32-wasip2`.
 
@@ -123,6 +131,7 @@ The proxy-wasm lifecycle is the core concept for CDN app development. Every CDN 
 
 The `proxy_wasm::main!` macro initializes the filter. It sets the log level and registers the root context factory function.
 
+```rust,no_run
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
 
@@ -132,13 +141,21 @@ proxy_wasm::main! {{
         Box::new(MyAppRoot)
     });
 }}
+# struct MyAppRoot;
+# impl proxy_wasm::traits::Context for MyAppRoot {}
+# impl proxy_wasm::traits::RootContext for MyAppRoot {}
+```
 
 ### Root Context
 
 The root context is a singleton created once when the filter loads. Its primary role is to create a new HTTP context for each lifecycle callback invocation.
 
+```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
+# struct MyApp;
+# impl Context for MyApp {}
+# impl HttpContext for MyApp {}
 struct MyAppRoot;
 
 impl Context for MyAppRoot {}
@@ -152,6 +169,7 @@ impl RootContext for MyAppRoot {
         Some(Box::new(MyApp))
     }
 }
+```
 
 `get_type()` must return `Some(ContextType::HttpContext)` for HTTP traffic interception. `create_http_context` is called once per lifecycle callback invocation and receives a unique `context_id`.
 
@@ -159,6 +177,7 @@ impl RootContext for MyAppRoot {
 
 The HTTP context is where request and response processing happens. A new instance is created for each lifecycle callback invocation — not once per request. See [Hook State Isolation](#hook-state-isolation) for the consequences this has on state management.
 
+```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
 struct MyApp;
@@ -175,6 +194,7 @@ impl HttpContext for MyApp {
         Action::Continue
     }
 }
+```
 
 Both `Context` and `HttpContext` must be implemented. The `Context` impl can be empty if no shared context callbacks are needed.
 
@@ -201,6 +221,7 @@ Every lifecycle callback returns an `Action` that controls what happens next.
 
 For body callbacks, return `Action::StopIterationAndBuffer` until `end_of_stream` is `true`, then process the full body and return `Action::Continue`.
 
+```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
 # struct MyApp;
@@ -214,6 +235,7 @@ impl HttpContext for MyApp {
         Action::Continue
     }
 }
+```
 
 ### Hook State Isolation
 
@@ -227,6 +249,7 @@ This has critical consequences for application design:
 
 To pass data between callbacks, use `self.set_property` and `self.get_property` with a custom property path. The host preserves these values across callback invocations for the same logical request:
 
+```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
 # struct MyApp;
@@ -246,11 +269,13 @@ impl HttpContext for MyApp {
         Action::Continue
     }
 }
+```
 
 ## Request and Response Manipulation
 
 ### Reading Headers and Properties
 
+```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
 # struct MyApp;
@@ -272,11 +297,13 @@ impl HttpContext for MyApp {
         Action::Continue
     }
 }
+```
 
 Properties return `Option<Vec<u8>>`. Most properties are UTF-8 strings; see the Request Properties section for encoding details.
 
 ### Modifying Headers
 
+```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
 # struct MyApp;
@@ -298,6 +325,7 @@ impl HttpContext for MyApp {
         Action::Continue
     }
 }
+```
 
 **Known limitation**: On the FastEdge CDN platform, passing `None` to `set_http_request_header` or `set_http_response_header` sets the header value to an empty string rather than removing the header entirely. When checking for header absence, test for an empty string as well as a missing value.
 
@@ -305,6 +333,7 @@ impl HttpContext for MyApp {
 
 To short-circuit the request and respond directly to the client without forwarding to origin, call `send_http_response` and return `Action::Pause`.
 
+```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
 # struct MyApp;
@@ -323,6 +352,7 @@ impl HttpContext for MyApp {
         Action::Continue
     }
 }
+```
 
 `send_http_response` signature: `fn send_http_response(&self, status_code: u32, headers: Vec<(&str, &str)>, body: Option<&[u8]>)`
 
@@ -355,6 +385,7 @@ Most properties are UTF-8 strings decoded with `std::str::from_utf8()`. The `res
 
 Geo-IP properties (`request.country`, `request.country.name`, `request.city`, `request.region`, `request.continent`, `request.geo.lat`, `request.geo.long`) are derived from the client IP address.
 
+```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
 # struct MyApp;
@@ -371,7 +402,9 @@ impl HttpContext for MyApp {
         Action::Continue
     }
 }
+```
 
+```rust,no_run
 # use proxy_wasm::traits::*;
 # use proxy_wasm::types::*;
 # struct MyApp;
@@ -390,6 +423,7 @@ impl HttpContext for MyApp {
         Action::Continue
     }
 }
+```
 
 ## Host Services for CDN Apps
 
@@ -401,7 +435,9 @@ Provides persistent key-value storage. The API shape mirrors `fastedge::key_valu
 
 #### `Store`
 
+```rust,ignore
 pub struct Store { /* ... */ }
+```
 
 | Method                                                  | Return Type                          | Description                                            |
 | ------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------ |
@@ -415,11 +451,13 @@ pub struct Store { /* ... */ }
 
 #### `Error`
 
+```rust,ignore
 pub enum Error {
     NoSuchStore,
     AccessDenied,
     Other(String),
 }
+```
 
 | Variant         | Description                                                 |
 | --------------- | ----------------------------------------------------------- |
@@ -429,6 +467,7 @@ pub enum Error {
 
 #### Example — Bloom filter check in request headers phase
 
+```rust,no_run
 use fastedge::proxywasm::key_value::Store;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
@@ -472,13 +511,16 @@ impl HttpContext for RateLimitFilter {
         }
     }
 }
+```
 
 ### Secret Management (`fastedge::proxywasm::secret`)
 
 Provides access to encrypted secrets stored in the FastEdge platform.
 
+```rust,ignore
 pub fn get(key: &str) -> Result<Option<Vec<u8>>, u32>
 pub fn get_effective_at(key: &str, at: u32) -> Result<Option<Vec<u8>>, u32>
+```
 
 | Function                               | Return Type                    | Description                                        |
 | -------------------------------------- | ------------------------------ | -------------------------------------------------- |
@@ -493,6 +535,7 @@ Never log or expose secret values in application output.
 
 #### Example — JWT validation using a secret signing key
 
+```rust,no_run
 use fastedge::proxywasm::secret;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
@@ -533,17 +576,21 @@ impl HttpContext for AuthFilter {
         Action::Continue
     }
 }
+```
 
 ### Dictionary (`fastedge::proxywasm::dictionary`)
 
 Provides read-only key-value lookups for configuration data. Values are returned as `String`.
 
+```rust,ignore
 pub fn get(key: &str) -> Option<String>
+```
 
 Returns `Some(value)` if the key exists and the value is valid UTF-8, `None` otherwise.
 
 #### Example — Reading upstream configuration
 
+```rust,no_run
 use fastedge::proxywasm::dictionary;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
@@ -575,15 +622,19 @@ impl HttpContext for ConfigFilter {
         Action::Continue
     }
 }
+```
 
 ### Diagnostics (`fastedge::proxywasm::utils`)
 
+```rust,ignore
 pub fn set_user_diag(value: &str)
+```
 
 Writes a diagnostic message visible in FastEdge platform logs. Panics if the host returns a non-zero status. Use for debugging and operational monitoring; do not log sensitive values.
 
 #### Example
 
+```rust,no_run
 use fastedge::proxywasm::utils;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
@@ -616,11 +667,13 @@ impl HttpContext for DiagFilter {
         Action::Continue
     }
 }
+```
 
 ### Environment Variables
 
 CDN apps read non-secret configuration via `std::env::var()`. This works identically to HTTP apps — no proxy-wasm-specific API is involved.
 
+```rust,no_run
 use std::env;
 use proxy_wasm::traits::*;
 use proxy_wasm::types::*;
@@ -662,6 +715,7 @@ impl HttpContext for EnvFilter {
         Action::Continue
     }
 }
+```
 
 For sensitive configuration, use `fastedge::proxywasm::secret::get()` instead of environment variables.
 
@@ -669,6 +723,7 @@ For sensitive configuration, use `fastedge::proxywasm::secret::get()` instead of
 
 CDN apps can write log output using `println!` or the `proxy_wasm::hostcalls::log` function:
 
+```rust,no_run
 use proxy_wasm::hostcalls;
 use proxy_wasm::types::LogLevel;
 
@@ -677,6 +732,7 @@ println!("Request received");
 
 // Proxy-wasm log API (routes through the configured log level)
 hostcalls::log(LogLevel::Info, "Request received").ok();
+```
 
 The `log` crate macros (`info!`, `warn!`, `error!`, etc.) work when `proxy_wasm::set_log_level()` is configured in the entry point, which routes them through the proxy-wasm log infrastructure.
 

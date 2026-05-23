@@ -12,26 +12,31 @@ The current crate version is `0.4.0` (from `[workspace.package]` in the reposito
 
 For `#[wstd::http_server]` (recommended):
 
+```toml
 [dependencies]
 wstd   = "0.6"
 anyhow = "1"
 
 [lib]
 crate-type = ["cdylib"]
+```
 
 For `#[fastedge::http]` (basic):
 
+```toml
 [dependencies]
 fastedge = "0.4.0"
 anyhow   = "1"
 
 [lib]
 crate-type = ["cdylib"]
+```
 
 ### Minimal Handler
 
 The recommended handler for new applications uses `#[wstd::http_server]` (async, WASI-HTTP):
 
+```rust,no_run
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
 
@@ -42,25 +47,32 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .body(Body::from("Hello, FastEdge!"))?;
     Ok(response)
 }
+```
 
 ### Build
 
 For `#[wstd::http_server]` (recommended):
 
+```bash
 rustup target add wasm32-wasip2
 cargo build --target wasm32-wasip2 --release
+```
 
 To avoid passing `--target` on every build, add `.cargo/config.toml` to your project:
 
+```toml
 [build]
 target = "wasm32-wasip2"
+```
 
 Then `cargo build --release` is sufficient.
 
 For `#[fastedge::http]` (basic):
 
+```bash
 rustup target add wasm32-wasip1
 cargo build --target wasm32-wasip1 --release
+```
 
 The output `.wasm` file is located at `target/<target-triple>/release/<crate_name>.wasm`.
 
@@ -74,7 +86,9 @@ Provided by the [`wstd`](https://crates.io/crates/wstd) crate. Registers an asyn
 
 The decorated function must match the following signature:
 
+```rust,ignore
 async fn <name>(request: Request<Body>) -> anyhow::Result<Response<Body>>
+```
 
 **Requirements:**
 
@@ -85,6 +99,7 @@ async fn <name>(request: Request<Body>) -> anyhow::Result<Response<Body>>
 
 **Example — echo handler:**
 
+```rust,no_run
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
 
@@ -95,9 +110,11 @@ async fn main(request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .status(200)
         .body(Body::from(format!("Method: {}", method)))?)
 }
+```
 
 **Example — outbound HTTP with `wstd::http::Client`:**
 
+```rust,no_run
 use wstd::http::body::Body;
 use wstd::http::{Client, Request, Response};
 
@@ -110,17 +127,22 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
     let response = Client::new().send(upstream).await?;
     Ok(response)
 }
+```
 
 ### `#[fastedge::http]` (Basic)
 
+```rust,ignore
 #[proc_macro_attribute]
 pub fn http(attr: TokenStream, item: TokenStream) -> TokenStream
+```
 
 Provided by the `fastedge` crate. Registers a synchronous function as the HTTP request handler using the FastEdge-specific WIT interface. Use this for applications that require synchronous execution or the `fastedge::send_request` client. New projects should prefer `#[wstd::http_server]`.
 
 The decorated function must match the following signature:
 
+```rust,ignore
 fn <name>(req: fastedge::http::Request<fastedge::body::Body>) -> anyhow::Result<fastedge::http::Response<fastedge::body::Body>>
+```
 
 **Requirements:**
 
@@ -135,6 +157,7 @@ If the function returns `Err(e)`, the macro converts it to an HTTP `500 Internal
 
 **Example — minimal handler:**
 
+```rust,no_run
 use anyhow::Result;
 use fastedge::body::Body;
 use fastedge::http::{Request, Response, StatusCode};
@@ -146,9 +169,11 @@ fn main(_req: Request<Body>) -> Result<Response<Body>> {
         .body(Body::from("Hello, FastEdge!"))
         .map_err(Into::into)
 }
+```
 
 **Example — method dispatch:**
 
+```rust,no_run
 use anyhow::{anyhow, Result};
 use fastedge::body::Body;
 use fastedge::http::{Method, Request, Response, StatusCode};
@@ -163,6 +188,7 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
         _ => Err(anyhow!("method not allowed")),
     }
 }
+```
 
 ### Comparison
 
@@ -179,7 +205,9 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
 
 ## Body Type
 
+```rust,ignore
 pub struct Body { /* private fields */ }
+```
 
 `fastedge::body::Body` wraps [`bytes::Bytes`](https://docs.rs/bytes) and carries a MIME content-type. The content-type is set at construction time based on the input data and cannot be changed after creation.
 
@@ -196,13 +224,16 @@ pub struct Body { /* private fields */ }
 | `Body::empty()`                            | `text/plain; charset=utf-8` | Zero-length body                                                   |
 | `Body::try_from(value: serde_json::Value)` | `application/json`          | Requires `json` feature; returns `Result<Body, serde_json::Error>` |
 
+```rust
 use fastedge::body::Body;
 
 let text  = Body::from("hello");
 let owned = Body::from(String::from("hello"));
 let bytes = Body::from(vec![0x48u8, 0x69]);
 let empty = Body::empty();
+```
 
+```rust,ignore
 // json feature required
 use fastedge::body::Body;
 use serde_json::json;
@@ -212,6 +243,7 @@ let body = Body::try_from(json!({"status": "ok"}))?;
 assert_eq!(body.content_type(), "application/json");
 # Ok(())
 # }
+```
 
 ### Methods
 
@@ -222,12 +254,14 @@ assert_eq!(body.content_type(), "application/json");
 
 All methods from `bytes::Bytes` are available via `Deref`:
 
+```rust
 use fastedge::body::Body;
 
 let body = Body::from("hello");
 assert_eq!(body.len(), 5);
 assert!(!body.is_empty());
 let slice: &[u8] = &body[..];
+```
 
 ### Content-Type Detection
 
@@ -242,6 +276,7 @@ Content-type is determined at construction time and cannot be changed after crea
 
 To send a response with a content-type that does not match automatic detection, set the `Content-Type` header explicitly on the response builder:
 
+```rust,no_run
 use fastedge::body::Body;
 use fastedge::http::{Response, StatusCode};
 
@@ -251,6 +286,7 @@ let response = Response::builder()
     .header("content-type", "text/html; charset=utf-8")
     .body(Body::from(html))
     .unwrap();
+```
 
 ---
 
@@ -258,7 +294,9 @@ let response = Response::builder()
 
 ### `send_request`
 
+```rust,ignore
 pub fn send_request(req: http::Request<Body>) -> Result<http::Response<Body>, Error>
+```
 
 Sends a synchronous outbound HTTP request to a backend service and returns the response. Available when using `#[fastedge::http]`. For async outbound requests with `#[wstd::http_server]`, use `wstd::http::Client` instead.
 
@@ -270,6 +308,7 @@ Sends a synchronous outbound HTTP request to a backend service and returns the r
 - `Error::BindgenHttpError` — the host runtime rejected or failed the request.
 - `Error::InvalidBody` — the response body could not be decoded.
 
+```rust,no_run
 use anyhow::Result;
 use fastedge::body::Body;
 use fastedge::http::{Method, Request, Response, StatusCode};
@@ -289,7 +328,9 @@ fn main(_req: Request<Body>) -> Result<Response<Body>> {
         .body(upstream_resp.into_body())
         .map_err(Into::into)
 }
+```
 
+```rust,no_run
 use anyhow::Result;
 use fastedge::body::Body;
 use fastedge::http::{Method, Request, Response, StatusCode};
@@ -310,6 +351,7 @@ fn main(_req: Request<Body>) -> Result<Response<Body>> {
         .body(Body::empty())
         .map_err(Into::into)
 }
+```
 
 ---
 
@@ -317,6 +359,7 @@ fn main(_req: Request<Body>) -> Result<Response<Body>> {
 
 ### Error Enum
 
+```rust,ignore
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
     UnsupportedMethod(http::Method),
@@ -325,6 +368,7 @@ pub enum Error {
     InvalidBody,
     InvalidStatusCode(u16),
 }
+```
 
 | Variant                           | When it occurs                                                                                     |
 | --------------------------------- | -------------------------------------------------------------------------------------------------- |
@@ -336,6 +380,7 @@ pub enum Error {
 
 `Error` implements `std::error::Error` and `std::fmt::Display`. It is compatible with `anyhow` and `?` propagation.
 
+```rust,no_run
 use fastedge::{Error, send_request};
 use fastedge::body::Body;
 use fastedge::http::{Method, Request};
@@ -350,6 +395,7 @@ fn fetch(uri: &str) -> Result<String, Error> {
     let resp = send_request(req)?;
     Ok(format!("status: {}", resp.status()))
 }
+```
 
 ---
 
@@ -362,13 +408,17 @@ fn fetch(uri: &str) -> Result<String, Error> {
 
 Enable non-default features in `Cargo.toml`:
 
+```toml
 [dependencies]
 fastedge = { version = "0.4.0", features = ["json"] }
+```
 
 Disable the default `proxywasm` feature if you do not need it:
 
+```toml
 [dependencies]
 fastedge = { version = "0.4.0", default-features = false }
+```
 
 ---
 
@@ -376,7 +426,9 @@ fastedge = { version = "0.4.0", default-features = false }
 
 `fastedge` re-exports the [`http`](https://crates.io/crates/http) crate as `fastedge::http`. All standard HTTP types are available through this path without adding `http` as a direct dependency.
 
+```rust,ignore
 use fastedge::http::{Method, Request, Response, StatusCode, HeaderMap, Uri};
+```
 
 **Supported HTTP methods** (the complete set accepted by `send_request`):
 
@@ -396,6 +448,7 @@ use fastedge::http::{Method, Request, Response, StatusCode, HeaderMap, Uri};
 
 The FastEdge platform captures **stdout only**. Output written to `stderr` is silently discarded and will not appear in the platform's log viewer. Use `print!` / `println!` for all diagnostic output. Do not use `eprint!` / `eprintln!` — those produce no visible output on the platform.
 
+```rust,no_run
 use anyhow::Result;
 use fastedge::body::Body;
 use fastedge::http::{Request, Response, StatusCode};
@@ -409,6 +462,7 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
         .body(Body::empty())
         .map_err(Into::into)
 }
+```
 
 ---
 

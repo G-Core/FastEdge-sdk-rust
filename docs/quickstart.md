@@ -10,20 +10,26 @@ Build and deploy edge computing applications that compile to WebAssembly using t
 
 Install both targets:
 
+```bash
 rustup target add wasm32-wasip1
 rustup target add wasm32-wasip2
+```
 
 ## Create a New Project
 
 Create a new library crate:
 
+```bash
 cargo new --lib my-edge-app
 cd my-edge-app
+```
 
 The crate must be compiled as a `cdylib`. Add to `Cargo.toml`:
 
+```toml
 [lib]
 crate-type = ["cdylib"]
+```
 
 ## Option A: Async Handler (Recommended)
 
@@ -31,15 +37,18 @@ The async handler uses the standard WASI-HTTP interface via the [`wstd`](https:/
 
 Add dependencies to `Cargo.toml`:
 
+```toml
 [dependencies]
 wstd   = "0.6"
 anyhow = "1"
 
 [lib]
 crate-type = ["cdylib"]
+```
 
 Write the handler in `src/lib.rs`:
 
+```rust,no_run
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
 
@@ -52,15 +61,20 @@ async fn main(request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .header("content-type", "text/plain;charset=UTF-8")
         .body(Body::from(format!("Hello, you made a request to {url}")))?)
 }
+```
 
 Build targeting `wasm32-wasip2`:
 
+```bash
 cargo build --target wasm32-wasip2 --release
+```
 
 To avoid passing `--target` on every build, add a `.cargo/config.toml` to your project:
 
+```toml
 [build]
 target = "wasm32-wasip2"
+```
 
 Then `cargo build --release` is sufficient.
 
@@ -72,15 +86,18 @@ The sync handler uses the `fastedge` crate directly. It is synchronous and suite
 
 Add dependencies to `Cargo.toml`:
 
+```toml
 [dependencies]
 fastedge = "0.4.0"
 anyhow   = "1"
 
 [lib]
 crate-type = ["cdylib"]
+```
 
 Write the handler in `src/lib.rs`:
 
+```rust,no_run
 use anyhow::Result;
 use fastedge::body::Body;
 use fastedge::http::{Request, Response, StatusCode};
@@ -95,33 +112,38 @@ fn main(req: Request<Body>) -> Result<Response<Body>> {
         .body(Body::from(format!("Hello, you made a request to {url}")))
         .map_err(Into::into)
 }
+```
 
 Build targeting `wasm32-wasip1`:
 
+```bash
 cargo build --target wasm32-wasip1 --release
+```
 
 The compiled `.wasm` file is written to `target/wasm32-wasip1/release/`.
 
 ## Build
 
-| Handler path            | Build command                                  |
-| ----------------------- | ---------------------------------------------- |
-| Async (`wstd`)          | `cargo build --target wasm32-wasip2 --release` |
-| Sync (`fastedge::http`) | `cargo build --target wasm32-wasip1 --release` |
+| Handler path            | Build command                                    |
+| ----------------------- | ------------------------------------------------ |
+| Async (`wstd`)          | `cargo build --target wasm32-wasip2 --release`   |
+| Sync (`fastedge::http`) | `cargo build --target wasm32-wasip1 --release`   |
 
 Both commands produce a `.wasm` binary in the respective `target/<target>/release/` directory. Neither path requires `cargo-component`.
 
 ## Feature Flags
 
-| Feature       | Default | Description                               |
-| ------------- | ------- | ----------------------------------------- |
-| `proxywasm`   | yes     | Enable ProxyWasm compatibility layer      |
-| `json`        | no      | Enable JSON body support via `serde_json` |
+| Feature     | Default | Description                               |
+| ----------- | ------- | ----------------------------------------- |
+| `proxywasm` | yes     | Enable ProxyWasm compatibility layer      |
+| `json`      | no      | Enable JSON body support via `serde_json` |
 
 Enable the `json` feature in `Cargo.toml`:
 
+```toml
 [dependencies]
 fastedge = { version = "0.4.0", features = ["json"] }
+```
 
 ## CDN Apps
 

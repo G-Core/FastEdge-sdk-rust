@@ -12,11 +12,14 @@ The `fastedge::key_value` module provides persistent storage with support for si
 
 ### Opening a Store
 
+```rust
 pub fn new() -> Result<Self, Error>
 pub fn open(name: &str) -> Result<Self, Error>
+```
 
 `Store::new()` opens the default store. `Store::open(name)` opens a named store. Both return `Err(Error::NoSuchStore)` if the store label is not recognized and `Err(Error::AccessDenied)` if the application is not authorized.
 
+```rust,no_run
 use fastedge::key_value::Store;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
@@ -33,13 +36,17 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .status(200)
         .body(Body::from("ok"))?)
 }
+```
 
 ### Reading Values
 
+```rust
 pub fn get(&self, key: &str) -> Result<Option<Vec<u8>>, Error>
+```
 
 Returns `Ok(Some(bytes))` if the key exists, `Ok(None)` if it does not.
 
+```rust,no_run
 use fastedge::key_value::Store;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
@@ -57,10 +64,13 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
             .body(Body::from("not found"))?),
     }
 }
+```
 
 ### Pattern Scanning
 
+```rust
 pub fn scan(&self, pattern: &str) -> Result<Vec<String>, Error>
+```
 
 Scans the store for keys matching a glob-style pattern. Returns a list of matching key names. Returns an empty `Vec` if no keys match.
 
@@ -72,6 +82,7 @@ Supported glob syntax:
 | `?`     | Any single character                        |
 | `[abc]` | Any character in the set                    |
 
+```rust,no_run
 use fastedge::key_value::Store;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
@@ -89,13 +100,16 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .status(200)
         .body(Body::from(format!("{} keys found", keys.len())))?)
 }
+```
 
 ### Sorted Sets
 
 Sorted sets store members associated with a `f64` score. Members are ordered from lowest to highest score.
 
+```rust
 pub fn zrange_by_score(&self, key: &str, min: f64, max: f64) -> Result<Vec<(Vec<u8>, f64)>, Error>
 pub fn zscan(&self, key: &str, pattern: &str) -> Result<Vec<(Vec<u8>, f64)>, Error>
+```
 
 `zrange_by_score` returns all members of the sorted set stored at `key` whose score falls in the inclusive range `[min, max]`. Use `f64::NEG_INFINITY` and `f64::INFINITY` for unbounded ranges.
 
@@ -103,6 +117,7 @@ pub fn zscan(&self, key: &str, pattern: &str) -> Result<Vec<(Vec<u8>, f64)>, Err
 
 Both return an empty `Vec` when the key does not exist or no members fall within the specified range or pattern.
 
+```rust,no_run
 use fastedge::key_value::Store;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
@@ -126,15 +141,19 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .status(200)
         .body(Body::from(format!("{} top players", top_players.len())))?)
 }
+```
 
 ### Bloom Filters
 
+```rust
 pub fn bf_exists(&self, key: &str, item: &str) -> Result<bool, Error>
+```
 
 Tests whether `item` is a member of the bloom filter stored at `key`. Returns `true` if the item was probably added to the filter (subject to the false-positive rate of the filter), or `false` if the key does not exist or the item was definitely not added.
 
 Bloom filters cannot produce false negatives: if `bf_exists` returns `false`, the item has not been added.
 
+```rust,no_run
 use fastedge::key_value::Store;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
@@ -155,6 +174,7 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .status(200)
         .body(Body::empty())?)
 }
+```
 
 ### Error Handling
 
@@ -166,6 +186,7 @@ All `Store` methods return `Result<_, Error>`. The `Error` type has three varian
 | `Error::AccessDenied`  | The application does not have permission to access the store    |
 | `Error::Other(String)` | An implementation-specific error (I/O or internal host failure) |
 
+```rust,no_run
 use fastedge::key_value::{Error, Store};
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
@@ -195,6 +216,7 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .status(200)
         .body(Body::empty())?)
 }
+```
 
 CDN apps use `fastedge::proxywasm::key_value` instead — see [CDN_APPS.md](CDN_APPS.md) for the ProxyWasm API surface and usage examples.
 
@@ -206,10 +228,13 @@ The `fastedge::secret` module provides access to encrypted secrets such as API k
 
 ### Reading Secrets
 
+```rust
 pub fn get(key: &str) -> Result<Option<Vec<u8>>, Error>
+```
 
 Returns the currently effective value of the named secret. Returns `Ok(None)` if no secret with that name is configured.
 
+```rust,no_run
 use fastedge::secret;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
@@ -232,15 +257,19 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .status(200)
         .body(Body::empty())?)
 }
+```
 
 ### Time-Based Retrieval
 
+```rust
 pub fn get_effective_at(key: &str, at: u32) -> Result<Option<Vec<u8>>, Error>
+```
 
 Returns the value of the named secret that was effective at the given Unix timestamp (`at`, seconds since epoch). This is useful during secret rotation: you can verify that both the old and new versions of a secret are accessible before completing a rotation.
 
 Returns `Ok(None)` if no version of the secret was configured at that time.
 
+```rust,no_run
 use fastedge::secret;
 use std::time::{SystemTime, UNIX_EPOCH};
 use wstd::http::body::Body;
@@ -264,6 +293,7 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .status(200)
         .body(Body::empty())?)
 }
+```
 
 ### Security Notes
 
@@ -282,12 +312,15 @@ The `fastedge::dictionary` module provides fast, read-only lookups for configura
 
 ### Configuration Lookups
 
+```rust
 pub fn get(key: &str) -> Option<String>
+```
 
 Returns `Some(value)` if the key exists and its value is valid UTF-8, or `None` if the key is not found or the value cannot be decoded as UTF-8.
 
 Dictionary values are environment variables set at deployment time via the platform — the same management mechanism as secrets, but without encryption. They are not writable from application code.
 
+```rust,no_run
 use fastedge::dictionary;
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};
@@ -308,6 +341,7 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
             upstream, timeout_ms
         )))?)
 }
+```
 
 ### When to Use Dictionary vs Key-Value vs Secrets
 
@@ -332,12 +366,15 @@ The `fastedge::utils` module provides diagnostic functions for monitoring and de
 
 ### Diagnostics
 
+```rust
 pub fn set_user_diag(value: &str)
+```
 
 Writes a diagnostic string that appears in the FastEdge platform logs associated with the current request. This is intended for debugging and operational monitoring. There is no return value; the function panics if the host rejects the call.
 
 The FastEdge platform captures only **stdout** for application log output. `stderr` is silently discarded and will not appear in the platform's log viewer. Use `println!` (or logging crates that write to stdout) for any output you need to observe. Do not use `eprintln!` — it produces no visible output on the platform.
 
+```rust,no_run
 use fastedge::key_value::Store;
 use fastedge::utils::set_user_diag;
 use wstd::http::body::Body;
@@ -362,6 +399,7 @@ async fn main(_request: Request<Body>) -> anyhow::Result<Response<Body>> {
         .status(200)
         .body(Body::empty())?)
 }
+```
 
 One diagnostic message per request is the typical pattern. If `set_user_diag` is called multiple times, the platform may record only the last value or concatenate them depending on runtime behavior.
 
