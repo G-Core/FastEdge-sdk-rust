@@ -1,6 +1,6 @@
 # fastedge
 
-> Documentation for the `fastedge` crate (v0.3.5) — a Rust SDK for building edge computing applications that compile to WebAssembly and run on the FastEdge platform.
+> Documentation for the `fastedge` crate (v0.4.0) — a Rust SDK for building edge computing applications that compile to WebAssembly and run on the FastEdge platform.
 
 ## Documentation
 
