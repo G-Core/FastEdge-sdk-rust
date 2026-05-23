@@ -838,11 +838,11 @@
     },
 
     "http-key-value-blueprint": {
-      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/kv-store-rust.md",
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/http/kv-store-wasi-rust.md",
       "section": null
     },
     "http-key-value-pattern": {
-      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-kv-store-rust.md",
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/http/examples-kv-store-wasi-rust.md",
       "section": null
     },
 
