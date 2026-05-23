@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "GET /logo.svg — serves embedded SVG",
+  "request": {
+    "method": "GET",
+    "path": "/logo.svg"
+  }
+}

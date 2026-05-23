@@ -1,0 +1,15 @@
+{
+  "appType": "http-wasm",
+  "description": "xid=0.25 — logo=hops (25%<50%), font=exo2 (25%<26.67%)",
+  "request": {
+    "method": "GET",
+    "path": "/",
+    "headers": {
+      "cookie": "x-fastedge-abid=0.25"
+    }
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

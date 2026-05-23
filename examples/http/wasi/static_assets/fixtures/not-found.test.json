@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "GET /missing.txt — 404 for unknown path",
+  "request": {
+    "method": "GET",
+    "path": "/missing.txt"
+  }
+}

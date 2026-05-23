@@ -169,7 +169,13 @@ fn send_device_command(token: &str, device: &str, command: &str) -> Result<Strin
     Ok(status.trim_matches('"').to_string())
 }
 
+const MAX_REDIRECTS: u8 = 5;
+
 fn request(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
+    request_inner(req, 0)
+}
+
+fn request_inner(req: Request<Body>, depth: u8) -> Result<Response<Body>, StatusCode> {
     let rsp = match fastedge::send_request(req) {
         Err(error) => {
             let status_code = match error {
@@ -185,7 +191,7 @@ fn request(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
     };
 
     let status = rsp.status();
-    if is_redirect(status) {
+    if is_redirect(status) && depth < MAX_REDIRECTS {
         if let Some(location) = rsp.headers().get(header::LOCATION) {
             let new_url = Url::parse(
                 location
@@ -207,7 +213,7 @@ fn request(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
                 .body(Body::empty())
                 .or(Err(StatusCode::INTERNAL_SERVER_ERROR))?;
 
-            return request(sub_req);
+            return request_inner(sub_req, depth + 1);
         }
     }
     if status == StatusCode::OK {
@@ -217,7 +223,7 @@ fn request(req: Request<Body>) -> Result<Response<Body>, StatusCode> {
     Err(status)
 }
 
-// List of acceptible 300-series redirect codes.
+// List of acceptable 300-series redirect codes.
 const REDIRECT_CODES: &[StatusCode] = &[
     StatusCode::MOVED_PERMANENTLY,
     StatusCode::FOUND,

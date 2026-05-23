@@ -1,0 +1,14 @@
+{
+  "appType": "http-wasm",
+  "description": "POST method — expects 405 with Allow header and body",
+  "request": {
+    "method": "POST",
+    "path": "/",
+    "headers": {},
+    "body": ""
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

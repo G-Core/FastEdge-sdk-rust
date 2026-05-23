@@ -1,0 +1,13 @@
+{
+  "appType": "http-wasm",
+  "description": "Empty path (root '/') with BASE set → 400 Missing file path",
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "request": {
+    "method": "GET",
+    "url": "/",
+    "headers": {}
+  }
+}

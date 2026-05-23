@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "POST request should be rejected with 405 Method Not Allowed",
+  "request": {
+    "method": "POST",
+    "path": "/image.png"
+  }
+}

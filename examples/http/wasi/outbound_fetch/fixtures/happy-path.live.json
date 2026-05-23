@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "content-type": { "contains": "application/json" }
+    },
+    "bodyContains": "\"username\""
+  }
+}

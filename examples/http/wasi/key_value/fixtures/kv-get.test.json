@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "KV get operation — requires KV store stub (WASI-KV-RUNNER-1)",
+  "request": {
+    "method": "GET",
+    "path": "/?store=my-store&action=get&key=hello"
+  }
+}

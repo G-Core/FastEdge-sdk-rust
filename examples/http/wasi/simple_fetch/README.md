@@ -4,7 +4,7 @@
 
 A minimal example demonstrating outbound HTTP requests using the [WASI-HTTP](https://github.com/WebAssembly/wasi-http) interface via the [`wstd`](https://crates.io/crates/wstd) crate.
 
-Unlike the other HTTP examples that use the synchronous FastEdge SDK, this example uses the WASI component model with an **async** handler and a proper HTTP client (`wstd::http::Client`).
+Uses the WASI component model with an **async** handler and a proper HTTP client (`wstd::http::Client`). The same async pattern is used by all examples in `examples/http/wasi/`.
 
 ## How it works
 
@@ -26,31 +26,16 @@ curl -H "x-fetch-url: https://httpbin.org/uuid" https://<your-app-domain>/
 
 ## Build
 
-### Prerequisites
-
-- Rust toolchain
-- [`cargo-component`](https://github.com/bytecodealliance/cargo-component)
-
 ```bash
-cargo install cargo-component
+cargo build --release
+# Output: target/wasm32-wasip2/release/simple_fetch.wasm
 ```
 
-### Compile
+## Key differences from basic HTTP examples
 
-```bash
-cargo component build --release
-```
-
-The compiled component will be at:
-```
-target/wasm32-wasip1/release/fetch.wasm
-```
-
-## Key differences from FastEdge SDK examples
-
-| | FastEdge SDK | This example (WASI-HTTP) |
+| | Basic HTTP (`fastedge` crate) | WASI HTTP (`wstd` crate) |
 |---|---|---|
 | Handler | `fn main(req)` — sync | `async fn main(req)` — async |
 | Macro | `#[fastedge::http]` | `#[wstd::http_server]` |
 | Outbound HTTP | `fastedge::send_request(req)` | `Client::new().send(req).await` |
-| Build tool | `cargo build` | `cargo component build` |
+| Build target | `wasm32-wasip1` | `wasm32-wasip2` |

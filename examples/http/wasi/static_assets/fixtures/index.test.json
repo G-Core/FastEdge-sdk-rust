@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "GET / — serves embedded index.html",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

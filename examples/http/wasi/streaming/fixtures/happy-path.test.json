@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "Streams 5 text chunks (one every 200ms) — runner collects full body",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

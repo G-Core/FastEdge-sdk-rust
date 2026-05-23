@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "ORIGIN_URL not configured — returns 500 with error message",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

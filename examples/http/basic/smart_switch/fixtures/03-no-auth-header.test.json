@@ -1,0 +1,12 @@
+{
+  "appType": "http-wasm",
+  "description": "GET with PASSWORD env set but no Authorization header → 403 Forbidden",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

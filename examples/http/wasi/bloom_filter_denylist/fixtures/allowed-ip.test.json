@@ -1,0 +1,15 @@
+{
+  "appType": "http-wasm",
+  "description": "Non-blocked IP — requires KV bloom filter stub (WASI-KV-RUNNER-1)",
+  "request": {
+    "method": "GET",
+    "path": "/",
+    "headers": {
+      "x-real-ip": "1.2.3.4"
+    }
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

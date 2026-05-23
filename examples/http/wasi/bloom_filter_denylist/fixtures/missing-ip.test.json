@@ -1,0 +1,12 @@
+{
+  "appType": "http-wasm",
+  "description": "No client IP header — returns 500 before opening KV store",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

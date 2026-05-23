@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "POST request with path - expects method POST and URL path echoed in response body",
+  "request": {
+    "method": "POST",
+    "path": "/api/inspect"
+  }
+}

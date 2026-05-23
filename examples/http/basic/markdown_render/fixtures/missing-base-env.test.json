@@ -1,0 +1,9 @@
+{
+  "appType": "http-wasm",
+  "description": "Missing BASE env var → 500 Misconfigured app",
+  "request": {
+    "method": "GET",
+    "url": "/readme.md",
+    "headers": {}
+  }
+}

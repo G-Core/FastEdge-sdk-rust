@@ -1,0 +1,12 @@
+{
+  "appType": "http-wasm",
+  "description": "LARGE_CONFIG loaded via dictionary API — reports byte count",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "GET /style.css — serves embedded stylesheet",
+  "request": {
+    "method": "GET",
+    "path": "/style.css"
+  }
+}

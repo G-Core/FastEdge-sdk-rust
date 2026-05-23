@@ -1,0 +1,10 @@
+{
+  "appType": "http-wasm",
+  "description": "Returns 500 when no query string is present at all",
+  "request": {
+    "method": "GET",
+    "url": "/",
+    "headers": {},
+    "body": ""
+  }
+}

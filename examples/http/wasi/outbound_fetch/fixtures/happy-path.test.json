@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "Fetches https://jsonplaceholder.typicode.com/users and returns it verbatim",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

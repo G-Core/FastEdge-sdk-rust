@@ -1,0 +1,6 @@
+{
+  "expected": {
+    "status": 200,
+    "bodyContains": "Method: POST\nURL: /api/inspect\nHeaders:"
+  }
+}

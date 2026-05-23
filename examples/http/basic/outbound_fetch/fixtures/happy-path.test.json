@@ -1,0 +1,9 @@
+{
+  "appType": "http-wasm",
+  "description": "Fetches users from jsonplaceholder, returns first 5 wrapped in pagination object",
+  "request": {
+    "method": "GET",
+    "url": "/",
+    "headers": {}
+  }
+}

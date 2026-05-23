@@ -57,8 +57,8 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
             .body(Body::from("Malformed request\n"));
     }
     let content_type = match req.headers().get("Content-Type") {
-        None => "application/octet-stream", // default MIME type
-        Some(v) => v.to_str().unwrap(),
+        None => "application/octet-stream",
+        Some(v) => v.to_str().unwrap_or("application/octet-stream"),
     };
     let content_type = content_type.to_owned();
     let content = req.into_body();

@@ -1,0 +1,6 @@
+{
+  "expected": {
+    "status": 400,
+    "body": "Missing file path\n"
+  }
+}
