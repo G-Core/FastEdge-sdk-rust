@@ -1,6 +1,7 @@
+[workspace]
 
 [package]
-name = "cdn_request_url"
+name = "request_url"
 version = "0.1.0"
 edition = "2024"
 

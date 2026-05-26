@@ -1,7 +1,7 @@
-
+[workspace]
 
 [package]
-name = "http_wasi_print"
+name = "wasi-print"
 version = "0.1.0"
 edition = "2024"
 
