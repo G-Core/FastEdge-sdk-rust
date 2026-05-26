@@ -161,22 +161,14 @@ impl HttpContext for HttpHeaders {
         }
 
         // check if the response header is not returned
-        let Some(value) = self.get_http_response_header("host") else {
+        if self.get_http_response_header("host").is_some() {
             self.send_http_response(553, vec![], None);
             return Action::Pause;
         };
-        if !value.is_empty() {
-            self.send_http_response(554, vec![], None);
-            return Action::Pause;
-        }
-        let Some(value) = self.get_http_response_header_bytes("host") else {
+        if self.get_http_response_header_bytes("host").is_some() {
             self.send_http_response(553, vec![], None);
             return Action::Pause;
         };
-        if !value.is_empty() {
-            self.send_http_response(554, vec![], None);
-            return Action::Pause;
-        }
 
         let response_headers = self.get_http_response_headers();
         if response_headers.len() != 1 {
@@ -318,30 +310,6 @@ impl HttpContext for HttpHeaders {
             let diff = diff_bytes.difference(&expected_bytes).collect::<Vec<_>>();
             println!("different headers bytes: {:?}", diff);
             self.send_http_response(552, vec![], None);
-            return Action::Pause;
-        }
-
-        // check if the reponse header is not returnd
-        let Some(value) = self.get_http_response_header("host") else {
-            self.send_http_response(553, vec![], None);
-            return Action::Pause;
-        };
-        if !value.is_empty() {
-            self.send_http_response(554, vec![], None);
-            return Action::Pause;
-        }
-        let Some(value) = self.get_http_response_header_bytes("host") else {
-            self.send_http_response(553, vec![], None);
-            return Action::Pause;
-        };
-        if !value.is_empty() {
-            self.send_http_response(554, vec![], None);
-            return Action::Pause;
-        }
-
-        let request_headers = self.get_http_response_headers();
-        if request_headers.is_empty() {
-            self.send_http_response(555, vec![], None);
             return Action::Pause;
         }
 

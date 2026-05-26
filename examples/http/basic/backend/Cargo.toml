@@ -9,7 +9,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-fastedge = "0.3"
+fastedge = { path = "../../../../" }
 anyhow = "1"
 querystring = "1.1"
 urlencoding = "2.1"

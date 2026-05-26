@@ -74,19 +74,14 @@ impl HttpContext for HttpHeaders {
         println!(" scheme = {} ", String::from_utf8_lossy(&scheme));
         self.add_http_response_header_bytes("request-scheme", &scheme);
 
-        let Some(extension) = self.get_property(vec![REQUEST_EXTENSION]) else {
-            self.send_http_response(555, vec![], None);
-            return Action::Pause;
+        let query = match self.get_property(vec![REQUEST_QUERY]) {
+            None => Bytes::new(),
+            Some(query) => {
+                println!(" query = {} ", String::from_utf8_lossy(&query));
+                self.add_http_response_header_bytes("request-query", &query);
+                query
+            }
         };
-        println!(" extension = {} ", String::from_utf8_lossy(&extension));
-        self.add_http_response_header_bytes("request-extension", &extension);
-
-        let Some(query) = self.get_property(vec![REQUEST_QUERY]) else {
-            self.send_http_response(556, vec![], None);
-            return Action::Pause;
-        };
-        println!(" query = {} ", String::from_utf8_lossy(&query));
-        self.add_http_response_header_bytes("request-query", &query);
 
         let Some(client_ip) = self.get_property(vec![REQUEST_X_REAL_IP]) else {
             self.send_http_response(557, vec![], None);
@@ -151,9 +146,9 @@ impl HttpContext for HttpHeaders {
         println!(" continent = {} ", String::from_utf8_lossy(&value));
         self.add_http_response_header_bytes("request-continent", &value);
 
-        let query = String::from_utf8_lossy(&query);
+        let query = std::str::from_utf8(&query).unwrap();
         println!("query={}", query);
-        let params = querystring::querify(&query);
+        let params = querystring::querify(query);
 
         if let Some(url) = params.iter().find_map(|(k, v)| {
             if "url".eq_ignore_ascii_case(k) {
