@@ -2,7 +2,7 @@
  * Copyright 2025 G-Core Innovations SARL
  */
 /*
-Example app demonstrating response caching via the cache interface.
+Example app demonstrating response caching and cache purging via the cache interface.
 
 The app reads ORIGIN_HOST from the environment, forwards the incoming request
 to that origin, and caches the response body keyed by the request path.
@@ -11,6 +11,10 @@ without hitting the origin.
 
 Cache reads and writes use the synchronous `fastedge::cache` API; upstream
 HTTP I/O still uses the async `wstd` client.
+
+Special purge routes (handled before any origin call):
+  GET /purge                  — purge all cached keys; returns 200 with deleted count
+  GET /purge/<path_and_query> — purge keys whose cache key starts with cache:/<path_and_query>
 
 Environment variables:
   ORIGIN_HOST   Base URL of the upstream origin, e.g. https://api.example.com
@@ -43,6 +47,24 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
         .path_and_query()
         .map(|pq| pq.as_str())
         .unwrap_or("/");
+
+    // Handle purge requests before any cache/origin logic
+    if path_and_query == "/purge" {
+        let deleted = cache::purge()?;
+        println!("purge all: {deleted} keys removed");
+        return Ok(Response::builder()
+            .status(204)
+            .body(Body::empty())?);
+    }
+    if let Some(prefix) = path_and_query.strip_prefix("/purge/") {
+        let prefix = format!("cache:/{prefix}");
+        let deleted = cache::purge_prefix(&prefix)?;
+        println!("purge prefix '{prefix}': {deleted} keys removed");
+        return Ok(Response::builder()
+            .status(204)
+            .body(Body::empty())?);
+    }
+
     let cache_key = format!("cache:{path_and_query}");
 
     // Return cached response if available
