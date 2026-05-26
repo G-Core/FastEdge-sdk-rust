@@ -513,6 +513,10 @@ pub mod cache {
     pub use crate::gcore::fastedge::cache_sync::incr;
     #[doc(inline)]
     pub use crate::gcore::fastedge::cache_sync::expire;
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::cache_sync::purge;
+    #[doc(inline)]
+    pub use crate::gcore::fastedge::cache_sync::purge_prefix;
 }
 
 
