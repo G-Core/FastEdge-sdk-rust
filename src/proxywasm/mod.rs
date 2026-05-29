@@ -32,6 +32,7 @@ pub mod secret;
 pub mod dictionary;
 pub mod utils;
 
+#[link(wasm_import_module = "env")]
 extern "C" {
     fn proxy_secret_get(
         key_data: *const u8,

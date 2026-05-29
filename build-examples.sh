@@ -15,6 +15,7 @@
 #   ./build-examples.sh cdn            # build only CDN examples
 #   ./build-examples.sh http-basic     # build only http/basic examples
 #   ./build-examples.sh http-wasi      # build only http/wasi examples
+#   ./build-examples.sh update         # cargo update every example's Cargo.lock
 #   ./build-examples.sh clean          # cargo clean every example
 
 set -u
@@ -52,7 +53,38 @@ build_group() {
         local name="${dir#$REPO_ROOT/}"
         echo
         echo "--- $name ---"
-        if (cd "$dir" && cargo build --release --target "$target"); then
+        if (cd "$dir" && cargo build --release --locked --target "$target"); then
+            PASSED+=("$name")
+        else
+            FAILED+=("$name")
+        fi
+    done
+}
+
+update_group() {
+    local label="$1"
+    local glob="$2"
+
+    shopt -s nullglob
+    local dirs=($glob)
+    shopt -u nullglob
+
+    if [ ${#dirs[@]} -eq 0 ]; then
+        echo "[$label] no example directories matched: $glob"
+        return
+    fi
+
+    echo
+    echo "=========================================="
+    echo "  Updating $label (cargo update)"
+    echo "=========================================="
+
+    for dir in "${dirs[@]}"; do
+        [ -f "$dir/Cargo.toml" ] || { SKIPPED+=("$dir (no Cargo.toml)"); continue; }
+        local name="${dir#$REPO_ROOT/}"
+        echo
+        echo "--- $name ---"
+        if (cd "$dir" && cargo update); then
             PASSED+=("$name")
         else
             FAILED+=("$name")
@@ -106,6 +138,11 @@ case "$GROUP" in
         build_group "http/basic" "wasm32-wasip1" "$REPO_ROOT/examples/http/basic/*/"
         build_group "http/wasi"  "wasm32-wasip2" "$REPO_ROOT/examples/http/wasi/*/"
         ;;
+    update)
+        update_group "cdn"        "$REPO_ROOT/examples/cdn/*/"
+        update_group "http/basic" "$REPO_ROOT/examples/http/basic/*/"
+        update_group "http/wasi"  "$REPO_ROOT/examples/http/wasi/*/"
+        ;;
     clean)
         clean_group "cdn"        "$REPO_ROOT/examples/cdn/*/"
         clean_group "http/basic" "$REPO_ROOT/examples/http/basic/*/"
@@ -113,7 +150,7 @@ case "$GROUP" in
         ;;
     *)
         echo "Unknown group: $GROUP" >&2
-        echo "Usage: $0 [all|cdn|http-basic|http-wasi|clean]" >&2
+        echo "Usage: $0 [all|cdn|http-basic|http-wasi|update|clean]" >&2
         exit 2
         ;;
 esac

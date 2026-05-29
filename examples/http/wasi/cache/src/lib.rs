@@ -73,7 +73,7 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
     if let Some(prefix) = path_and_query.strip_prefix("/delete/") {
         let prefix = format!("cache:/{prefix}");
         cache::delete(&prefix)?;
-        println!("purge prefix '{prefix}': removed");
+        println!("prefix '{prefix}': removed");
         return Ok(Response::builder()
             .status(204)
             .body(Body::empty())?);
