@@ -36,10 +36,14 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
     let origin = env::var("ORIGIN_HOST")
         .map_err(|_| anyhow!("ORIGIN_HOST environment variable is not set"))?;
 
-    let ttl_ms: u64 = env::var("CACHE_TTL_MS")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(60_000);
+    let ttl_ms = req.headers().get("cache-ttl-ms").and_then(|v| v.to_str().ok())
+        .and_then(|s| s.parse().ok())
+        .unwrap_or_else(|| {
+            env::var("CACHE_TTL_MS")
+                .ok()
+                .and_then(|v| v.parse().ok())
+                .unwrap_or(60_000)
+        });
 
     // Build cache key from the request path (and query string if present)
     let path_and_query = req
@@ -47,6 +51,7 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
         .path_and_query()
         .map(|pq| pq.as_str())
         .unwrap_or("/");
+
 
     // Handle purge requests before any cache/origin logic
     if path_and_query == "/purge" {
@@ -60,6 +65,15 @@ async fn main(req: Request<Body>) -> anyhow::Result<Response<Body>> {
         let prefix = format!("cache:/{prefix}");
         let deleted = cache::purge_prefix(&prefix)?;
         println!("purge prefix '{prefix}': {deleted} keys removed");
+        return Ok(Response::builder()
+            .status(204)
+            .body(Body::empty())?);
+    }
+
+    if let Some(prefix) = path_and_query.strip_prefix("/delete/") {
+        let prefix = format!("cache:/{prefix}");
+        cache::delete(&prefix)?;
+        println!("purge prefix '{prefix}': removed");
         return Ok(Response::builder()
             .status(204)
             .body(Body::empty())?);
