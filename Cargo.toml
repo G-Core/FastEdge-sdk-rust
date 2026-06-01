@@ -2,7 +2,7 @@
 members = ["derive", "."]
 
 [workspace.package]
-version = "0.4.0"
+version = "0.4.1"
 edition = "2021"
 license = "Apache-2.0"
 description = "FastEdge Rust SDK that helps you to create edge cloud application using WASM"
@@ -40,7 +40,7 @@ json = ["serde_json"]
 [dependencies]
 fastedge-derive = { path = "derive", version = "0.4" }
 http = "1.3"
-bytes = "1.10"
+bytes = "1.11"
 wit-bindgen = "0.46"
 thiserror = "2.0"
 mime = "^0.3"

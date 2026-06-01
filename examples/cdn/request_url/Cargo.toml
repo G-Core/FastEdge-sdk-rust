@@ -1,7 +1,7 @@
 [workspace]
 
 [package]
-name = "api_key"
+name = "request_url"
 version = "0.1.0"
 edition = "2024"
 
@@ -9,5 +9,6 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
+log = "0.4"
 proxy-wasm = "0.2"
-fastedge = { path = "../../../", features = ["proxywasm"] }
+querystring = "1.1"

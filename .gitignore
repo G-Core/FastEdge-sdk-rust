@@ -23,6 +23,8 @@ examples/**/pnpm-lock.yaml
 examples/**/package-lock.json
 examples/**/livetest.config.json
 
+# Cargo.lock files for examples (libraries, not deployable binaries)
+examples/**/Cargo.lock
 
 # Doc-generator failure artifacts — rejected/preamble-leaked claude -p
 # outputs preserved for prompt-debugging. Prune manually.
