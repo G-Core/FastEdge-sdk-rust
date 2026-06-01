@@ -9,7 +9,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-fastedge = { path = "../../../../" }
+fastedge = "0.4"
 url = "2.3"
 image = "0.24"
 rusty-s3 = "0.5"
