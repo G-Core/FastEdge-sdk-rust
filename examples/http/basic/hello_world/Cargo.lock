@@ -28,20 +28,19 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "fastedge"
-version = "0.4.2"
+version = "0.4.1"
 dependencies = [
  "bytes",
  "fastedge-derive",
  "http",
  "mime",
- "serde_json",
  "thiserror",
  "wit-bindgen",
 ]
 
 [[package]]
 name = "fastedge-derive"
-version = "0.4.2"
+version = "0.4.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -162,6 +161,14 @@ name = "heck"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
+
+[[package]]
+name = "hello_world"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "fastedge",
+]
 
 [[package]]
 name = "http"
