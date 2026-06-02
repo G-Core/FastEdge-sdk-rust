@@ -14,7 +14,3 @@ target/
 
 # FastEdge debugger artifacts
 **/.fastedge-debug/
-
-# Cargo.lock files for examples (libraries, not deployable binaries)
-examples/**/Cargo.lock
-

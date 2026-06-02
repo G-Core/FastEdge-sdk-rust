@@ -3,13 +3,6 @@
 version = 4
 
 [[package]]
-name = "ab_testing"
-version = "0.1.0"
-dependencies = [
- "proxy-wasm",
-]
-
-[[package]]
 name = "allocator-api2"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -36,6 +29,13 @@ dependencies = [
  "allocator-api2",
  "equivalent",
  "foldhash",
+]
+
+[[package]]
+name = "local_response"
+version = "0.1.0"
+dependencies = [
+ "proxy-wasm",
 ]
 
 [[package]]
