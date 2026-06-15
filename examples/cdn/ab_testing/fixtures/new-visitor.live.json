@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "logs": ["A/B test \"homepage-hero\": variant "],
+    "headers": {
+      "set-cookie": { "contains": "fe_exp_homepage-hero=" }
+    },
+    "status": 200
+  }
+}

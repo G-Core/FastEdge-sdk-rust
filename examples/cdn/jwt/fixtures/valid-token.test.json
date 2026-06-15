@@ -1,0 +1,28 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Valid HS256 JWT with far-future exp — request passes through",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com",
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjQxMDI0NDQ4MDB9.h4nrvZCtvX1OtRJMjID961FJGw2kkRM0zySLXN7VEtg"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "text/plain"
+    },
+    "body": "OK"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

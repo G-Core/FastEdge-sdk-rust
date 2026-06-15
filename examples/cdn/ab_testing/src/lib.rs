@@ -108,14 +108,10 @@ impl HttpContext for AbTestingContext {
         self.add_http_request_header("X-Experiment", &experiment_name);
         self.add_http_request_header("X-Variant", &assigned);
 
-        proxy_wasm::hostcalls::log(
-            LogLevel::Info,
-            &format!(
-                "A/B test \"{}\": variant {}, path {}",
-                experiment_name, assigned, new_path
-            ),
-        )
-        .ok();
+        println!(
+            "A/B test \"{}\": variant {}, path {}",
+            experiment_name, assigned, new_path
+        );
 
         Action::Continue
     }

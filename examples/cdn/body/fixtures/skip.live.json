@@ -1,0 +1,14 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "Chunked"
+    },
+    "logs": [
+      "url=http://fastedge-builtin.debug",
+      "content_type=text/plain"
+    ],
+    "body": "Hello World, this is a test message",
+    "noLogs": ["redacted"]
+  }
+}

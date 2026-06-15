@@ -346,7 +346,7 @@
         "examples/cdn/cache_control/README.md"
       ],
       "required": true,
-      "description": "CDN Cache Control example — reference pattern (docs)"
+      "description": "CDN Cache Control example — docs pattern extraction"
     },
 
     "cdn-convert-image-blueprint": {
@@ -365,7 +365,7 @@
         "examples/cdn/convert_image/README.md"
       ],
       "required": true,
-      "description": "CDN Image Conversion example — reference pattern (docs)"
+      "description": "CDN Image Conversion example — docs pattern extraction"
     },
 
     "cdn-custom-blueprint": {
@@ -375,7 +375,7 @@
         "examples/cdn/custom/README.md"
       ],
       "required": true,
-      "description": "CDN Custom Response example — scaffold blueprint"
+      "description": "CDN Custom Response example — scaffold blueprint extraction"
     },
     "cdn-custom-pattern": {
       "files": [
@@ -384,7 +384,7 @@
         "examples/cdn/custom/README.md"
       ],
       "required": true,
-      "description": "CDN Custom Response example — reference pattern (docs)"
+      "description": "CDN Custom Response example — docs pattern extraction"
     },
 
     "cdn-log-time-blueprint": {
@@ -394,7 +394,7 @@
         "examples/cdn/log_time/README.md"
       ],
       "required": true,
-      "description": "CDN Log Time example — scaffold blueprint"
+      "description": "CDN Log Time example — scaffold blueprint extraction"
     },
     "cdn-log-time-pattern": {
       "files": [
@@ -403,7 +403,7 @@
         "examples/cdn/log_time/README.md"
       ],
       "required": true,
-      "description": "CDN Log Time example — reference pattern (docs)"
+      "description": "CDN Log Time example — docs pattern extraction"
     },
 
     "cdn-md2html-blueprint": {
@@ -413,7 +413,7 @@
         "examples/cdn/md2html/README.md"
       ],
       "required": true,
-      "description": "CDN Markdown-to-HTML example — scaffold blueprint"
+      "description": "CDN Markdown-to-HTML example — scaffold blueprint extraction"
     },
     "cdn-md2html-pattern": {
       "files": [
@@ -422,7 +422,7 @@
         "examples/cdn/md2html/README.md"
       ],
       "required": true,
-      "description": "CDN Markdown-to-HTML example — reference pattern (docs)"
+      "description": "CDN Markdown-to-HTML example — docs pattern extraction"
     },
 
     "http-basic-hello-world-pattern": {

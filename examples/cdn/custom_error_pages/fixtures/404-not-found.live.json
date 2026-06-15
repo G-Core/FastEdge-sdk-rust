@@ -1,0 +1,10 @@
+{
+  "expected": {
+    "status": 404,
+    "headers": {
+      "content-type": "text/html",
+      "transfer-encoding": "Chunked"
+    },
+    "bodyContains": ["<html", "Oops! Page Not Found", "doesn’t exist"]
+  }
+}

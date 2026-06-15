@@ -1,0 +1,6 @@
+{
+  "expected": {
+    "status": 400,
+    "body": "Malformed request - invalid status code"
+  }
+}

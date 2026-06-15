@@ -1,0 +1,8 @@
+{
+  "expected": {
+    "status": 200,
+    "logs": [
+      "Redirecting to: https://de-origin.example.com/test"
+    ]
+  }
+}

@@ -6,16 +6,16 @@ use proxy_wasm::types::*;
 
 proxy_wasm::main! {{
     proxy_wasm::set_log_level(LogLevel::Trace);
-    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(HttpHeadersRoot) });
+    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(GeoblockRoot) });
 }}
 
-struct HttpHeadersRoot;
+struct GeoblockRoot;
 
-impl Context for HttpHeadersRoot {}
+impl Context for GeoblockRoot {}
 
-impl RootContext for HttpHeadersRoot {
+impl RootContext for GeoblockRoot {
     fn create_http_context(&self, _context_id: u32) -> Option<Box<dyn HttpContext>> {
-        Some(Box::new(HttpHeaders {}))
+        Some(Box::new(GeoblockContext {}))
     }
 
     fn get_type(&self) -> Option<ContextType> {
@@ -23,15 +23,15 @@ impl RootContext for HttpHeadersRoot {
     }
 }
 
-struct HttpHeaders {}
+struct GeoblockContext {}
 
-impl Context for HttpHeaders {}
+impl Context for GeoblockContext {}
 
 const BAD_GATEWAY: u32 = 502;
 const FORBIDDEN: u32 = 403;
 const INTERNAL_SERVER_ERROR: u32 = 500;
 
-impl HttpContext for HttpHeaders {
+impl HttpContext for GeoblockContext {
     fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
         let Ok(blacklist) = env::var("BLACKLIST") else {
             self.send_http_response(INTERNAL_SERVER_ERROR, vec![], Some(b"App misconfigured"));
@@ -69,7 +69,7 @@ impl HttpContext for HttpHeaders {
                     .unwrap()
                     .as_secs();
 
-                if now > tw_start || now <= tw_end {
+                if now >= tw_start && now <= tw_end {
                     self.send_http_response(FORBIDDEN, vec![], Some(b"Request blacklisted"));
                     return Action::Pause;
                 }

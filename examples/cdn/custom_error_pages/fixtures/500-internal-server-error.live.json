@@ -1,0 +1,10 @@
+{
+  "expected": {
+    "status": 500,
+    "headers": {
+      "content-type": "text/html",
+      "transfer-encoding": "Chunked"
+    },
+    "bodyContains": ["<html", "Internal Server Error", "An unexpected condition was encountered."]
+  }
+}

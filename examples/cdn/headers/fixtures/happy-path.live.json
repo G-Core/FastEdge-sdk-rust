@@ -1,0 +1,12 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "new-response-header": "value-02"
+    },
+    "logs": [
+      "-> host: example.com",
+      "-> new-response-header: value-02"
+    ]
+  }
+}

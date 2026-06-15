@@ -1,0 +1,11 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "cache-control": "public, max-age=31536000, immutable"
+    },
+    "logs": [
+      "Cache-Control: public, max-age=31536000, immutable (content-type: application/javascript)"
+    ]
+  }
+}

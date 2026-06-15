@@ -49,11 +49,7 @@ impl HttpContext for LargeEnvContext {
         let config = dictionary::get("LARGE_CONFIG").unwrap_or_default();
 
         let size = config.len();
-        proxy_wasm::hostcalls::log(
-            LogLevel::Info,
-            &format!("LARGE_CONFIG size: {} bytes", size),
-        )
-        .ok();
+        println!("LARGE_CONFIG size: {} bytes", size);
 
         self.add_http_request_header("x-config-size", &size.to_string());
 

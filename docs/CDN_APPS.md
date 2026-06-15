@@ -54,7 +54,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 proxy-wasm = "0.2"
-fastedge = { version = "0.3", features = ["proxywasm"] }
+fastedge = { version = "0.4", features = ["proxywasm"] }
 ```
 
 The `proxywasm` feature flag is required to access `fastedge::proxywasm::*`. Without it, `fastedge` only exposes Component Model APIs, which are not available in the proxy-wasm environment.

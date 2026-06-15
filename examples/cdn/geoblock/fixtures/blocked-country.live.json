@@ -1,0 +1,6 @@
+{
+  "expected": {
+    "status": 403,
+    "body": "Request blacklisted"
+  }
+}

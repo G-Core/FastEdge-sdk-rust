@@ -68,7 +68,7 @@ impl HttpContext for ApiKeyContext {
         };
 
         if provided_key != expected_key {
-            proxy_wasm::hostcalls::log(LogLevel::Info, "API key validation failed").ok();
+            println!("API key validation failed");
             self.send_http_response(403, vec![], Some(b"Invalid API key"));
             return Action::Pause;
         }
@@ -76,7 +76,7 @@ impl HttpContext for ApiKeyContext {
         // Strip the API key header before forwarding to upstream
         self.set_http_request_header("X-API-Key", None);
 
-        proxy_wasm::hostcalls::log(LogLevel::Info, "API key validated successfully").ok();
+        println!("API key validated successfully");
         Action::Continue
     }
 }

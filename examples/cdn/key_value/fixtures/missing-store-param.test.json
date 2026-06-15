@@ -1,0 +1,26 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Query params present but 'store' param missing — returns error",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "properties": {
+    "request.query": "action=get&key=mykey"
+  },
+  "response": {
+    "headers": {
+      "content-type": "text/plain"
+    },
+    "body": "upstream response"
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

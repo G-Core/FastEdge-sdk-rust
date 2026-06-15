@@ -1,0 +1,27 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Extension jpg present but FORMATS_TO_TRANSFORM env var not set — app does not schedule conversion",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug/photo.jpg",
+    "headers": {
+      "host": "example.com",
+      "User-Agent": "Mozilla/5.0 TestBrowser"
+    },
+    "body": ""
+  },
+  "response": {
+    "headers": {
+      "content-type": "image/jpeg"
+    },
+    "body": ""
+  },
+  "properties": {
+    "request.extension": "jpg"
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

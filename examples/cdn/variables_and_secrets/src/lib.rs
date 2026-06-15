@@ -49,10 +49,16 @@ impl HttpContext for VariablesContext {
             .and_then(|v| String::from_utf8(v).ok())
             .unwrap_or_default();
 
-        proxy_wasm::hostcalls::log(LogLevel::Info, &format!("USERNAME: {}", username)).ok();
-        proxy_wasm::hostcalls::log(LogLevel::Info, &format!("PASSWORD: {}", password)).ok();
+        println!("USERNAME: {}", username);
+        // WARNING: Secrets are stored and retrieved as plaintext. Never log secret values
+        // in production code — platform logs are visible to operators and may be persisted.
+        // This line is shown for demonstration only; remove it in any real application.
+        println!("PASSWORD: {}", password);
 
         self.add_http_request_header("x-env-username", &username);
+        // WARNING: Forwarding a secret in a request header exposes it to the upstream origin
+        // and any intermediary that can inspect headers. Only do this when the upstream
+        // channel is trusted and the header is required by the destination API.
         self.add_http_request_header("x-env-password", &password);
 
         Action::Continue

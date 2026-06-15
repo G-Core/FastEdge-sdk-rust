@@ -1,0 +1,22 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Expired JWT (exp in 2020) — returns 403",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com",
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJleHAiOjE1Nzc4MzY4MDB9.4jxrYjcCcbcMrifZ4qzxtMzrHiNw9sHzvfW0dWkgj2w"
+    },
+    "body": ""
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}

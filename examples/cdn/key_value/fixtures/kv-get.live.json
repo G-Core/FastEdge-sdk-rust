@@ -1,0 +1,8 @@
+{
+  "expected": {
+    "bodyContains": "mystore",
+    "headers": {
+      "content-type": "application/json"
+    }
+  }
+}

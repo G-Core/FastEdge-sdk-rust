@@ -120,10 +120,12 @@ The `#[fastedge::http]` macro generates the `Guest` trait implementation that br
 | `proxy_on_request_body(context_id, body_size, end_of_stream)` | Handle request body phase |
 | `proxy_on_response_headers(context_id, num_headers)` | Handle response headers phase |
 | `proxy_on_response_body(context_id, body_size, end_of_stream)` | Handle response body phase |
-| `proxy_on_log(context_id)` | Final logging callback |
+| `proxy_on_log(context_id)` | Final logging callback — **NOT dispatched on FastEdge today** (see note below) |
 | `proxy_on_http_call_response(ctx, call_id, h_size, b_size, t_size)` | HTTP callout response delivered |
 
 See `architecture/REQUEST_LIFECYCLE.md` for the order these are called.
+
+**`proxy_on_log` is part of the proxy-wasm spec but the FastEdge platform does not currently invoke it.** Neither the edge runtime nor the local debugger (`@gcoredev/fastedge-test`) dispatches the symbol. The SDK still exports it for forward-compat. Examples and production code must not rely on `on_log` firing — use the four phase hooks (`on_request_*`, `on_response_*`) for end-of-request observability instead.
 
 ---
 

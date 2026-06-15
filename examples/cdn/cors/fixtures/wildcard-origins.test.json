@@ -18,7 +18,7 @@
   },
   "dotenv": {
     "enabled": true,
-    "path": "fixtures/wildcard.env"
+    "path": "wildcard"
   },
   "logLevel": 2,
   "wasm": {

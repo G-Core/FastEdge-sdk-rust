@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 proxy-wasm = "0.2"
-fastedge = { path = "../../../", features = ["proxywasm"] }
+fastedge = { version = "0.4", features = ["proxywasm"] }
 jsonwebtoken = "9"
 serde = { version = "1", features = ["derive"] }
 headers = "0.4"
