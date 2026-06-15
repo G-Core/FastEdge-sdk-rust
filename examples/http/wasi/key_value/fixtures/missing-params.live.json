@@ -1,0 +1,6 @@
+{
+  "expected": {
+    "status": 530,
+    "bodyContains": "Execute error"
+  }
+}

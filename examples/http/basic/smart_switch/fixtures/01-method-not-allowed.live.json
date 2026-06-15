@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 405,
+    "headers": {
+      "allow": "GET, HEAD"
+    },
+    "body": "This method is not allowed\n"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "appType": "http-wasm",
+  "description": "Missing Authorization header — expects 403 with 'No auth header' body",
+  "request": {
+    "method": "GET",
+    "path": "/",
+    "headers": {}
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "appType": "http-wasm",
+  "description": "No existing cookie — new xid generated from nanosecond timestamp",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

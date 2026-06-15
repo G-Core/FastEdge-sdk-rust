@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "Base case — GET request returns greeting with full request URI",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

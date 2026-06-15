@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "Fetches users, slices to first 5, returns reshaped JSON with pagination metadata",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

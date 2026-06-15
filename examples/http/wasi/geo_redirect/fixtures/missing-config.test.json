@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "BASE_ORIGIN not configured — returns 500",
+  "request": {
+    "method": "GET",
+    "path": "/test"
+  }
+}

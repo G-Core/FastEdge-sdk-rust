@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "No env/secret configured — both values fall back to empty string",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

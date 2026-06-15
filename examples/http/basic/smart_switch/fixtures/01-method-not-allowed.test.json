@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "POST request → 405 Method Not Allowed before auth check",
+  "request": {
+    "method": "POST",
+    "path": "/"
+  }
+}

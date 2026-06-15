@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "GET request - expects method, URL, and headers echoed in response body",
+  "request": {
+    "method": "GET",
+    "path": "/test"
+  }
+}

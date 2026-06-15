@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "content-type": "text/css; charset=utf-8"
+    },
+    "bodyContains": "font-family"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "appType": "http-wasm",
+  "description": "Slot 0 with default secret name — current and effective values returned",
+  "request": {
+    "method": "GET",
+    "path": "/",
+    "headers": {
+      "x-slot": "0"
+    }
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

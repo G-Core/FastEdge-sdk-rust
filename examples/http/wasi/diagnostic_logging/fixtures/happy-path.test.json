@@ -1,0 +1,12 @@
+{
+  "appType": "http-wasm",
+  "description": "Proxies request to ORIGIN_URL, returns response with set_user_diag tag",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  },
+  "dotenv": {
+    "enabled": true,
+    "path": "."
+  }
+}

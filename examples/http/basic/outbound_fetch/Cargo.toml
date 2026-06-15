@@ -9,6 +9,6 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-fastedge = { path = "../../../../" }
+fastedge = "0.4"
 anyhow = "1"
 serde_json = "1"

@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "set-cookie": { "contains": "x-fastedge-abid=0.75" },
+      "content-type": { "contains": "application/json" }
+    }
+  }
+}

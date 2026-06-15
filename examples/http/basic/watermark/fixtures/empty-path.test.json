@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "GET request with no filename in path should return 400 Bad Request",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

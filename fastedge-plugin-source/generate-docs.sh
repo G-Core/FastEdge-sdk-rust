@@ -291,17 +291,17 @@ PROMPT
     # heading-detection scan. Fence delimiter lines are NOT skipped — they fall
     # through to `found { print }` so fenced code blocks are preserved intact
     # in the output. Only a bare `# ` heading outside a fence sets found=1.
-    stripped=$(awk '/^```/ { in_fence = !in_fence } !in_fence && /^#[^#]/ { found=1 } found' "$tmpfile")
+    stripped=$(awk '/^```/ { in_fence = !in_fence } !in_fence && /^# / { found=1 } found' "$tmpfile")
 
     # Post-strip validation: confirm the salvaged output actually starts with a
-    # level-1 heading. If awk matched something that looks like `#!` (shebang)
-    # or another edge case, reject it and retry rather than silently writing junk.
+    # level-1 heading (# followed by a space). Belt-and-suspenders against any
+    # remaining edge case; reject and retry rather than silently writing junk.
     local first_nonempty
     first_nonempty=$(printf '%s\n' "$stripped" | grep -m1 '.')
-    if [ -n "$stripped" ] && [[ "$first_nonempty" =~ ^#[^#] ]]; then
+    if [ -n "$stripped" ] && [[ "$first_nonempty" =~ ^"# " ]]; then
       # Detect preamble: anything before the first level-1 heading is preamble.
       local first_heading_line
-      first_heading_line=$(grep -n -m1 '^#[^#]' "$tmpfile" | cut -d: -f1)
+      first_heading_line=$(grep -n -m1 '^# ' "$tmpfile" | cut -d: -f1)
       if [ "${first_heading_line:-1}" -gt 1 ]; then
         local preamble_copy="$failure_dir/${target}.preamble.attempt-${attempt}.$(date +%s).md"
         cp "$tmpfile" "$preamble_copy"

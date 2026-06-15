@@ -1,0 +1,10 @@
+{
+  "appType": "http-wasm",
+  "description": "Returns 500 when ?url= query parameter is absent",
+  "request": {
+    "method": "GET",
+    "url": "/?q=hello",
+    "headers": {},
+    "body": ""
+  }
+}

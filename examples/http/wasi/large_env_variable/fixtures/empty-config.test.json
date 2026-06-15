@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "LARGE_CONFIG not set — falls back to empty string, reports 0 bytes",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "appType": "http-wasm",
+  "description": "Non-GET/HEAD method → 405 with Allow header",
+  "request": {
+    "method": "POST",
+    "url": "/readme.md",
+    "headers": {}
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "x-my-custom-header": "my-custom-value"
+    },
+    "bodyContains": "Returned all headers with a custom header added"
+  }
+}

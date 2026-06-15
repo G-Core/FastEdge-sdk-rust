@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "GET request with no S3 env vars configured should return 500 (App misconfigured)",
+  "request": {
+    "method": "GET",
+    "path": "/image.png"
+  }
+}

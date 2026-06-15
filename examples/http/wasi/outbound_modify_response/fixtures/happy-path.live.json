@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "bodyContains": "\"total\":5"
+  }
+}

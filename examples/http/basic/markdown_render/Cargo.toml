@@ -9,7 +9,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-fastedge = { path = "../../../../" }
+fastedge = "0.4"
 mime = "0.3"
 pulldown-cmark = "0.11"
 url = "2.5"

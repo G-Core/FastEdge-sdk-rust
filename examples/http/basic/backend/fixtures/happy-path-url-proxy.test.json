@@ -1,0 +1,10 @@
+{
+  "appType": "http-wasm",
+  "description": "Proxies ?url= to an upstream and returns len + content-type",
+  "request": {
+    "method": "GET",
+    "url": "/?url=https%3A%2F%2Fhttpbin.org%2Fget",
+    "headers": {},
+    "body": ""
+  }
+}

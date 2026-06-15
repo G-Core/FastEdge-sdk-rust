@@ -1,0 +1,8 @@
+{
+  "appType": "http-wasm",
+  "description": "No query parameters — handler returns error (KV store not reached)",
+  "request": {
+    "method": "GET",
+    "path": "/"
+  }
+}

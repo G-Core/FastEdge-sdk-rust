@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "content-type": "text/plain;charset=UTF-8"
+    },
+    "bodyContains": "Hello, you made a wasi request to http://test.localhost/api/hello/world?name=FastEdge&lang=Rust"
+  }
+}

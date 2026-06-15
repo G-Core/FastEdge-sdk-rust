@@ -55,10 +55,16 @@ Examples are organized into three categories:
 
 | Example | Description |
 | --- | --- |
+| [ab_testing](./http/wasi/ab_testing/) | Cookie-based A/B testing — weighted variant headers and persistent xid cookie |
+| [bloom_filter_denylist](./http/wasi/bloom_filter_denylist/) | Reject requests from IPs present in a KV Store bloom filter (`bf_exists`) |
+| [diagnostic_logging](./http/wasi/diagnostic_logging/) | Tag each request with a single `set_user_diag` outcome label (logfmt) |
 | [geo_redirect](./http/wasi/geo_redirect/) | Redirect requests to country-specific origins based on geoIP |
 | [key_value](./http/wasi/key_value/) | KV store operations — get, scan, zrange, zscan, bfExists |
-| [outbound_fetch](./http/wasi/outbound_fetch/) | Make outbound HTTP requests to a JSON API and transform the response |
+| [outbound_fetch](./http/wasi/outbound_fetch/) | Fetch from an outbound HTTP origin and return the response directly |
+| [outbound_modify_response](./http/wasi/outbound_modify_response/) | Fetch outbound, parse the JSON body, and return a reshaped response |
 | [secret_rollover](./http/wasi/secret_rollover/) | Slot-based secret retrieval for secret rotation scenarios |
+| [static_assets](./http/wasi/static_assets/) | Serve HTML, CSS, and SVG embedded into the wasm binary at compile time |
+| [streaming](./http/wasi/streaming/) | Generate a streaming response body with `Body::from_stream` and timed chunks |
 | [large_env_variable](./http/wasi/large_env_variable/) | Read large (> 64KB) environment variables using the dictionary API |
 
 ### cdn (proxy-wasm)
@@ -80,11 +86,20 @@ Examples are organized into three categories:
 
 ## Usage
 
-Each example is a standalone project. To build one:
+Each example is a standalone crate. To build one:
 
 ```sh
 cd <example-name>
-cargo build --target wasm32-wasip1 --release
+cargo build --release
 ```
 
-Each example depends on the [`fastedge`](https://crates.io/crates/fastedge) crate from crates.io.
+The correct WASM target is picked up automatically from the nearest `.cargo/config.toml`:
+
+- `http/basic/*` and `cdn/*` → `wasm32-wasip1` (from the repo-root config)
+- `http/wasi/*` → `wasm32-wasip2` (from `examples/http/wasi/.cargo/config.toml`)
+
+Install both targets once with `rustup target add wasm32-wasip1 wasm32-wasip2`.
+
+Most examples depend on the [`fastedge`](https://crates.io/crates/fastedge) crate. The majority
+reference a published version from crates.io; a small number use a path dependency to the local
+workspace (e.g. examples that exercise unreleased APIs).

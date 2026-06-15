@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FastEdge Static Assets</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <img src="/logo.svg" alt="FastEdge logo" width="80" height="80" />
+      <h1>Static assets, served from wasm</h1>
+    </header>
+    <p>
+      This page, its stylesheet, and its logo are embedded in the wasm binary at compile
+      time via <code>include_str!</code>. There is no file system at runtime &mdash; every
+      asset ships inside the handler.
+    </p>
+    <p>
+      Fetch <a href="/style.css">/style.css</a> or
+      <a href="/logo.svg">/logo.svg</a> directly to see them served by the same handler.
+    </p>
+  </body>
+</html>
