@@ -1,0 +1,11 @@
+{
+  "expected": {
+    "status": 500,
+    "headers": {
+      "cache-control": "no-store"
+    },
+    "noLogs": [
+      "Cache-Control:"
+    ]
+  }
+}

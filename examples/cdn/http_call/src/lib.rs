@@ -30,7 +30,7 @@ impl Context for HttpHeaders {
         &mut self,
         token_id: u32,
         num_headers: usize,
-        body_size: usize,
+        _body_size: usize,
         _num_trailers: usize,
     ) {
         println!(
@@ -38,26 +38,17 @@ impl Context for HttpHeaders {
         );
         //If num_headers is 0, then the HTTP call failed.
         if num_headers != 0 {
-            let user_agent = self.get_http_call_response_header("user-agent");
-            println!("User-Agent: {:?}", user_agent);
-
             let headers = self.get_http_call_response_headers();
-            println!("Response headers:");
-            for (name, value) in &headers {
-                println!("  {}: {}", name, value);
-            }
-            let headers_value = self.get_http_call_response_headers_bytes();
-            for (name, value) in &headers_value {
-                println!("  {}: {:?}", name, value);
-            }
-
-            let body = self.get_http_call_response_body(0, body_size);
-            println!("Response body: {:?}", body);
+            let headers_str = headers
+                .iter()
+                .map(|(name, value)| format!("\"{}: {}\"", name, value))
+                .collect::<Vec<_>>()
+                .join(",");
+            println!("Response headers: [{}]", headers_str);
 
             self.state = 1; // Set state to 1 to indicate that the HTTP call response was received successfully.
 
             self.resume_http_request();
-            // or self.resume_http_response()
         } else {
             self.reset_http_request();
         }

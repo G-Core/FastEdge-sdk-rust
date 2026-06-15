@@ -5,13 +5,9 @@
     "method": "GET",
     "url": "http://fastedge-builtin.debug",
     "headers": {
-      "host": "example.com"
-    },
-    "body": ""
-  },
-  "response": {
-    "headers": {
-      "content-type": "text/html; charset=utf-8"
+      "host": "example.com",
+      "content-type": "text/html; charset=utf-8",
+      "x-debugger-content": "body-only"
     },
     "body": "<html><body>Hello</body></html>"
   },

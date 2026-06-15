@@ -155,7 +155,7 @@ impl HttpContext for HttpHeaders {
 
         let diff_bytes = diff_bytes.difference(&expected_bytes).collect::<Vec<_>>();
         if !diff_bytes.is_empty() {
-            println!("different headers bytes: {:?}", diff);
+            println!("different headers bytes: {:?}", diff_bytes);
             self.send_http_response(552, vec![], None);
             return Action::Pause;
         }
@@ -299,24 +299,21 @@ impl HttpContext for HttpHeaders {
             .difference(&original_headers_bytes)
             .collect::<HashSet<_>>();
 
-        if expected != diff {
-            let diff = diff.difference(&expected).collect::<Vec<_>>();
+        let diff = diff.difference(&expected).collect::<Vec<_>>();
+
+        if !diff.is_empty() {
             println!("different headers: {:?}", diff);
             self.send_http_response(552, vec![], None);
             return Action::Pause;
         }
 
-        if expected_bytes != diff_bytes {
-            let diff = diff_bytes.difference(&expected_bytes).collect::<Vec<_>>();
-            println!("different headers bytes: {:?}", diff);
+        let diff_bytes = diff_bytes.difference(&expected_bytes).collect::<Vec<_>>();
+        if !diff_bytes.is_empty() {
+            println!("different headers bytes: {:?}", diff_bytes);
             self.send_http_response(552, vec![], None);
             return Action::Pause;
         }
 
         Action::Continue
-    }
-
-    fn on_log(&mut self) {
-        println!("#{} completed.", self.context_id);
     }
 }

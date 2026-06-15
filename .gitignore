@@ -14,3 +14,15 @@ target/
 
 # FastEdge debugger artifacts
 **/.fastedge-debug/
+
+# build artifacts
+**/*.wasm
+
+# example project lock files
+examples/**/pnpm-lock.yaml
+examples/**/package-lock.json
+examples/**/livetest.config.json
+
+# Doc-generator failure artifacts — rejected/preamble-leaked claude -p
+# outputs preserved for prompt-debugging. Prune manually.
+docs/.failures/

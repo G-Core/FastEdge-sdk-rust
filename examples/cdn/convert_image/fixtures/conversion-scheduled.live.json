@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "logs": [" bytes -> ", "image/avif"],
+    "headers": {
+      "Content-Type": "image/avif"
+    },
+    "noLogs": ["not transforming", "cannot load image"]
+  }
+}

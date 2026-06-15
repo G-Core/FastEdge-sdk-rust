@@ -1,0 +1,26 @@
+{
+  "expected": {
+    "logs": [
+      "uri = ",
+      "host = ",
+      "path = ",
+      "scheme = https",
+      "extension = ",
+      "query = ",
+      "client_ip = ",
+      "country = ",
+      "city = ",
+      "asn = ",
+      "long = ",
+      "lat = ",
+      "country names = ",
+      "region = ",
+      "continent = ",
+      "query=test=value"
+    ],
+    "headers": {
+      "request-scheme": "https",
+      "request-query": "test=value"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "logs": [
+      "state: 0",
+      "Dispatched http call with token id:",
+      "Received http call response with token id:"
+    ]
+  }
+}

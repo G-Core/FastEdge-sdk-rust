@@ -1,0 +1,7 @@
+{
+  "expected": {
+    "logs": ["Token is invalid"],
+    "status": 403,
+    "bodyContains": "Could not decode token"
+  }
+}

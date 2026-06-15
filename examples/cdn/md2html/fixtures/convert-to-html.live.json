@@ -1,0 +1,14 @@
+{
+  "expected": {
+    "logs": [
+      "On response headers",
+      "Response is markdown, converting to HTML",
+      "Converted"
+    ],
+    "headers": {
+      "content-type": "text/html"
+    },
+    "status": 200,
+    "bodyContains": "<!DOCTYPE html><html><body>"
+  }
+}

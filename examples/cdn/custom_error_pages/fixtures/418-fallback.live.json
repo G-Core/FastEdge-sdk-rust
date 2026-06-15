@@ -1,0 +1,10 @@
+{
+  "expected": {
+    "status": 418,
+    "headers": {
+      "content-type": "text/html",
+      "transfer-encoding": "Chunked"
+    },
+    "bodyContains": ["<html", "Unexpected Client Error", "418"]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "expected": {
+    "logs": [
+      "On response headers"
+    ],
+    "noLogs": [
+      "converting to HTML",
+      "Converted"
+    ],
+    "headers": {
+      "content-type": "text/html"
+    },
+    "status": 200,
+    "body": "<html><body>Already HTML</body></html>"
+  }
+}

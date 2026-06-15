@@ -1,0 +1,10 @@
+{
+  "expected": {
+    "status": 502,
+    "headers": {
+      "content-type": "text/html",
+      "transfer-encoding": "Chunked"
+    },
+    "bodyContains": ["<html", "Bad Gateway", "The server received an invalid response from the upstream server."]
+  }
+}

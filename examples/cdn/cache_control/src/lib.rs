@@ -88,14 +88,10 @@ impl HttpContext for CacheControlContext {
 
         self.set_http_response_header("Cache-Control", Some(&cache_control));
 
-        proxy_wasm::hostcalls::log(
-            LogLevel::Info,
-            &format!(
-                "Cache-Control: {} (content-type: {})",
-                cache_control, content_type
-            ),
-        )
-        .ok();
+        println!(
+            "Cache-Control: {} (content-type: {})",
+            cache_control, content_type
+        );
 
         Action::Continue
     }

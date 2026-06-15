@@ -1,0 +1,12 @@
+{
+  "expected": {
+    "status": 200,
+    "headers": {
+      "cache-control": "public, max-age=3600, must-revalidate",
+      "vary": "Accept-Encoding"
+    },
+    "logs": [
+      "Cache-Control: public, max-age=3600, must-revalidate (content-type: text/html; charset=utf-8)"
+    ]
+  }
+}

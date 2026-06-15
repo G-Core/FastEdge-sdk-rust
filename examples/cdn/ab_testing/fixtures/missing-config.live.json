@@ -1,0 +1,6 @@
+{
+  "expected": {
+    "status": 500,
+    "body": "App misconfigured - EXPERIMENT_NAME must be set"
+  }
+}

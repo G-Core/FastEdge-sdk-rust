@@ -75,7 +75,7 @@ impl HttpContext for GeoRedirectContext {
 
         let request_url = format!("{}{}", origin, path);
 
-        proxy_wasm::hostcalls::log(LogLevel::Info, &format!("Redirecting to: {}", request_url)).ok();
+        println!("Redirecting to: {}", request_url);
 
         self.set_property(vec!["request.url"], Some(request_url.as_bytes()));
 

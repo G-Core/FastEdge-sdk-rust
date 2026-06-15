@@ -1,0 +1,8 @@
+{
+  "expected": {
+    "logs": [
+      "LARGE_CONFIG size: 0 bytes"
+    ],
+    "status": 200
+  }
+}

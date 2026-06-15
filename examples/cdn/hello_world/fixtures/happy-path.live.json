@@ -1,0 +1,14 @@
+{
+  "expected": {
+    "logs": [
+      "Hello from on_http_request_headers",
+      "Hello from on_http_request_body",
+      "Hello from on_http_response_headers",
+      "Hello from on_http_response_body"
+    ],
+    "headers": {
+      "x-powered-by": "FastEdge"
+    },
+    "status": 200
+  }
+}

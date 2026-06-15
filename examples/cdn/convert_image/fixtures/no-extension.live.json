@@ -1,0 +1,5 @@
+{
+  "expected": {
+    "logs": ["No extension in request path, not transforming"]
+  }
+}

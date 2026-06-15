@@ -1,0 +1,9 @@
+{
+  "expected": {
+    "status": 200,
+    "logs": [
+      "on_http_request_headers:",
+      "on_http_response_headers:"
+    ]
+  }
+}

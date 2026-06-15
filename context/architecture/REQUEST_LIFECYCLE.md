@@ -62,10 +62,12 @@ CDN-mode apps using the proxy-wasm interface have a multi-phase lifecycle. The h
         |
 7. Response Body     proxy_on_response_body(ctx, size, end_of_stream)
         |
-8. Log               proxy_on_log(ctx)
+8. Log               proxy_on_log(ctx)    // NOT dispatched on FastEdge today (see note below)
         |
 9. Instance discarded
 ```
+
+> **NOTE on `proxy_on_log`:** The hook is part of the proxy-wasm spec but the FastEdge platform does not currently invoke it (verified in both the edge runtime and `@gcoredev/fastedge-test`). The SDK still exports the symbol for forward-compat. Place end-of-request observability into the four phase hooks (`on_request_headers`/`on_request_body`/`on_response_headers`/`on_response_body`) — typically `on_response_body` with `end_of_stream = true` is the closest functional substitute.
 
 ### Actions
 
