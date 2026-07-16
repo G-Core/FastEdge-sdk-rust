@@ -26,8 +26,19 @@ async fn main(request: Request<Body>) -> anyhow::Result<Response<Body>> {
 
     println!("Fetching: {target_url}");
 
-    let upstream_req = Request::get(&target_url)
-        .header("accept", "application/json")
+    let mut builder = Request::get(&target_url).header("accept", "application/json");
+
+    if let Some(fetch_header) = request
+        .headers()
+        .get("x-fetch-header")
+        .and_then(|v| v.to_str().ok())
+    {
+        if let Some((key, value)) = fetch_header.split_once(':') {
+            builder = builder.header(key.trim(), value.trim());
+        }
+    }
+
+    let upstream_req = builder
         .body(Body::empty())
         .map_err(|e| anyhow!("failed to build request: {e}"))?;
 
