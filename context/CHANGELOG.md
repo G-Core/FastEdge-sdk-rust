@@ -4,6 +4,32 @@ This file tracks agent decisions, architectural changes, and context for future 
 
 ---
 
+## [2026-09-14] — ProxyWasm cache module
+
+### Overview
+Added `fastedge::proxywasm::cache` — the ProxyWasm/CDN counterpart of the `cache-sync` WIT interface already exposed to HTTP apps as `fastedge::cache`.
+
+### Decisions
+- Free functions rather than a handle-based `Store` (as in `key_value`): the `cache-sync` WIT interface has no named stores or handles, every operation is scoped to the calling app and addressed by key alone.
+- `Error` mirrors the WIT `cache-types.error` variant (`AccessDenied`, `InternalError`, `Other(String)`) instead of reusing `key_value::Error` (which carries `NoSuchStore`).
+- `option<u64>` TTL is carried over FFI as a plain `u64` with `0` meaning "no expiry", avoiding an extra flag/pointer parameter for a value that has no meaningful zero case.
+- Host status codes follow the real ProxyWasm status enum (`0` ok, `1` not found, `2` bad argument — which also carries access denial, as in `key_value` — `10` internal failure); "not found" is folded into `Ok(None)` / `Ok(false)` / no-op per the WIT contract. Note `reference/ERROR_CODES.md` previously listed `3`/`6` for these, which does not match the host enum; corrected in the same change.
+
+### Changes
+- `src/proxywasm/cache.rs` — new module: `get`, `set`, `delete`, `exists`, `incr`, `expire`, `purge`, `purge_prefix`
+- `src/proxywasm/mod.rs` — `pub mod cache`, eight `proxy_cache_*` FFI declarations, module docs
+- `context/architecture/HOST_SDK_CONTRACT.md` — documented the `proxy_cache_*` FFI functions
+- `examples/cdn/cache/` — new CDN example exercising all eight operations via query parameters, modelled on `examples/cdn/key_value/` (no `store` param — the cache has no named stores)
+- `examples/README.md` — listed the new CDN example
+- `fastedge-plugin-source/manifest.json` — `cdn-cache-blueprint` / `cdn-cache-pattern` source + target entries
+
+### Follow-up
+- The `proxy_cache_*` symbol names and signatures were derived from the existing `proxy_kv_store_*` convention — they must be confirmed against the host implementation before release.
+- `examples/cdn/cache/Cargo.toml` uses a path dependency (`fastedge = { path = "../../.." }`) because `proxywasm::cache` is not in the published 0.4.2 crate. Every other example uses the registry dep — switch this one to `{ version = "0.4", features = ["proxywasm"] }` once the module is published.
+- Per `context/PLUGIN_CONTRACT.md` steps 3-4, the `fastedge-plugin` repo still needs intent files (`cdn/cache-rust.md`, `cdn/examples-cache-rust.md`) and placeholder reference files at the mapped target paths, or the next sync will fail for the two new manifest entries.
+
+---
+
 ## [2026-04-07] — Migrated Rust examples from FastEdge-examples
 
 ### Overview

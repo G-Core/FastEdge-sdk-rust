@@ -52,6 +52,21 @@ These are the `extern "C"` functions the host makes available to WASM modules. T
 | `proxy_kv_store_zscan(handle, key, len, pattern, plen, ret, ret_len)` | `Store::zscan(key, pattern)` | Sorted set pattern scan |
 | `proxy_kv_store_bf_exists(handle, key, len, item, ilen, ret)` | `Store::bf_exists(key, item)` | Bloom filter membership check |
 
+### Cache
+
+| FFI Function | SDK Wrapper | Purpose |
+|-------------|-------------|---------|
+| `proxy_cache_get(key, len, ret, ret_len)` | `cache::get(key)` | Retrieve cached value by key |
+| `proxy_cache_set(key, len, value, vlen, ttl_ms)` | `cache::set(key, value, ttl)` | Store value; `ttl_ms = 0` means no expiry |
+| `proxy_cache_delete(key, len)` | `cache::delete(key)` | Delete a cached key (no-op if absent) |
+| `proxy_cache_exists(key, len, ret)` | `cache::exists(key)` | Key membership check |
+| `proxy_cache_incr(key, len, delta, ret)` | `cache::incr(key, delta)` | Atomic integer increment/decrement |
+| `proxy_cache_expire(key, len, ttl_ms, ret)` | `cache::expire(key, ttl)` | Set/update key expiry |
+| `proxy_cache_purge(ret)` | `cache::purge()` | Delete all of the app's cached keys |
+| `proxy_cache_purge_prefix(prefix, len, ret)` | `cache::purge_prefix(prefix)` | Delete the app's keys matching a prefix |
+
+The cache has no handle — every operation is scoped to the calling application and addressed by key alone. Mirrors the `cache-sync` WIT interface used by HTTP apps.
+
 ### Secrets
 
 | FFI Function | SDK Wrapper | Purpose |
@@ -86,6 +101,7 @@ For the WIT-based Component Model path, the same capabilities are exposed as typ
 The WIT world (`gcore:fastedge/reactor`) imports:
 - `http` + `http-client` — request/response types and outbound HTTP
 - `key-value` — persistent storage (same operations as FFI above)
+- `cache-sync` — ephemeral cache (same operations as FFI above)
 - `secret` — encrypted secrets (same operations as FFI above)
 - `dictionary` — read-only config (same as FFI above)
 - `utils` — diagnostics (same as FFI above)

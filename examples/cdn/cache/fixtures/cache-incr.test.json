@@ -1,0 +1,26 @@
+{
+  "appType": "proxy-wasm",
+  "description": "Cache incr operation — calls proxy_cache_incr host function (runner gap expected)",
+  "request": {
+    "method": "GET",
+    "url": "http://fastedge-builtin.debug",
+    "headers": {
+      "host": "example.com"
+    },
+    "body": ""
+  },
+  "properties": {
+    "request.query": "action=incr&key=hits&delta=1"
+  },
+  "response": {
+    "headers": {
+      "content-type": "text/plain"
+    },
+    "body": "upstream response"
+  },
+  "logLevel": 2,
+  "wasm": {
+    "path": "<workspace>/.fastedge-debug/app.wasm",
+    "description": "Default debugger WASM binary"
+  }
+}
