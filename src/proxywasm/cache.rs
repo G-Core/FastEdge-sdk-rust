@@ -38,7 +38,7 @@
 //!     fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
 //!
 //!         let Ok(cached) = cache::get("key-3338664") else {
-//!             return Action::Pa§use;
+//!             return Action::Pause;
 //!         };
 //!
 //!         if cached.is_none() {

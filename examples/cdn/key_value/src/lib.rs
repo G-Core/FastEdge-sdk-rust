@@ -225,7 +225,7 @@ impl KvStoreContext {
     fn send_error(&self, msg: &str, body_size: usize) {
         println!("{}", msg);
         self.set_property(
-            vec!["response", "status"],
+            vec!["response.status"],
             Some(b"500"),
         );
         let error_body = json!({"error": msg}).to_string();
