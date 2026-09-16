@@ -41,7 +41,7 @@ proxy-wasm = "0.2"
 log = "0.4"
 ```
 
-**Tier 2 — CDN app with FastEdge host services** (KV, secrets, dictionary):
+**Tier 2 — CDN app with FastEdge host services** (KV, cache, secrets, dictionary):
 
 ```toml
 [package]
@@ -201,7 +201,7 @@ Both `Context` and `HttpContext` must be implemented. The `Context` impl can be 
 ### Lifecycle Callbacks
 
 | Callback                                                         | Phase            | Description                                         |
-| ---------------------------------------------------------------- | ---------------- | --------------------------------------------------- |
+| ----------------------------------------------------------------- | ---------------- | ---------------------------------------------------- |
 | `on_http_request_headers(num_headers, end_of_stream) -> Action`  | Request headers  | Inspect or modify request headers before forwarding |
 | `on_http_request_body(body_size, end_of_stream) -> Action`       | Request body     | Inspect or modify request body before forwarding    |
 | `on_http_response_headers(num_headers, end_of_stream) -> Action` | Response headers | Inspect or modify response headers from origin      |
@@ -214,7 +214,7 @@ All callbacks have default no-op implementations. Override only the phases your 
 Every lifecycle callback returns an `Action` that controls what happens next.
 
 | Action                           | Meaning                                                                    |
-| -------------------------------- | -------------------------------------------------------------------------- |
+| --------------------------------- | ---------------------------------------------------------------------------- |
 | `Action::Continue`               | Pass the request or response through to the next stage                     |
 | `Action::Pause`                  | Stop processing; used after `send_http_response` to short-circuit origin   |
 | `Action::StopIterationAndBuffer` | Buffer the current body chunk; continue accumulating until `end_of_stream` |
@@ -362,23 +362,23 @@ CDN apps access request metadata through `self.get_property(vec![...])`. The ret
 
 **Path format:** Always pass the property identifier as a single dotted string in a one-element vec — e.g., `vec!["request.path"]`, `vec!["response.status"]`, `vec!["request.geo.long"]`. Do **not** split on dots (e.g., `vec!["response", "status"]` is incorrect).
 
-| Property               | Encoding              | Description                                                                      |
-| ---------------------- | --------------------- | -------------------------------------------------------------------------------- |
-| `request.path`         | UTF-8 string          | URL path                                                                         |
-| `request.query`        | UTF-8 string          | Query string                                                                     |
-| `request.url`          | UTF-8 string          | Full request URL                                                                 |
-| `request.host`         | UTF-8 string          | Domain (may have `shield_` prefix on edge shield nodes)                          |
-| `request.scheme`       | UTF-8 string          | HTTP scheme (from X-Forwarded-Proto)                                             |
-| `request.extension`    | UTF-8 string          | File extension                                                                   |
-| `request.x_real_ip`    | UTF-8 string          | Client IP address                                                                |
-| `request.country`      | UTF-8 string          | 2-letter ISO country code (geo-IP)                                               |
-| `request.country.name` | UTF-8 string          | Full country name                                                                |
-| `request.city`         | UTF-8 string          | City name                                                                        |
-| `request.region`       | UTF-8 string          | Region/state                                                                     |
-| `request.continent`    | UTF-8 string          | Continent                                                                        |
-| `request.asn`          | UTF-8 string          | Autonomous System Number                                                         |
-| `request.geo.lat`      | UTF-8 string          | Latitude                                                                         |
-| `request.geo.long`     | UTF-8 string          | Longitude                                                                        |
+| Property               | Encoding              | Description                                                                        |
+| ----------------------- | ---------------------- | ------------------------------------------------------------------------------------ |
+| `request.path`         | UTF-8 string          | URL path                                                                           |
+| `request.query`        | UTF-8 string          | Query string                                                                       |
+| `request.url`          | UTF-8 string          | Full request URL                                                                    |
+| `request.host`         | UTF-8 string          | Domain (may have `shield_` prefix on edge shield nodes)                            |
+| `request.scheme`       | UTF-8 string          | HTTP scheme (from X-Forwarded-Proto)                                                |
+| `request.extension`    | UTF-8 string          | File extension                                                                      |
+| `request.x_real_ip`    | UTF-8 string          | Client IP address                                                                   |
+| `request.country`      | UTF-8 string          | 2-letter ISO country code (geo-IP)                                                  |
+| `request.country.name` | UTF-8 string          | Full country name                                                                   |
+| `request.city`         | UTF-8 string          | City name                                                                           |
+| `request.region`       | UTF-8 string          | Region/state                                                                        |
+| `request.continent`    | UTF-8 string          | Continent                                                                           |
+| `request.asn`          | UTF-8 string          | Autonomous System Number                                                            |
+| `request.geo.lat`      | UTF-8 string          | Latitude                                                                            |
+| `request.geo.long`     | UTF-8 string          | Longitude                                                                           |
 | `response.status`      | 2-byte big-endian u16 | Response status code (**binary, NOT a string** — decode with `u16::from_be_bytes`) |
 
 Most properties are UTF-8 strings decoded with `std::str::from_utf8()`. The `response.status` property is binary-encoded and must be decoded as a big-endian `u16`. Do not use `String::from_utf8` for this property.
@@ -440,7 +440,7 @@ pub struct Store { /* ... */ }
 ```
 
 | Method                                                  | Return Type                          | Description                                            |
-| ------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------ |
+| --------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------- |
 | `Store::new()`                                          | `Result<Self, Error>`                | Open the default store                                 |
 | `Store::open(name: &str)`                               | `Result<Self, Error>`                | Open a named store                                     |
 | `Store::get(key: &str)`                                 | `Result<Option<Vec<u8>>, Error>`     | Get the value for a key; `None` if key does not exist  |
@@ -460,7 +460,7 @@ pub enum Error {
 ```
 
 | Variant         | Description                                                 |
-| --------------- | ----------------------------------------------------------- |
+| ----------------- | -------------------------------------------------------------- |
 | `NoSuchStore`   | The store label is not recognized by the host               |
 | `AccessDenied`  | The application does not have access to the specified store |
 | `Other(String)` | An implementation-specific error (e.g., I/O failure)        |
@@ -513,6 +513,91 @@ impl HttpContext for RateLimitFilter {
 }
 ```
 
+### Cache (`fastedge::proxywasm::cache`)
+
+Provides ephemeral cache storage, implemented by the host. Unlike `key_value::Store`, cache operations are not scoped to a named store or handle — every function is a free function keyed directly, and every entry is scoped to the calling application.
+
+```rust,ignore
+pub fn get(key: &str) -> Result<Option<Vec<u8>>, Error>
+pub fn set(key: &str, value: &[u8], ttl_ms: Option<u64>) -> Result<(), Error>
+pub fn delete(key: &str) -> Result<(), Error>
+pub fn exists(key: &str) -> Result<bool, Error>
+pub fn incr(key: &str, delta: i64) -> Result<i64, Error>
+pub fn expire(key: &str, ttl_ms: u64) -> Result<bool, Error>
+pub fn purge() -> Result<u64, Error>
+pub fn purge_prefix(prefix: &str) -> Result<u64, Error>
+```
+
+| Function                                            | Return Type                       | Description                                                                  |
+| ------------------------------------------------------ | ------------------------------------ | --------------------------------------------------------------------------------- |
+| `get(key: &str)`                                    | `Result<Option<Vec<u8>>, Error>` | Get the value for a key; `None` if the key does not exist                   |
+| `set(key: &str, value: &[u8], ttl_ms: Option<u64>)`  | `Result<(), Error>`               | Set a value with an optional expiry; `None` means no expiry                 |
+| `delete(key: &str)`                                 | `Result<(), Error>`               | Delete a key; a no-op if the key does not exist                             |
+| `exists(key: &str)`                                 | `Result<bool, Error>`             | Test whether a key exists                                                   |
+| `incr(key: &str, delta: i64)`                       | `Result<i64, Error>`              | Atomically increment (or decrement) an integer value; returns the new value |
+| `expire(key: &str, ttl_ms: u64)`                    | `Result<bool, Error>`             | Set or update a key's expiry; `false` if the key does not exist             |
+| `purge()`                                           | `Result<u64, Error>`              | Delete all cache entries owned by the calling application                   |
+| `purge_prefix(prefix: &str)`                        | `Result<u64, Error>`              | Delete all cache entries whose key begins with `prefix`                     |
+
+`purge()` and `purge_prefix()` both return the number of keys that were deleted.
+
+#### `Error`
+
+```rust,ignore
+pub enum Error {
+    AccessDenied,
+    InternalError,
+    Other(String),
+}
+```
+
+| Variant         | Description                                                 |
+| ----------------- | -------------------------------------------------------------- |
+| `AccessDenied`  | The application does not have access to the specified cache |
+| `InternalError` | An unexpected internal error occurred                       |
+| `Other(String)` | An implementation-specific error (e.g., I/O failure)        |
+
+#### Example — cache a computed value in the response headers phase
+
+```rust,no_run
+use fastedge::proxywasm::cache;
+use proxy_wasm::traits::*;
+use proxy_wasm::types::*;
+
+proxy_wasm::main! {{
+    proxy_wasm::set_log_level(LogLevel::Trace);
+    proxy_wasm::set_root_context(|_| -> Box<dyn RootContext> { Box::new(CacheRoot) });
+}}
+
+struct CacheRoot;
+impl Context for CacheRoot {}
+impl RootContext for CacheRoot {
+    fn get_type(&self) -> Option<ContextType> { Some(ContextType::HttpContext) }
+    fn create_http_context(&self, _: u32) -> Option<Box<dyn HttpContext>> {
+        Some(Box::new(CacheFilter))
+    }
+}
+
+struct CacheFilter;
+impl Context for CacheFilter {}
+
+impl HttpContext for CacheFilter {
+    fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
+        match cache::get("key-3338664") {
+            Ok(Some(_cached)) => {
+                // reuse the cached value
+            }
+            Ok(None) => {
+                // store the value for 5 minutes
+                let _ = cache::set("key-3338664", b"value", Some(300_000));
+            }
+            Err(_) => {}
+        }
+        Action::Continue
+    }
+}
+```
+
 ### Secret Management (`fastedge::proxywasm::secret`)
 
 Provides access to encrypted secrets stored in the FastEdge platform.
@@ -523,7 +608,7 @@ pub fn get_effective_at(key: &str, at: u32) -> Result<Option<Vec<u8>>, u32>
 ```
 
 | Function                               | Return Type                    | Description                                        |
-| -------------------------------------- | ------------------------------ | -------------------------------------------------- |
+| ----------------------------------------- | --------------------------------- | ------------------------------------------------------ |
 | `get(key: &str)`                       | `Result<Option<Vec<u8>>, u32>` | Get the current value of a secret                  |
 | `get_effective_at(key: &str, at: u32)` | `Result<Option<Vec<u8>>, u32>` | Get the secret value effective at a Unix timestamp |
 
@@ -740,16 +825,17 @@ The `log` crate macros (`info!`, `warn!`, `error!`, etc.) work when `proxy_wasm:
 
 ## API Comparison: HTTP vs CDN
 
-| Service       | HTTP Apps (Component Model)                                         | CDN Apps (ProxyWasm)                                     |
-| ------------- | ------------------------------------------------------------------- | -------------------------------------------------------- |
-| Key-Value     | `fastedge::key_value::Store`                                        | `fastedge::proxywasm::key_value::Store`                  |
-| Secrets       | `fastedge::secret::get`                                             | `fastedge::proxywasm::secret::get`                       |
-| Dictionary    | `fastedge::dictionary::get`                                         | `fastedge::proxywasm::dictionary::get`                   |
-| Diagnostics   | `fastedge::utils::set_user_diag`                                    | `fastedge::proxywasm::utils::set_user_diag`              |
-| Error types   | Typed `Error` enums                                                 | `u32` status codes (secret) or typed `Error` (key_value) |
-| Cargo feature | None required                                                       | `features = ["proxywasm"]`                               |
-| Build target  | `wasm32-wasip1` (basic) / `wasm32-wasip2` (wstd)                    | `wasm32-wasip1`                                          |
-| Handler       | `#[wstd::http_server]` (recommended) / `#[fastedge::http]` (basic) | `proxy_wasm::main!` + traits                             |
+| Service       | HTTP Apps (Component Model)                                         | CDN Apps (ProxyWasm)                                              |
+| --------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Key-Value     | `fastedge::key_value::Store`                                        | `fastedge::proxywasm::key_value::Store`                           |
+| Cache         | `fastedge::cache`                                                    | `fastedge::proxywasm::cache`                                       |
+| Secrets       | `fastedge::secret::get`                                             | `fastedge::proxywasm::secret::get`                                 |
+| Dictionary    | `fastedge::dictionary::get`                                         | `fastedge::proxywasm::dictionary::get`                              |
+| Diagnostics   | `fastedge::utils::set_user_diag`                                    | `fastedge::proxywasm::utils::set_user_diag`                         |
+| Error types   | Typed `Error` enums                                                  | `u32` status codes (secret) or typed `Error` (key_value, cache)   |
+| Cargo feature | None required                                                       | `features = ["proxywasm"]`                                         |
+| Build target  | `wasm32-wasip1` (basic) / `wasm32-wasip2` (wstd)                    | `wasm32-wasip1`                                                     |
+| Handler       | `#[wstd::http_server]` (recommended) / `#[fastedge::http]` (basic) | `proxy_wasm::main!` + traits                                       |
 
 ## See Also
 

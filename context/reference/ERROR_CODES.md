@@ -71,6 +71,14 @@ These typically surface when:
 | `AccessDenied` | App doesn't have permission to access this store |
 | `InternalError` | Platform-side storage error |
 
+### Cache (`cache::Error`)
+
+| Variant | Meaning |
+|---------|---------|
+| `AccessDenied` | App doesn't have permission to use the cache — check that the app's cache mode is enabled |
+| `InternalError` | Platform-side cache error |
+| `Other(String)` | Unrecognized host status code |
+
 ### Secrets (`secret::Error`)
 
 | Variant | Meaning |
@@ -89,9 +97,16 @@ The `proxy_*` FFI functions return `u32` status codes:
 |-------|---------|
 | `0` | Success |
 | `1` | Not found (key doesn't exist) |
-| `2` | Bad argument |
-| `3` | Not allowed |
-| `6` | Internal failure |
+| `2` | Bad argument — also how the host reports access denial |
+| `3` | Serialization failure |
+| `4` | Parse failure |
+| `6` | Invalid memory access |
+| `7` | Empty |
+| `8` | CAS mismatch |
+| `10` | Internal failure |
+| `12` | Unimplemented |
+
+These are the values of the host's `ProxyStatus` enum (`fastedge_proxywasm::v2::ProxyStatus`) — the authoritative list lives there, not here.
 
 The SDK's ProxyWasm wrappers in `src/proxywasm/` translate these into Rust `Result` types — application code doesn't see raw status codes.
 

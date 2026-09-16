@@ -1,0 +1,8 @@
+{
+  "expected": {
+    "bodyContains": "myvalue",
+    "headers": {
+      "content-type": "application/json"
+    }
+  }
+}
