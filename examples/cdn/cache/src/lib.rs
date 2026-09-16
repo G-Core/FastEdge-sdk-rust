@@ -65,7 +65,7 @@ impl HttpContext for CacheContext {
         }
 
         let query = self
-            .get_property(vec!["request", "query"])
+            .get_property(vec!["request.query"])
             .and_then(|bytes| String::from_utf8(bytes).ok())
             .unwrap_or_default();
 
