@@ -76,7 +76,10 @@ pub fn get(key: &str) -> Result<Option<Vec<u8>>, u32> {
                 }
             }
             1 => Ok(None),
-            status => panic!("unexpected status: {}", status),
+            // Any other status (e.g. 6, invalid memory access) is reported to
+            // the caller — an unrecognised host status is not a reason to
+            // abort the guest.
+            status => Err(status),
         }
     }
 }
@@ -136,7 +139,8 @@ pub fn get_effective_at(key: &str, at: u32) -> Result<Option<Vec<u8>>, u32> {
                 }
             }
             1 => Ok(None),
-            status => panic!("unexpected status: {}", status),
+            // See `get`: an unrecognised host status is returned, not panicked on.
+            status => Err(status),
         }
     }
 }

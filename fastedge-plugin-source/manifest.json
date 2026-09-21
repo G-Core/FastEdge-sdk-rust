@@ -216,6 +216,25 @@
       "description": "CDN KV Store example — reference pattern (docs)"
     },
 
+    "cdn-cache-blueprint": {
+      "files": [
+        "examples/cdn/cache/src/lib.rs",
+        "examples/cdn/cache/Cargo.toml",
+        "examples/cdn/cache/README.md"
+      ],
+      "required": true,
+      "description": "CDN Cache example — scaffold blueprint"
+    },
+    "cdn-cache-pattern": {
+      "files": [
+        "examples/cdn/cache/src/lib.rs",
+        "examples/cdn/cache/Cargo.toml",
+        "examples/cdn/cache/README.md"
+      ],
+      "required": true,
+      "description": "CDN Cache example — reference pattern (docs)"
+    },
+
     "cdn-headers-blueprint": {
       "files": [
         "examples/cdn/headers/src/lib.rs",
@@ -906,6 +925,15 @@
     },
     "cdn-key-value-pattern": {
       "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-kv-store-rust.md",
+      "section": null
+    },
+
+    "cdn-cache-blueprint": {
+      "reference_file": "plugins/gcore-fastedge/skills/scaffold/reference/cdn/cache-rust.md",
+      "section": null
+    },
+    "cdn-cache-pattern": {
+      "reference_file": "plugins/gcore-fastedge/skills/fastedge-docs/reference/cdn/examples-cache-rust.md",
       "section": null
     },
 

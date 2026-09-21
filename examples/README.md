@@ -76,6 +76,7 @@ Examples are organized into three categories:
 | [custom](./cdn/custom/) | Return HTTP status codes based on request path with optional delay |
 | [http_call](./cdn/http_call/) | Make asynchronous HTTP calls to external services |
 | [key_value](./cdn/key_value/) | KV store operations via query parameters |
+| [cache](./cdn/cache/) | Cache operations via query parameters — get, set, incr, expire, purge |
 | [geo_redirect](./cdn/geo_redirect/) | Route requests to country-specific origins based on geoIP |
 | [large_env_variable](./cdn/large_env_variable/) | Read large (> 64KB) environment variables using the dictionary API |
 | [jwt](./cdn/jwt/) | Validate JWT tokens on incoming requests (signature and expiration) |

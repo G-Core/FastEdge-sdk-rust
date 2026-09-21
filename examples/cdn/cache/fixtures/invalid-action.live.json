@@ -1,0 +1,8 @@
+{
+  "expected": {
+    "bodyContains": "Invalid action 'bogus'",
+    "headers": {
+      "content-type": "application/json"
+    }
+  }
+}
