@@ -66,6 +66,7 @@ Examples are organized into three categories:
 | [static_assets](./http/wasi/static_assets/) | Serve HTML, CSS, and SVG embedded into the wasm binary at compile time |
 | [streaming](./http/wasi/streaming/) | Generate a streaming response body with `Body::from_stream` and timed chunks |
 | [large_env_variable](./http/wasi/large_env_variable/) | Read large (> 64KB) environment variables using the dictionary API |
+| [waap_ai_detect](./http/wasi/waap_ai_detect/) | Classify request URIs with the waap-ai fastText model over wasi-nn / OpenVINO |
 
 ### cdn (proxy-wasm)
 
