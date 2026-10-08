@@ -775,7 +775,14 @@ impl From<::http::Response<body::Body>> for Response {
             Some(
                 res.headers()
                     .iter()
-                    .map(|(name, value)| (name.to_string(), value.to_str().unwrap().to_string()))
+                    // `to_str` rejects obs-text (bytes >= 0x80), which origins do send,
+                    // e.g. UTF-8 filenames in Content-Disposition. Don't panic on it.
+                    .map(|(name, value)| {
+                        (
+                            name.to_string(),
+                            String::from_utf8_lossy(value.as_bytes()).into_owned(),
+                        )
+                    })
                     .collect::<Vec<(String, String)>>(),
             )
         } else {
@@ -810,5 +817,39 @@ impl TryFrom<Response> for ::http::Response<body::Body> {
 
         let body = res.body.map_or_else(body::Body::empty, body::Body::from);
         builder.body(body).map_err(|_| Error::InvalidBody)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn response_from_http_keeps_non_ascii_header() {
+        let res = ::http::Response::builder()
+            .header(
+                "content-disposition",
+                ::http::HeaderValue::from_bytes("attachment; filename=\"café.md\"".as_bytes())
+                    .unwrap(),
+            )
+            .header(
+                "x-latin1",
+                ::http::HeaderValue::from_bytes(b"caf\xe9").unwrap(),
+            )
+            .body(body::Body::empty())
+            .unwrap();
+
+        let res = Response::from(res);
+
+        assert_eq!(
+            res.headers.unwrap(),
+            vec![
+                (
+                    "content-disposition".to_string(),
+                    "attachment; filename=\"café.md\"".to_string()
+                ),
+                ("x-latin1".to_string(), "caf\u{fffd}".to_string()),
+            ]
+        );
     }
 }

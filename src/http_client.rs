@@ -110,10 +110,12 @@ impl TryFrom<(&Parts, &Body)> for http_client::Request {
         let headers = parts
             .headers
             .iter()
+            // `to_str` rejects obs-text (bytes >= 0x80), e.g. UTF-8 in headers copied
+            // from the incoming request. Don't panic on it.
             .map(|(name, value)| {
                 (
                     name.to_string(),
-                    value.to_str().map(|s| s.to_string()).unwrap(),
+                    String::from_utf8_lossy(value.as_bytes()).into_owned(),
                 )
             })
             .collect::<Vec<(String, String)>>();
@@ -138,4 +140,36 @@ fn to_http_client_method(method: &::http::Method) -> Result<Method, Error> {
         &::http::Method::OPTIONS => Method::Options,
         method => return Err(Error::UnsupportedMethod(method.to_owned())),
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn request_keeps_non_ascii_header() {
+        let (parts, body) = ::http::Request::builder()
+            .uri("http://example.com/")
+            .header(
+                "x-name",
+                ::http::HeaderValue::from_bytes("café".as_bytes()).unwrap(),
+            )
+            .header(
+                "x-latin1",
+                ::http::HeaderValue::from_bytes(b"caf\xe9").unwrap(),
+            )
+            .body(Body::empty())
+            .unwrap()
+            .into_parts();
+
+        let req = http_client::Request::try_from((&parts, &body)).unwrap();
+
+        assert_eq!(
+            req.headers,
+            vec![
+                ("x-name".to_string(), "café".to_string()),
+                ("x-latin1".to_string(), "caf\u{fffd}".to_string()),
+            ]
+        );
+    }
 }
