@@ -44,7 +44,9 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "fastedge"
-version = "0.4.2"
+version = "0.4.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "38f99ccc6ecc029bcc8d2cf008f11647f8cea8eddccbab9e1489bfaac54bb0fd"
 dependencies = [
  "bytes",
  "fastedge-derive",
@@ -56,7 +58,9 @@ dependencies = [
 
 [[package]]
 name = "fastedge-derive"
-version = "0.4.2"
+version = "0.4.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f4015884a15f36df9997409528e11be4e030708495fbfb4ccd662aaf6bd166fc"
 dependencies = [
  "proc-macro2",
  "quote",
