@@ -180,8 +180,8 @@
 //!     // Get a secret value
 //!     match secret::get("API_KEY")? {
 //!         Some(api_key) => {
-//!             // Use the API key
-//!             let key = String::from_utf8_lossy(&api_key);
+//!             // Use the API key (a String)
+//!             let _key: String = api_key;
 //!             Response::builder()
 //!                 .status(StatusCode::OK)
 //!                 .body(Body::from("Secret retrieved"))
@@ -222,7 +222,7 @@
 //!     let content = b"<h1>Hello</h1>".to_vec();
 //!
 //!     // Store it for 60 seconds
-//!     cache::set(key, content.clone(), Some(60_000))?;
+//!     cache::set(key, &content, Some(60_000))?;
 //!
 //!     Response::builder()
 //!         .status(StatusCode::OK)
@@ -306,8 +306,8 @@ pub mod dictionary {
 /// // Get current secret value
 /// match secret::get("DATABASE_PASSWORD")? {
 ///     Some(password) => {
-///         let pwd = String::from_utf8_lossy(&password);
-///         // Use the password to connect to database
+///         // `password` is a String; use it to connect to the database
+///         let _pwd: String = password;
 ///     }
 ///     None => {
 ///         eprintln!("Secret not found");
@@ -446,10 +446,10 @@ pub mod key_value {
 /// use fastedge::cache;
 ///
 /// // Store with a 5-minute TTL
-/// cache::set("session:abc123", b"user-data".to_vec(), Some(300_000))?;
+/// cache::set("session:abc123", b"user-data", Some(300_000))?;
 ///
 /// // Store with no expiry
-/// cache::set("config:flags", b"enabled".to_vec(), None)?;
+/// cache::set("config:flags", b"enabled", None)?;
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
 ///
