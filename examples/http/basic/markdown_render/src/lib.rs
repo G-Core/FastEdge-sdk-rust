@@ -38,6 +38,14 @@ fn main(req: Request<Body>) -> Result<Response<Body>, Error> {
             .body(Body::from("Missing file path\n"));
     }
 
+    // Browsers request these on their own; they are never Markdown, so don't
+    // spend an origin round-trip on them.
+    if is_browser_probe(path) {
+        return Response::builder()
+            .status(StatusCode::NOT_FOUND)
+            .body(Body::empty());
+    }
+
     let Ok(sub_req) = Request::builder()
         .method(Method::GET)
         .header(header::USER_AGENT, "fastedge")
@@ -145,4 +153,17 @@ const REDIRECT_CODES: &[StatusCode] = &[
 
 fn is_redirect(status_code: StatusCode) -> bool {
     return REDIRECT_CODES.contains(&status_code);
+}
+
+// Paths browsers fetch automatically when a page is opened.
+const BROWSER_PROBES: &[&str] = &[
+    "/favicon.ico",
+    "/favicon.png",
+    "/favicon.svg",
+    "/apple-touch-icon.png",
+    "/apple-touch-icon-precomposed.png",
+];
+
+fn is_browser_probe(path: &str) -> bool {
+    BROWSER_PROBES.contains(&path)
 }

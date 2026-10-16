@@ -36,8 +36,9 @@ cargo build --release
 | `BASE` env var not set | 500 `Misconfigured app\n` |
 | Method is not GET or HEAD | 405 `This method is not allowed\n`, `Allow: GET, HEAD` |
 | Path is empty or `/` | 400 `Missing file path\n` |
+| Path is a browser probe (`/favicon.ico`, `/favicon.png`, `/favicon.svg`, `/apple-touch-icon*.png`) | 404, empty body, no origin request |
 | Origin returns non-200 | Forwards the upstream status, empty body |
-| Origin returns a redirect | Follows the redirect (up to one level) and retries |
+| Origin returns a redirect | Follows the redirect (up to 5 hops) and retries |
 | Normal request | 200 HTML page with rendered Markdown, `Content-Type: text/html` |
 
 ## Example
