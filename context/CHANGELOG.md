@@ -4,6 +4,22 @@ This file tracks agent decisions, architectural changes, and context for future 
 
 ---
 
+## [2026-10-27] — db: bind `gcore:db/sql-sync` (WIT split)
+
+### Overview
+FastEdge-wit split `gcore:db/sql` into `sql-types` + `sql-sync`, mirroring `cache-types` / `cache-sync`.
+
+### Decisions
+- Rust stays on the sync interface by default; the plain `sql` name is reserved for an async (pollable)
+  variant intended for the JS SDK. Public API `fastedge::db::sql` is unchanged.
+
+### Changes
+- `wit` submodule → FastEdge-wit `feat/db-interface` 83a7d08
+- `src/lib.rs` — `with:` generates `gcore:db/sql-types@0.1.0` and `gcore:db/sql-sync@0.1.0`
+- `src/db.rs` — re-exports `Database` from `sql_sync`, data types from `sql_types`
+
+---
+
 ## [2026-10-27] — POC: `fastedge::db::sql` (gcore:db/sql@0.1.0)
 
 ### Overview
