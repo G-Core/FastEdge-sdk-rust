@@ -264,6 +264,8 @@ wit_bindgen::generate!({
     with: {
         "gcore:db/sql-types@0.1.0": generate,
         "gcore:db/sql-sync@0.1.0": generate,
+        "gcore:db/kv-types@0.1.0": generate,
+        "gcore:db/kv-sync@0.1.0": generate,
     },
 });
 

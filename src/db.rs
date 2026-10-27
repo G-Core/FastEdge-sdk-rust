@@ -144,6 +144,50 @@ pub mod sql {
     }
 }
 
+/// Database KV (regional, durable, writable key-value), `gcore:db/kv-sync`.
+///
+/// Not Edge Storage ([`crate::key_value`], read-only, replicated to every edge) and not the
+/// PoP-local cache. Calls are blocking. Values are bytes and must be valid UTF-8 for now.
+///
+/// # Examples
+///
+/// ```no_run
+/// use fastedge::db::kv::{Database, Op, SetCondition, SetOp, SetOptions, IncrOp};
+///
+/// let db = Database::open("main")?;
+/// db.set("greeting", b"hello", SetOptions::default())?;
+/// let visits = db.incr("visits", 1)?;
+///
+/// // Atomic: create a 60 s window counter if missing, then count this request.
+/// let results = db.batch(&[
+///     Op::Set(SetOp {
+///         key: "rl:ann".into(),
+///         value: b"0".to_vec(),
+///         options: SetOptions { ttl_ms: Some(60_000), condition: SetCondition::IfNotExists },
+///     }),
+///     Op::Incr(IncrOp { key: "rl:ann".into(), delta: 1 }),
+/// ])?;
+/// # Ok::<(), fastedge::db::kv::Error>(())
+/// ```
+pub mod kv {
+    #[doc(inline)]
+    pub use crate::gcore::db::kv_sync::Database;
+    #[doc(inline)]
+    pub use crate::gcore::db::kv_types::{
+        Error, ExpireOp, IncrOp, KvValue, Op, OpError, OpResult, SetCondition, SetOp, SetOptions,
+    };
+
+    /// Always write, no expiry.
+    impl Default for SetOptions {
+        fn default() -> Self {
+            Self {
+                ttl_ms: None,
+                condition: SetCondition::Always,
+            }
+        }
+    }
+}
+
 /// Builds a `&[Value]` parameter list from plain Rust values; see [`sql::ToSql`].
 #[doc(hidden)]
 #[macro_export]

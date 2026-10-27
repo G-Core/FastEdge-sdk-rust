@@ -27,6 +27,7 @@ Examples are organized into three categories:
 | [variables_and_secrets](./http/wasi/variables_and_secrets/) | Read an environment variable and a secret |
 | [simple_fetch](./http/wasi/simple_fetch/) | Fetch from a configurable URL and return the response |
 | [db_sql](./http/wasi/db_sql/) | Query a bound PostgreSQL database and decode rows into a struct (`fastedge::db::sql`) |
+| [db_kv](./http/wasi/db_kv/) | Per-user rate limit and visit counter in a bound Database KV, one atomic batch (`fastedge::db::kv`) |
 
 ### cdn (proxy-wasm)
 

@@ -4,6 +4,25 @@ This file tracks agent decisions, architectural changes, and context for future 
 
 ---
 
+## [2026-10-27] — POC: `fastedge::db::kv` (gcore:db/kv-sync@0.1.0)
+
+### Overview
+Added `fastedge::db::kv`: Database KV (regional, durable, writable; Upstash Redis in the POC) bound
+to the app by name; the host holds the credentials.
+
+### Decisions
+- Sync interface `kv-sync`, like `sql-sync`; the plain `kv` name is reserved for an async variant
+  (JS SDK).
+- Re-export the generated types as is (`Database`, `Op`, `OpResult`, `SetOptions`, ...), plus
+  `Default for SetOptions` (always write, no expiry). No other wrapper.
+- Example mirrors the JS SDK `examples/db-kv` (same keys, limits, responses).
+
+### Changes
+- `wit` submodule → FastEdge-wit `feat/db-interface-kv` ca89dc6 (`kv-types`, `kv-sync`)
+- `src/lib.rs` — `with:` generates `gcore:db/kv-types@0.1.0` and `gcore:db/kv-sync@0.1.0`
+- `src/db.rs` — `db::kv` module
+- `examples/http/wasi/db_kv/` — new wstd example; `examples/README.md` entry
+
 ## [2026-10-27] — db: bind `gcore:db/sql-sync` (WIT split)
 
 ### Overview
