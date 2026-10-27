@@ -31,6 +31,9 @@ async fn main(request: Request<Body>) -> anyhow::Result<Response<Body>> {
     // "main" is the binding name; the host resolves it to the app's database.
     let db = match Database::open("main") {
         Ok(db) => db,
+        Err(Error::NoSuchDatabase) => {
+            return json(500, &serde_json::json!({ "error": "no such database" }))
+        }
         Err(e) => return json(500, &serde_json::json!({ "error": format!("{e:?}") })),
     };
 

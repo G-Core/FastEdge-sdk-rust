@@ -29,7 +29,7 @@ GET /?id=9  → 404 {"error":"not found"}
 
 | Condition | Status | Body |
 |---|---|---|
-| No database bound to `main` | 500 | `{"error":"NoSuchDatabase"}` |
+| No database bound to `main` | 500 | `{"error":"no such database"}` |
 | Schema not applied | 500 | `{"error":"relation \"example_users\" does not exist","code":"42P01"}` |
 | Row doesn't match `User` | 500 | `{"error":"row decode: …"}` |
 
