@@ -149,6 +149,9 @@ pub mod sql {
 /// Not Edge Storage ([`crate::key_value`], read-only, replicated to every edge) and not the
 /// PoP-local cache. Calls are blocking. Values are bytes and must be valid UTF-8 for now.
 ///
+/// Within one request, reads see the request's own writes. Other requests may see a write only
+/// after it has replicated (eventually, for a database with read replicas in other regions).
+///
 /// # Examples
 ///
 /// ```no_run
