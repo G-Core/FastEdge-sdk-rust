@@ -35,7 +35,7 @@ name = "fastedge"
 [features]
 default = ["proxywasm"]
 proxywasm = []
-json = ["serde_json"]
+json = ["serde_json", "serde"]
 
 [dependencies]
 fastedge-derive = { path = "derive", version = "0.4" }
@@ -45,6 +45,7 @@ wit-bindgen = "0.46"
 thiserror = "2.0"
 mime = "^0.3"
 serde_json = { version = "^1.0", optional = true }
+serde = { version = "1", optional = true }
 
 [dev-dependencies]
 

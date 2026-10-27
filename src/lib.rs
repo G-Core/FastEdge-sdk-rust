@@ -261,6 +261,7 @@ wit_bindgen::generate!({
     world: "reactor",
     path: "wit",
     pub_export_macro: true,
+    with: { "gcore:db/sql@0.1.0": generate },
 });
 
 /// Fast read-only key-value dictionary for configuration.
@@ -410,6 +411,9 @@ pub mod key_value {
     #[doc(inline)]
     pub use crate::gcore::fastedge::key_value::Error;
 }
+
+/// Customer-owned databases bound to the app by name (`gcore:db`).
+pub mod db;
 
 /// Synchronous cache API for FastEdge applications.
 ///

@@ -4,6 +4,31 @@ This file tracks agent decisions, architectural changes, and context for future 
 
 ---
 
+## [2026-10-27] — POC: `fastedge::db::sql` (gcore:db/sql@0.1.0)
+
+### Overview
+Added `fastedge::db::sql`: SQL database (PostgreSQL, Neon in the POC) bound to the app by name; the host holds the credentials.
+
+### Decisions
+- Module path `fastedge::db::sql` mirrors the WIT package `gcore:db/sql`, and keeps it apart from `fastedge::key_value` (Edge Storage). Upstash KV will follow as `fastedge::db::kv`.
+- Re-export the generated types (`Database`, `Value`, `QueryResult`, `Error`, `DbError`, ...) as is, plus a thin layer: `params!` / `ToSql` for parameters, and `QueryAs::query_as::<T>` / `rows_as` decoding rows by column name via serde_json.
+- `query_as` is behind the existing `json` feature (now also enables optional `serde`), so the default build gains no deps. Alternatives: sqlx/diesel (own the connection, don't fit), a custom serde Deserializer (more code, same result).
+- Calls are blocking (sync WIT). Async (futures / WASI p3) is an open decision; see coordinator `db-integration/context/async-calls.md`.
+
+### Changes
+- `wit` submodule → FastEdge-wit `feat/db-interface` (`deps/db/sql.wit`, world imports `gcore:db/sql@0.1.0`)
+- `src/lib.rs` — `with: { "gcore:db/sql@0.1.0": generate }` in `generate!`; `pub mod db`
+- `src/db.rs` — new: `db::sql` re-exports, `ToSql`, `params!`, `QueryAs`, `rows_as`, `QueryAsError`
+- `Cargo.toml` — optional `serde`, `json = ["serde_json", "serde"]`
+- `examples/http/wasi/db_sql/` — new wstd example + `schema.sql`; `examples/README.md` entry
+
+### Follow-up
+- `examples/http/wasi/db_sql/Cargo.toml` uses a path dependency until `fastedge::db` is published (same as `examples/cdn/cache`).
+- The `wit` submodule points at a FastEdge-wit commit that is not pushed yet (`6ddb92e`).
+- Not yet: fixtures, SDK_ARCHITECTURE/PROJECT_OVERVIEW updates, plugin manifest entries, docs generation.
+
+---
+
 ## [2026-09-14] — ProxyWasm cache module
 
 ### Overview

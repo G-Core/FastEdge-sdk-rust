@@ -26,6 +26,7 @@ Examples are organized into three categories:
 | [headers](./http/wasi/headers/) | Echo request headers and add a custom header from an environment variable |
 | [variables_and_secrets](./http/wasi/variables_and_secrets/) | Read an environment variable and a secret |
 | [simple_fetch](./http/wasi/simple_fetch/) | Fetch from a configurable URL and return the response |
+| [db_sql](./http/wasi/db_sql/) | Query a bound PostgreSQL database and decode rows into a struct (`fastedge::db::sql`) |
 
 ### cdn (proxy-wasm)
 
