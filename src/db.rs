@@ -2,7 +2,7 @@
 //!
 //! The connection details stay with the host; the app only knows the binding name.
 
-/// SQL database (PostgreSQL), `gcore:db/sql`.
+/// SQL database (PostgreSQL), `gcore:db/sql-sync`.
 ///
 /// Calls are blocking. Parameters use positional placeholders (`$1`, `$2`, ...).
 ///
@@ -30,9 +30,9 @@
 /// ```
 pub mod sql {
     #[doc(inline)]
-    pub use crate::gcore::db::sql::{
-        Column, Database, DbError, Error, QueryResult, Statement, Value,
-    };
+    pub use crate::gcore::db::sql_sync::Database;
+    #[doc(inline)]
+    pub use crate::gcore::db::sql_types::{Column, DbError, Error, QueryResult, Statement, Value};
 
     #[doc(inline)]
     pub use crate::__db_sql_params as params;

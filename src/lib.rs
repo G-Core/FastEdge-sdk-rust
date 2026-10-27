@@ -261,7 +261,10 @@ wit_bindgen::generate!({
     world: "reactor",
     path: "wit",
     pub_export_macro: true,
-    with: { "gcore:db/sql@0.1.0": generate },
+    with: {
+        "gcore:db/sql-types@0.1.0": generate,
+        "gcore:db/sql-sync@0.1.0": generate,
+    },
 });
 
 /// Fast read-only key-value dictionary for configuration.
