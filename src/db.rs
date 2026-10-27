@@ -132,6 +132,9 @@ pub mod sql {
                 Value::Boolean(b) => b.into(),
                 Value::Int32(i) => i.into(),
                 Value::Int64(i) => i.into(),
+                // JSON has no NaN/Infinity (serde_json would make them null): keep them as
+                // strings so an `f64` field fails to decode instead of reading NULL.
+                Value::Float64(f) if !f.is_finite() => Json::String(f.to_string()),
                 Value::Float64(f) => f.into(),
                 Value::Json(s) => serde_json::from_str(&s).unwrap_or(Json::String(s)),
                 Value::Numeric(s) | Value::Text(s) => s.into(),
