@@ -1,0 +1,17 @@
+[workspace]
+
+[package]
+name = "db_sql"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wstd = "0.6"
+fastedge = { path = "../../../..", features = ["json"] }
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
