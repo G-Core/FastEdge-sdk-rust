@@ -14,7 +14,9 @@ struct User {
 
 #[derive(Debug, Deserialize, Serialize)]
 struct Meta {
-    plan: String,
+    // Optional: the schema's default `meta` is `{}`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    plan: Option<String>,
 }
 
 const SELECT_USERS: &str = "select id, email, nickname, created, meta from example_users";
