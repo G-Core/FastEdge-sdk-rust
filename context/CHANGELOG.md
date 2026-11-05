@@ -22,6 +22,10 @@ A PostgreSQL-named module over the neutral SQL interface: same `Database`, `para
 - `src/db.rs` — `pub mod postgres` (re-exports, `sqlstate`, `SqlState` for `Error` and
   `QueryAsError`, unit test); `sql` docs point PostgreSQL users at it
 - `examples/http/wasi/db_sql_postgres` — imports `fastedge::db::postgres` (responses unchanged)
+- `src/db.rs` — `postgres` docs: extension and user-defined types (pgvector, PostGIS, enums) work as text
+  (`$1::vector` casts) with an empty `type_name`
+- `fastedge-plugin-source/.generation-config.md` — `HOST_SERVICES.md` covers `fastedge::db` (`sql`, `postgres`,
+  `kv`; sources `src/db.rs`, the `gcore:db` WIT and the db examples); `docs/HOST_SERVICES.md` regenerated
 
 ## [2026-11-05] — db: dialect-neutral SQL; `Column.type_name`; example `db_sql_postgres`
 

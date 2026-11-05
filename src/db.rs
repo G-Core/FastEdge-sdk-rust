@@ -158,6 +158,12 @@ pub mod sql {
 /// `Numeric` (decimal text), `bool` → `Boolean`, `json`/`jsonb` → `Json` (text), `bytea` → `Bytes`,
 /// anything else → `Text` in PostgreSQL text format (`timestamptz` in UTC). `NULL` → `Null`.
 ///
+/// Extension and user-defined types (pgvector `vector`, PostGIS `geometry`, enums, domains) work as
+/// text: send them as text parameters, casting in SQL where PostgreSQL cannot infer the type (e.g.
+/// `order by embedding <-> $1::vector`), and they come back as `Text` in PostgreSQL's text format
+/// (`"[0.1,0.2]"` for a vector). Their `Column::type_name` is empty: the host names only
+/// PostgreSQL's built-in types.
+///
 /// # Examples
 ///
 /// ```no_run
