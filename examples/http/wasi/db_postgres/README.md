@@ -7,7 +7,7 @@ with `query_as`.
 
 ## Setup
 
-1. Bind the database: add a secret `FASTEDGE_DB_SQL_main` with the Postgres connection string
+1. Bind the database: add a secret `FASTEDGE_DB_POSTGRES_main` with the Postgres connection string
    (e.g. a Neon pooled URL). The app never sees it; the host resolves `Database::open("main")`.
 2. Create the schema once, outside the app:
 
@@ -40,7 +40,7 @@ cargo build --release
 # Output: target/wasm32-wasip2/release/db_postgres.wasm
 ```
 
-Local run: `fastedge-run http -w target/wasm32-wasip2/release/db_postgres.wasm --wasi-http true --secret "FASTEDGE_DB_SQL_main=postgresql://…"`
+Local run: `fastedge-run http -w target/wasm32-wasip2/release/db_postgres.wasm --wasi-http true --secret "FASTEDGE_DB_POSTGRES_main=postgresql://…"`
 
 ## APIs used
 

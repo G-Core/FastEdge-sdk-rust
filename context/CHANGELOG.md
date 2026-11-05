@@ -17,6 +17,9 @@ parameters, type OIDs, SQLSTATE); another dialect would get its own interface. S
 - `src/lib.rs` — `with:` generates `gcore:db/postgres-types@0.1.0` and `gcore:db/postgres-sync@0.1.0`
 - `src/db.rs` — `db::sql` → `db::postgres` (same API; `ToSql`, `params!`, `QueryAs` unchanged)
 - `examples/http/wasi/db_sql/` → `examples/http/wasi/db_postgres/`
+- POC binding secret `FASTEDGE_DB_SQL_<name>` → `FASTEDGE_DB_POSTGRES_<name>` (engine), example README
+- `ToSql` keeps its name: the usual Rust name for this trait (rust-postgres, rusqlite, sqlx), and it
+  is already namespaced under `db::postgres`
 
 ## [2026-10-27] — POC: `fastedge::db::kv` (gcore:db/kv-sync@0.1.0)
 
