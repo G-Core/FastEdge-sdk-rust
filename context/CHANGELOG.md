@@ -4,6 +4,25 @@ This file tracks agent decisions, architectural changes, and context for future 
 
 ---
 
+## [2026-11-05] — db: `fastedge::db::postgres` (PostgreSQL module over `gcore:db/sql`)
+
+### Overview
+A PostgreSQL-named module over the neutral SQL interface: same `Database`, `params!`, `ToSql`,
+`QueryAs`, plus SQLSTATE constants and an `Error::sqlstate()` helper. No WIT change.
+
+### Decisions
+- Re-export, not a wrapper type: the host cannot check a binding's dialect, so a distinct
+  `Database` type would add code without adding checking. The module names the dialect for
+  readers, agents and tooling; it does not verify it
+- `sqlstate` constants are taken from PostgreSQL's `errcodes.txt` (REL_17_STABLE); any other code
+  still arrives in `DbError::code`
+- `fastedge::db::sql` stays for code that is not PostgreSQL-specific
+
+### Changes
+- `src/db.rs` — `pub mod postgres` (re-exports, `sqlstate`, `SqlState` for `Error` and
+  `QueryAsError`, unit test); `sql` docs point PostgreSQL users at it
+- `examples/http/wasi/db_sql_postgres` — imports `fastedge::db::postgres` (responses unchanged)
+
 ## [2026-11-05] — db: dialect-neutral SQL; `Column.type_name`; example `db_sql_postgres`
 
 ### Overview

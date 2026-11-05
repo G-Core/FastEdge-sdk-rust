@@ -3,9 +3,11 @@
 //! The connection details stay with the host; the app only knows the binding name.
 
 /// SQL database, `gcore:db/sql-sync`. The SQL dialect (placeholders, types, error codes) is that of
-/// the database bound to the name; PostgreSQL on Neon in the POC.
+/// the database bound to the name. For a PostgreSQL database, use [`postgres`]: the same API, with
+/// PostgreSQL docs and SQLSTATE helpers.
 ///
-/// Calls are blocking. Parameters use positional placeholders (`$1`, `$2`, ...).
+/// Calls are blocking. Parameters are positional, in the database's placeholder syntax (`$1`, `$2`,
+/// ... for PostgreSQL).
 ///
 /// # Examples
 ///
@@ -141,6 +143,136 @@ pub mod sql {
                 Value::Numeric(s) | Value::Text(s) => s.into(),
                 Value::Bytes(b) => b.into(),
             }
+        }
+    }
+}
+
+/// PostgreSQL database, over `gcore:db/sql-sync`: the [`sql`] API, named for PostgreSQL, plus
+/// SQLSTATE helpers.
+///
+/// Write PostgreSQL: `$1`, `$2`, ... placeholders, `RETURNING`, `jsonb`. The host does not check the
+/// dialect: bind a PostgreSQL database (e.g. Neon) to the name. Calls are blocking; each `query`
+/// auto-commits and each `batch` runs in one transaction.
+///
+/// Values: `int2`/`int4` → `Int32`, `int8` → `Int64`, `float4`/`float8` → `Float64`, `numeric` →
+/// `Numeric` (decimal text), `bool` → `Boolean`, `json`/`jsonb` → `Json` (text), `bytea` → `Bytes`,
+/// anything else → `Text` in PostgreSQL text format (`timestamptz` in UTC). `NULL` → `Null`.
+///
+/// # Examples
+///
+/// ```no_run
+/// use fastedge::db::postgres::{params, sqlstate, Database, Error, SqlState};
+///
+/// let db = Database::open("main")?;
+/// match db.query("insert into users (email) values ($1)", params!["ann@example.com"]) {
+///     Ok(_) => {}
+///     Err(e) if e.sqlstate() == Some(sqlstate::UNIQUE_VIOLATION) => println!("already registered"),
+///     Err(e) => return Err(e),
+/// }
+/// # Ok::<(), Error>(())
+/// ```
+pub mod postgres {
+    #[cfg(feature = "json")]
+    #[doc(inline)]
+    pub use super::sql::{rows_as, QueryAs, QueryAsError};
+    #[doc(inline)]
+    pub use super::sql::{Column, Database, DbError, Error, QueryResult, Statement, ToSql, Value};
+
+    #[doc(inline)]
+    pub use crate::__db_sql_params as params;
+
+    /// SQLSTATE codes apps commonly branch on (PostgreSQL `errcodes.txt`). Any other code is
+    /// still reported in [`DbError::code`].
+    pub mod sqlstate {
+        /// `23505`: a unique constraint or index rejected a duplicate.
+        pub const UNIQUE_VIOLATION: &str = "23505";
+        /// `23503`: a foreign key points at a missing row.
+        pub const FOREIGN_KEY_VIOLATION: &str = "23503";
+        /// `23502`: `NULL` in a `NOT NULL` column.
+        pub const NOT_NULL_VIOLATION: &str = "23502";
+        /// `23514`: a `CHECK` constraint failed.
+        pub const CHECK_VIOLATION: &str = "23514";
+        /// `23P01`: an exclusion constraint failed.
+        pub const EXCLUSION_VIOLATION: &str = "23P01";
+        /// `22P02`: text could not be parsed as the column type (e.g. `'abc'` for an integer).
+        pub const INVALID_TEXT_REPRESENTATION: &str = "22P02";
+        /// `22003`: a number out of the column type's range.
+        pub const NUMERIC_VALUE_OUT_OF_RANGE: &str = "22003";
+        /// `22001`: a string longer than the column allows.
+        pub const STRING_DATA_RIGHT_TRUNCATION: &str = "22001";
+        /// `22012`: division by zero.
+        pub const DIVISION_BY_ZERO: &str = "22012";
+        /// `42P01`: the table does not exist (e.g. migrations not applied).
+        pub const UNDEFINED_TABLE: &str = "42P01";
+        /// `42703`: the column does not exist.
+        pub const UNDEFINED_COLUMN: &str = "42703";
+        /// `42883`: no function matches the name and argument types.
+        pub const UNDEFINED_FUNCTION: &str = "42883";
+        /// `42601`: SQL syntax error (e.g. `?` placeholders instead of `$1`).
+        pub const SYNTAX_ERROR: &str = "42601";
+        /// `42501`: the database role lacks a privilege.
+        pub const INSUFFICIENT_PRIVILEGE: &str = "42501";
+        /// `40001`: serialization failure; the transaction may be retried.
+        pub const SERIALIZATION_FAILURE: &str = "40001";
+        /// `40P01`: deadlock detected; the transaction may be retried.
+        pub const DEADLOCK_DETECTED: &str = "40P01";
+        /// `57014`: the statement was cancelled (e.g. `statement_timeout`).
+        pub const QUERY_CANCELED: &str = "57014";
+        /// `28P01`: wrong password for the database role (reported as `Error::Config`).
+        pub const INVALID_PASSWORD: &str = "28P01";
+        /// `3D000`: the database does not exist (reported as `Error::Config`).
+        pub const INVALID_CATALOG_NAME: &str = "3D000";
+    }
+
+    /// The SQLSTATE of an error, when the database reported one.
+    pub trait SqlState {
+        /// The SQLSTATE code (compare with the [`sqlstate`] constants), or `None` for errors that
+        /// did not come from the database (no binding, timeout, connection, limit).
+        fn sqlstate(&self) -> Option<&str>;
+    }
+
+    impl SqlState for Error {
+        fn sqlstate(&self) -> Option<&str> {
+            match self {
+                Error::Query(e) | Error::Config(e) => e.code.as_deref(),
+                _ => None,
+            }
+        }
+    }
+
+    #[cfg(feature = "json")]
+    impl SqlState for QueryAsError {
+        fn sqlstate(&self) -> Option<&str> {
+            match self {
+                QueryAsError::Db(e) => e.sqlstate(),
+                QueryAsError::Decode(_) => None,
+            }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::{sqlstate, DbError, Error, SqlState};
+
+        fn db_error(code: Option<&str>) -> DbError {
+            DbError {
+                code: code.map(String::from),
+                message: "m".into(),
+                detail: None,
+                hint: None,
+                constraint: None,
+            }
+        }
+
+        #[test]
+        fn sqlstate_comes_from_database_errors_only() {
+            let unique = Error::Query(db_error(Some(sqlstate::UNIQUE_VIOLATION)));
+            assert_eq!(unique.sqlstate(), Some("23505"));
+            let auth = Error::Config(db_error(Some(sqlstate::INVALID_PASSWORD)));
+            assert_eq!(auth.sqlstate(), Some("28P01"));
+            assert_eq!(Error::Query(db_error(None)).sqlstate(), None);
+            assert_eq!(Error::NoSuchDatabase.sqlstate(), None);
+            assert_eq!(Error::Timeout.sqlstate(), None);
         }
     }
 }

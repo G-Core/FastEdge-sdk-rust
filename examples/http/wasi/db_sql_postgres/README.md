@@ -44,7 +44,7 @@ Local run: `fastedge-run http -w target/wasm32-wasip2/release/db_sql_postgres.wa
 
 ## APIs used
 
-- `fastedge::db::sql::Database::open(name)` — open the database bound to `name`
+- `fastedge::db::postgres::Database::open(name)` — open the PostgreSQL database bound to `name`
 - `db.query_as::<T>(sql, params)` — run one statement and decode rows into `T` (feature `json`)
 - `params![…]` — build `$1, $2, …` parameters from plain Rust values
-- `Error::Query(DbError { code, message, … })` — database error; for PostgreSQL `code` is the SQLSTATE
+- `Error::Query(DbError { code, message, … })` — database error; `code` is the SQLSTATE (`e.sqlstate()` and the `sqlstate` constants, e.g. `sqlstate::UNDEFINED_TABLE`)
