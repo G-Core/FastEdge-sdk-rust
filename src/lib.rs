@@ -262,8 +262,8 @@ wit_bindgen::generate!({
     path: "wit",
     pub_export_macro: true,
     with: {
-        "gcore:db/sql-types@0.1.0": generate,
-        "gcore:db/sql-sync@0.1.0": generate,
+        "gcore:db/postgres-types@0.1.0": generate,
+        "gcore:db/postgres-sync@0.1.0": generate,
         "gcore:db/kv-types@0.1.0": generate,
         "gcore:db/kv-sync@0.1.0": generate,
     },

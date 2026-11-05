@@ -4,6 +4,20 @@ This file tracks agent decisions, architectural changes, and context for future 
 
 ---
 
+## [2026-11-05] — db: `fastedge::db::sql` renamed to `fastedge::db::postgres`
+
+### Overview
+FastEdge-wit renamed the SQL interfaces after the engine they describe: `gcore:db/postgres-types` and
+`gcore:db/postgres-sync` (async: `gcore:db/postgres`). The contract was already PostgreSQL ($1
+parameters, type OIDs, SQLSTATE); another dialect would get its own interface. Still `0.1.0`
+(unreleased).
+
+### Changes
+- `wit` submodule → FastEdge-wit `feat/db-interface-all` e41118a
+- `src/lib.rs` — `with:` generates `gcore:db/postgres-types@0.1.0` and `gcore:db/postgres-sync@0.1.0`
+- `src/db.rs` — `db::sql` → `db::postgres` (same API; `ToSql`, `params!`, `QueryAs` unchanged)
+- `examples/http/wasi/db_sql/` → `examples/http/wasi/db_postgres/`
+
 ## [2026-10-27] — POC: `fastedge::db::kv` (gcore:db/kv-sync@0.1.0)
 
 ### Overview
