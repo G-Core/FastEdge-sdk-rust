@@ -1,4 +1,4 @@
-use fastedge::db::postgres::{params, Database, Error, QueryAs, QueryAsError};
+use fastedge::db::sql::{params, Database, Error, QueryAs, QueryAsError};
 use serde::{Deserialize, Serialize};
 use wstd::http::body::Body;
 use wstd::http::{Request, Response};

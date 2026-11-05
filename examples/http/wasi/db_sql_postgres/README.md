@@ -1,13 +1,13 @@
 [← Back to examples](../../../README.md)
 
-# PostgreSQL database (WASI)
+# SQL database (WASI)
 
-Reads users from a PostgreSQL database bound to the app as `main`, decoding rows into a Rust struct
+Reads users from a SQL database (PostgreSQL in this example) bound to the app as `main`, decoding rows into a Rust struct
 with `query_as`.
 
 ## Setup
 
-1. Bind the database: add a secret `FASTEDGE_DB_POSTGRES_main` with the Postgres connection string
+1. Bind the database: add a secret `FASTEDGE_DB_SQL_main` with the Postgres connection string
    (e.g. a Neon pooled URL). The app never sees it; the host resolves `Database::open("main")`.
 2. Create the schema once, outside the app:
 
@@ -37,14 +37,14 @@ GET /?id=9  → 404 {"error":"not found"}
 
 ```sh
 cargo build --release
-# Output: target/wasm32-wasip2/release/db_postgres.wasm
+# Output: target/wasm32-wasip2/release/db_sql_postgres.wasm
 ```
 
-Local run: `fastedge-run http -w target/wasm32-wasip2/release/db_postgres.wasm --wasi-http true --secret "FASTEDGE_DB_POSTGRES_main=postgresql://…"`
+Local run: `fastedge-run http -w target/wasm32-wasip2/release/db_sql_postgres.wasm --wasi-http true --secret "FASTEDGE_DB_SQL_main=postgresql://…"`
 
 ## APIs used
 
-- `fastedge::db::postgres::Database::open(name)` — open the database bound to `name`
+- `fastedge::db::sql::Database::open(name)` — open the database bound to `name`
 - `db.query_as::<T>(sql, params)` — run one statement and decode rows into `T` (feature `json`)
 - `params![…]` — build `$1, $2, …` parameters from plain Rust values
-- `Error::Query(DbError { code, message, … })` — Postgres error with SQLSTATE
+- `Error::Query(DbError { code, message, … })` — database error; for PostgreSQL `code` is the SQLSTATE

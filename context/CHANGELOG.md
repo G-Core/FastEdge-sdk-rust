@@ -4,22 +4,23 @@ This file tracks agent decisions, architectural changes, and context for future 
 
 ---
 
-## [2026-11-05] — db: `fastedge::db::sql` renamed to `fastedge::db::postgres`
+## [2026-11-05] — db: dialect-neutral SQL; `Column.type_name`; example `db_sql_postgres`
 
 ### Overview
-FastEdge-wit renamed the SQL interfaces after the engine they describe: `gcore:db/postgres-types` and
-`gcore:db/postgres-sync` (async: `gcore:db/postgres`). The contract was already PostgreSQL ($1
-parameters, type OIDs, SQLSTATE); another dialect would get its own interface. Still `0.1.0`
+`gcore:db/sql` is documented as dialect-neutral: SQL text, placeholders and error codes are the bound
+database's, and the host picks the backend from the binding's configuration. Still `0.1.0`
 (unreleased).
 
+### Decisions
+- No `dialect()` call: binding a database of the wrong dialect is the developer's mistake
+- The example is named after its dialect (PostgreSQL schema, `$1` placeholders), so a SQLite example
+  can sit beside it later
+
 ### Changes
-- `wit` submodule → FastEdge-wit `feat/db-interface-all` e41118a
-- `src/lib.rs` — `with:` generates `gcore:db/postgres-types@0.1.0` and `gcore:db/postgres-sync@0.1.0`
-- `src/db.rs` — `db::sql` → `db::postgres` (same API; `ToSql`, `params!`, `QueryAs` unchanged)
-- `examples/http/wasi/db_sql/` → `examples/http/wasi/db_postgres/`
-- POC binding secret `FASTEDGE_DB_SQL_<name>` → `FASTEDGE_DB_POSTGRES_<name>` (engine), example README
-- `ToSql` keeps its name: the usual Rust name for this trait (rust-postgres, rusqlite, sqlx), and it
-  is already namespaced under `db::postgres`
+- `wit` submodule → FastEdge-wit `feat/db-interface-all` a23194c
+- `Column.type_name` (the database's type name, e.g. `int4`) replaces the PostgreSQL `type_oid`
+- `src/db.rs` — module docs describe the dialect as the bound database's
+- `examples/http/wasi/db_sql/` → `examples/http/wasi/db_sql_postgres/`
 
 ## [2026-10-27] — POC: `fastedge::db::kv` (gcore:db/kv-sync@0.1.0)
 

@@ -2,25 +2,26 @@
 //!
 //! The connection details stay with the host; the app only knows the binding name.
 
-/// PostgreSQL database, `gcore:db/postgres-sync`.
+/// SQL database, `gcore:db/sql-sync`. The SQL dialect (placeholders, types, error codes) is that of
+/// the database bound to the name; PostgreSQL on Neon in the POC.
 ///
 /// Calls are blocking. Parameters use positional placeholders (`$1`, `$2`, ...).
 ///
 /// # Examples
 ///
 /// ```no_run
-/// use fastedge::db::postgres::{params, Database};
+/// use fastedge::db::sql::{params, Database};
 ///
 /// let db = Database::open("main")?;
 /// let result = db.query("select id, email from users where id = $1", params![42i64])?;
 /// println!("{} rows", result.row_count);
-/// # Ok::<(), fastedge::db::postgres::Error>(())
+/// # Ok::<(), fastedge::db::sql::Error>(())
 /// ```
 ///
 /// With the `json` feature, rows decode into any `serde::Deserialize` type by column name:
 ///
 /// ```ignore
-/// use fastedge::db::postgres::{params, Database, QueryAs};
+/// use fastedge::db::sql::{params, Database, QueryAs};
 ///
 /// #[derive(serde::Deserialize)]
 /// struct User { id: i64, email: String, nickname: Option<String> }
@@ -28,14 +29,14 @@
 /// let users: Vec<User> = Database::open("main")?
 ///     .query_as("select id, email, nickname from users where id = $1", params![42i64])?;
 /// ```
-pub mod postgres {
+pub mod sql {
     #[doc(inline)]
-    pub use crate::gcore::db::postgres_sync::Database;
+    pub use crate::gcore::db::sql_sync::Database;
     #[doc(inline)]
-    pub use crate::gcore::db::postgres_types::{Column, DbError, Error, QueryResult, Statement, Value};
+    pub use crate::gcore::db::sql_types::{Column, DbError, Error, QueryResult, Statement, Value};
 
     #[doc(inline)]
-    pub use crate::__db_postgres_params as params;
+    pub use crate::__db_sql_params as params;
 
     /// Converts a Rust value into a SQL parameter [`Value`].
     ///
@@ -191,9 +192,9 @@ pub mod kv {
     }
 }
 
-/// Builds a `&[Value]` parameter list from plain Rust values; see [`postgres::ToSql`].
+/// Builds a `&[Value]` parameter list from plain Rust values; see [`sql::ToSql`].
 #[doc(hidden)]
 #[macro_export]
-macro_rules! __db_postgres_params {
-    ($($p:expr),* $(,)?) => { &[$($crate::db::postgres::ToSql::to_sql($p)),*] };
+macro_rules! __db_sql_params {
+    ($($p:expr),* $(,)?) => { &[$($crate::db::sql::ToSql::to_sql($p)),*] };
 }
